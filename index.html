@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Empire Illicite - Idle Tycoon</title>
+<style>
+:root{
+	--bg:#f6f7fb;
+	--sidebar:#ffffff;
+	--card:#ffffff;
+	--text:#0f172a;
+	--muted:#6b7280;
+	--primary:#2563eb;
+	--primary-2:#1e40af;
+	--danger:#dc2626;
+	--accent:#16a34a;
+	--border:#e5e7eb;
+	--success:#10b981;
+	--warning:#f59e0b;
+}
+*{box-sizing:border-box}
+body{
+	margin:0;
+	font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Helvetica,Arial,sans-serif;
+	color:var(--text);
+	background:var(--bg);
+	min-height:100vh;
+	display:grid;
+	grid-template-columns:240px 1fr;
+}
+/* Sidebar */
+.sidebar{
+	position:sticky; top:0; height:100vh; overflow:auto;
+	background:var(--sidebar); border-right:1px solid var(--border);
+	padding:16px;
+    display: flex;
+    flex-direction: column;
+}
+.sidebar h1{font-size:20px;margin:0 0 12px 0}
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-grow: 1;
+}
+.nav .tab{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-start;
+    text-align: left;
+    background: #ffffff;
+    color: var(--text);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+.nav .tab:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+.nav .tab.active {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+.nav .tab.active:hover {
+    transform: translateY(-2px);
+}
+.wallet {
+    margin-top: auto;
+    background: linear-gradient(135deg, #1f2937, #374151);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    color: #fff;
+    margin-top: 24px;
+    position: relative;
+    overflow: hidden;
+}
+.wallet::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 10%, transparent 10%), radial-gradient(circle at bottom right, rgba(255,255,255,0.1) 20%, transparent 20%);
+    background-size: 20px 20px, 40px 40px;
+    animation: move-bg 60s linear infinite;
+    opacity: 0.8;
+}
+@keyframes move-bg {
+    from { transform: rotate(0deg) translate(0, 0); }
+    to { transform: rotate(360deg) translate(20px, 20px); }
+}
+.wallet-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+.wallet-amount {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-top: 8px;
+    letter-spacing: -1px;
+    font-family: 'Courier New', Courier, monospace;
+}
+/* Main content */
+main{
+	padding:24px;
+	overflow:auto;
+}
+.panel{
+	display:none;
+}
+.panel.active{
+	display:block;
+}
+.banner{
+	position:relative;
+	height:60px;
+	border-radius:16px;
+	overflow:hidden;
+	margin-bottom:24px;
+    background: var(--primary-2);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.card{
+	background:var(--card);
+	border:1px solid var(--border);
+	border-radius:16px;
+	padding:24px;
+	margin-bottom:16px;
+}
+.card h2{
+	margin:0 0 6px 0
+}
+.muted{
+	color:var(--muted);
+	font-size:14px;
+}
+.grid{
+	display:grid;
+	gap:16px;
+}
+.grid.two{
+	grid-template-columns:1fr 1fr;
+}
+.grid.three{
+	grid-template-columns:1fr 1fr 1fr;
+}
+.grid.one{
+	grid-template-columns:1fr;
+}
+.big{
+	font-size:24px;
+	font-weight:bold;
+}
+.adbar{
+	padding:12px;
+	text-align:center;
+	font-size:12px;
+	color:var(--muted);
+	border-top:1px solid var(--border);
+}
+.icon-row{
+	display:flex;
+	align-items:center;
+	gap:8px;
+	margin-bottom:8px;
+}
+/* Style pour les emojis/icônes de crypto */
+.crypto-icon {
+    font-size: 1.5em;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+.crypto-market .grid{
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.coin{
+	padding:16px;
+	border:1px solid var(--border);
+	border-radius:12px;
+}
+.coin h4{margin:0 0 4px 0}
+.coin .price{font-size:18px;font-weight:bold;}
+.change{font-size:12px;margin-left:8px;font-weight:bold;}
+.pos{color:var(--accent)}
+.neg{color:#dc2626}
+.spark{grid-column:1/3;height:60px;width:100%;}
+.crypto-actions{
+    display:flex;
+    gap:12px;
+    margin-top:12px;
+    justify-content:space-between;
+}
+.buy-controls, .sell-controls{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+.buy-controls input, .sell-controls input {
+    margin-bottom: 0;
+}
+.buy-controls button, .sell-controls button {
+    margin: 0;
+}
+button{
+	background:#0ea5e9;
+	color:#fff;
+	border:1px solid #0284c7;
+	border-radius:10px;padding:10px 12px;cursor:pointer;margin:6px 6px 0 0
+}
+button.primary{background:var(--primary);border-color:transparent}
+button.danger{background:var(--danger);border-color:transparent}
+button.success{background:var(--success);border-color:transparent}
+button.warning{background:var(--warning);border-color:transparent}
+button:disabled{opacity:.6;cursor:not-allowed}
+button:hover:not(:disabled){opacity:0.9;transform:translateY(-1px)}
+input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text)}
+.shop{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.asset{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px}
+.asset h4{margin:0 0 6px 0}
+.asset .price{color:var(--muted);font-size:14px}
+.asset .bonus{color:var(--accent)}
+.asset .media{
+    position:relative;
+    height:60px;
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    background-color: var(--bg);
+}
+/* Styles pour les barres de progression */
+.progress-container {
+    margin: 8px 0;
+}
+.progress-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background-color: #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #059669);
+    border-radius: 6px;
+    transition: width 0.3s ease;
+}
+.progress-fill.planting {
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+}
+.progress-fill.growing {
+    background: linear-gradient(90deg, #10b981, #059669);
+}
+/* Styles pour les améliorations des propriétés */
+.property-upgrades {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+.property-upgrades h5 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: var(--text);
+}
+.upgrade-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 6px 0;
+    font-size: 13px;
+}
+.upgrade-buttons {
+    display: flex;
+    gap: 6px;
+}
+.upgrade-buttons button {
+    padding: 4px 8px;
+    font-size: 11px;
+    margin: 0;
+}
+.icon-row{display:flex;align-items:center;gap:12px;margin-top:12px}
+.crypto-icon{font-size:36px; line-height:1;width:48px;height:48px;border-radius:50%;background:#f0f0f0;display:flex;justify-content:center;align-items:center}
+
+/* Styles pour les animations de gain de graines */
+.seed-gain-animation {
+    position: fixed;
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 1.2em;
+    pointer-events: none;
+    animation: floatUp 1s ease-out forwards;
+    z-index: 1000;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+@keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-50px); }
+}
+
+/* Styles pour l'animation de plantation */
+.planting-animation {
+    position: fixed;
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 0.9em;
+    pointer-events: none;
+    animation: popIn 0.5s ease-out forwards, fadeOut 0.5s ease-in 0.5s forwards;
+    z-index: 1000;
+    background: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    z-index: 10000;
+    animation: slideIn 0.3s ease-out;
+    max-width: 300px;
+    border-left: 4px solid var(--success);
+}
+
+.notification.warning {
+    border-left-color: var(--warning);
+}
+
+.notification.error {
+    border-left-color: var(--danger);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+}
+
+.notification p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Stats dashboard */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    border-radius: 12px;
+    padding: 16px;
+    color: white;
+}
+
+.stat-card.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-card.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-card .stat-label {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-bottom: 4px;
+}
+
+.stat-card .stat-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Boutons d'action rapide */
+.quick-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.planted-counter {
+    font-size: 13px;
+    margin: 6px 0;
+    color: var(--muted);
+}
+
+.harvest-btn {
+    width: 100%;
+    margin-top: 8px;
+}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+    <h1>🏴‍☠️ Empire Illicite</h1>
+    <div class="nav">
+        <button class="tab" data-tab="dashboard">📊 Dashboard</button>
+        <button class="tab" data-tab="job">🍕 Petit boulot</button>
+        <button class="tab active" data-tab="plantation">🌱 Plantation</button>
+        <button class="tab" data-tab="vente">📈 Vente</button>
+        <button class="tab" data-tab="dealers">🤝 Dealers</button>
+        <button class="tab" data-tab="assets">💎 Magasin</button>
+        <button class="tab" data-tab="crypto">₿ Crypto</button>
+        <button class="tab" data-tab="profil">👤 Profil</button>
+    </div>
+    <div class="wallet">
+        <div class="wallet-label">Argent</div>
+        <div class="wallet-amount" id="cashDisplay">$100</div>
+    </div>
+</aside>
+<main>
+    <!-- NOUVEAU: Dashboard -->
+    <section id="dashboard" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>📊 Vue d'ensemble</h2>
+            <p class="muted">Statistiques de votre empire</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">💰 Cash</div>
+                    <div class="stat-value" id="dashCash">$0</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-label">🌱 Plants mûrs</div>
+                    <div class="stat-value" id="dashPlants">0</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-label">📦 Stock (g)</div>
+                    <div class="stat-value" id="dashStock">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">📈 Production/s</div>
+                    <div class="stat-value" id="dashProduction">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>🏢 Vos propriétés</h2>
+            <p class="muted">Résumé de vos lieux de production</p>
+            <div id="dashboardProperties"></div>
+        </div>
+        <div class="card">
+            <h2>💼 Vos actifs</h2>
+            <div class="grid two">
+                <div>
+                    <strong>Dealers:</strong> <span id="dashDealers">0</span>
+                </div>
+                <div>
+                    <strong>Armes:</strong> Niveau <span id="dashWeapons">0</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="job" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>🍕 Livreur de pizza</h2>
+            <p class="muted">Gagnez un peu d'argent en attendant que vos plants poussent.</p>
+            <div class="grid one">
+                <div>
+                    <button id="doJob" class="primary">Faire une livraison (+$10)</button>
+                    <p id="jobCooldown" style="display:none;">Revenez dans <span id="jobTimer">30</span> secondes...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="plantation" class="panel active">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>🌱 Graines et Production</h2>
+            <p class="muted">Achetez des graines, faites pousser et récoltez de la drogue.</p>
+            <div class="grid two">
+                <div>
+                    <label>Prix graine</label>
+                    <div class="big" id="seedPrice">$10</div>
+                    <div class="quick-actions">
+                        <button id="buySeed" class="primary">Acheter 1 ($10)</button>
+                        <button id="buySeed10">Acheter 10 ($100)</button>
+                        <button id="buySeedMax" class="success">Acheter Max</button>
+                    </div>
+                </div>
+                <div>
+                    <label>Vos cultures</label>
+                    <div>Graines: <strong id="seedCount">0</strong></div>
+                    <div>Plants mûrs: <strong id="plantCount">0 / 50</strong></div>
+                    <div>Production: <strong id="productionRate">0</strong> g/s</div>
+                    <div>En plantation: <strong id="totalPlanting">0</strong></div>
+                    <div>En croissance: <strong id="totalGrowing">0</strong></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>🏡 Lieux de production</h2>
+            <p class="muted">Vos propriétés et lieux de culture. Achetez-les au Magasin.</p>
+            <div class="shop" id="plantProperties">
+                <div class="asset owned" data-asset-id="studio">
+                    <div class="media">🏠</div>
+                    <h4>Petit studio miteux</h4>
+                    <p class="bonus">Capacité: <span id="studio-capacity">0 / 50</span></p>
+                    <div class="quick-actions">
+                        <button class="primary plant-seed-btn" data-asset-id="studio">Planter 1</button>
+                        <button class="plant-seed-btn-10" data-asset-id="studio">Planter 10</button>
+                    </div>
+                    <button class="success harvest-btn" data-asset-id="studio">🌾 Récolter tout</button>
+                    <div class="planted-counter">En plantation: <span id="studio-plants">0</span></div>
+                    <div class="progress-container" id="studio-planting-container">
+                        <div class="progress-label">Plantation</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill planting" id="studio-planting-progress" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="planted-counter">En croissance: <span id="studio-growing">0</span></div>
+                    <div class="progress-container">
+                        <div class="progress-label">Croissance des plants</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill growing" id="studio-growing-progress" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="property-upgrades">
+                        <h5>🔧 Améliorations</h5>
+                        <div class="upgrade-row">
+                            <span>🧑‍🌾 Botanistes: <strong id="studio-botanists">0</strong></span>
+                            <div class="upgrade-buttons">
+                                <button class="primary hire-botanist" data-asset-id="studio">+1 ($2,000)</button>
+                            </div>
+                        </div>
+                        <div class="upgrade-row">
+                            <span>💡 Lampes UV: <strong id="studio-lamps">0</strong></span>
+                            <div class="upgrade-buttons">
+                                <button class="primary buy-lamp" data-asset-id="studio">+1 ($3,000)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="vente" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>📈 Marché</h2>
+            <p class="muted">Vendez votre stock au prix du marché. Le prix fluctue.</p>
+            <div class="grid two">
+                <div>
+                    <label>Prix actuel (par g)</label>
+                    <div class="big" id="marketPrice">$1.00</div>
+                </div>
+                <div>
+                    <label>Stock disponible: <strong id="stockDisplay2">0</strong> g</label>
+                    <input id="sellAmount" type="number" min="1" placeholder="Quantité à vendre (g)">
+                    <div class="quick-actions">
+                        <button id="sellBtn" class="primary">Vendre</button>
+                        <button id="sellAllBtn" class="success">Vendre tout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>💰 Résumé</h2>
+            <div class="grid two">
+                <div>Cash: <strong id="cashDisplay2">$100</strong></div>
+                <div>Stock: <strong id="stockDisplay">0</strong> g</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dealers" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>🤝 Dealers & Armes</h2>
+            <p class="muted">Les dealers vendent automatiquement votre stock au prix du marché.</p>
+            <div class="grid two">
+                <div>
+                    <p>Embaucher un dealer (+0.5 g/s vendus)</p>
+                    <button id="hireDealer" class="primary">Embaucher ($1,000)</button>
+                    <div>Dealers: <strong id="dealerCount">0</strong></div>
+                    <div class="muted">Vente auto: <strong id="dealerRate">0</strong> g/s</div>
+                </div>
+                <div>
+                    <p>Armer les dealers (+30% efficacité)</p>
+                    <button id="buyWeapon" class="primary">Acheter armes ($2,000)</button>
+                    <div>Niveau d'armes: <strong id="weaponLevel">0</strong></div>
+                    <div class="muted">Bonus: <strong id="weaponBonus">0</strong>%</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="assets" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>💎 Magasin</h2>
+            <p class="muted">Achetez des articles pour améliorer vos affaires.</p>
+        </div>
+        <div class="card">
+            <h3>Lieux de production</h3>
+            <p class="muted">Des propriétés pour augmenter votre capacité de culture.</p>
+            <div class="shop" id="plantAssets"></div>
+        </div>
+        <div class="card">
+            <h3>Voitures</h3>
+            <p class="muted">Des voitures de luxe pour une livraison plus rapide et un meilleur profil.</p>
+            <div class="shop" id="carAssets"></div>
+        </div>
+        <div class="card">
+            <h3>Œuvres d'art</h3>
+            <p class="muted">Investissez dans l'art pour diversifier votre patrimoine et blanchir de l'argent.</p>
+            <div class="shop" id="artAssets"></div>
+        </div>
+        <div class="card">
+            <h3>Bijoux</h3>
+            <p class="muted">Investissez dans des bijoux pour des gains rapides et diversifier votre patrimoine.</p>
+            <div class="shop" id="jewelryAssets"></div>
+        </div>
+    </section>
+
+    <section id="crypto" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>₿ Crypto Marché</h2>
+            <p class="muted">Investissez dans des cryptomonnaies. Leurs prix fluctuent lentement.</p>
+            <div class="grid two">
+                <div class="coin">
+                    <div>
+                        <h4>Bitcoin</h4>
+                        <span class="price" id="btcPrice">$0</span>
+                        <span class="change pos" id="btcChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="btcSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="btcBuyAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="primary buy-crypto" data-crypto="btc">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="btcSellAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="danger sell-crypto" data-crypto="btc">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="coin">
+                    <div>
+                        <h4>Ethereum</h4>
+                        <span class="price" id="ethPrice">$0</span>
+                        <span class="change pos" id="ethChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="ethSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="ethBuyAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="primary buy-crypto" data-crypto="eth">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="ethSellAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="danger sell-crypto" data-crypto="eth">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="coin">
+                    <div>
+                        <h4>Dogecoin</h4>
+                        <span class="price" id="dogePrice">$0</span>
+                        <span class="change pos" id="dogeChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="dogeSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="dogeBuyAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="primary buy-crypto" data-crypto="doge">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="dogeSellAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="danger sell-crypto" data-crypto="doge">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>💼 Vos Cryptos</h2>
+            <p>Vos possessions actuelles et leur valeur.</p>
+            <div class="icon-row">
+                <span class="crypto-icon">₿</span>
+                <div>
+                    <div>Bitcoin: <strong id="btcOwned">0</strong> BTC</div>
+                    <div class="muted">Valeur: <strong id="btcValue">$0</strong></div>
+                </div>
+            </div>
+            <div class="icon-row">
+                <span class="crypto-icon">Ξ</span>
+                <div>
+                    <div>Ethereum: <strong id="ethOwned">0</strong> ETH</div>
+                    <div class="muted">Valeur: <strong id="ethValue">$0</strong></div>
+                </div>
+            </div>
+            <div class="icon-row">
+                <span class="crypto-icon">🐶</span>
+                <div>
+                    <div>Dogecoin: <strong id="dogeOwned">0</strong> DOGE</div>
+                    <div class="muted">Valeur: <strong id="dogeValue">$0</strong></div>
+                </div>
+            </div>
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+                <strong>Valeur totale du portefeuille: <span id="totalCryptoValue">$0</span></strong>
+            </div>
+        </div>
+    </section>
+
+    <section id="profil" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>👤 Profil</h2>
+            <p>Nom: <input id="playerName" placeholder="Votre blaze"></p>
+            <button id="saveBtn">Sauvegarder</button>
+            <button id="resetBtn" class="danger">Réinitialiser la partie</button>
+            <button id="adminBtn" class="warning">💰 Admin : +$1,000,000</button>
+        </div>
+    </section>
+</main>
+<footer class="adbar">Empire Illicite v2.0 - Jeu de gestion</footer>
+
+<!-- Notifications Container -->
+<div id="notificationContainer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script>
+(() => {
+    // État du jeu avec système de progression contrôlé
+    const savedState = JSON.parse(localStorage.getItem('illicit-empire')) || {};
+    const state = {
+        cash: savedState.cash || 100,
+        seeds: savedState.seeds || 0,
+        plants: savedState.plants || 0,
+        stockGrams: savedState.stockGrams || 0,
+        dealerCount: savedState.dealerCount || 0,
+        weaponLevel: savedState.weaponLevel || 0,
+        passiveIncome: savedState.passiveIncome || 0,
+        assets: savedState.assets || {},
+        plantLimit: savedState.plantLimit || 50,
+        playerName: savedState.playerName || '',
+        crypto: savedState.crypto || {
+            btc: 0,
+            eth: 0,
+            doge: 0
+        },
+        jobCooldownEnd: savedState.jobCooldownEnd || 0,
+        propertyProgress: savedState.propertyProgress || {},
+        plantingQueues: savedState.plantingQueues || {} // NOUVEAU: Files d'attente pour plantation
+    };
+
+    // État des cryptos
+    const cryptoPrices = JSON.parse(localStorage.getItem('crypto-prices')) || {
+        btc: 10000,
+        eth: 1000,
+        doge: 0.1
+    };
+    const cryptoHistory = JSON.parse(localStorage.getItem('crypto-history')) || {
+        btc: Array(60).fill(10000),
+        eth: Array(60).fill(1000),
+        doge: Array(60).fill(0.1)
+    };
+
+    // Prix du marché pour la vente
+    let marketPrice = 1 + Math.random();
+
+    // Définition des propriétés
+    const purchasableAssets = [
+        { id: 'local', type: 'plantLimit', name: 'Local Abandonné', bonus: 500, price: 5000, icon: '🏪' },
+        { id: 'small-apt', type: 'plantLimit', name: 'Petit Appartement', bonus: 1000, price: 25000, icon: '🏙️' },
+        { id: 'house', type: 'plantLimit', name: 'Maison avec Jardin', bonus: 5000, price: 100000, icon: '🏡' },
+        { id: 'farm-small', type: 'plantLimit', name: 'Corps de Ferme Caché', bonus: 10000, price: 500000, icon: '🌲' },
+        { id: 'farm-large', type: 'plantLimit', name: 'Grosse Ferme Cachée', bonus: 50000, price: 2000000, icon: '🌳' },
+        { id: 'huge-farm', type: 'plantLimit', name: 'Exploitation Géante', bonus: 100000, price: 10000000, icon: '🏭' },
+        { id: 'lamborghini', type: 'deliverySpeed', name: 'Lamborghini Huracán', bonus: 0.1, price: 250000, icon: '🏎️' },
+        { id: 'rollsroyce', type: 'credibility', name: 'Rolls-Royce Phantom', bonus: 0.15, price: 450000, icon: '🚗' },
+        { id: 'picasso', type: 'avoidInvestigation', name: 'Tableau de Picasso', bonus: 0.05, price: 1000000, icon: '🎨' },
+        { id: 'monet', type: 'salesBonus', name: 'Tableau de Monet', bonus: 0.02, price: 800000, icon: '🖼️' },
+        { id: 'diamond-ring', type: 'salesBonus', name: 'Bague en diamant', bonus: 0.05, price: 500000, icon: '💍' },
+    ];
+
+    // Initialisation des propriétés
+    if (!state.assets.studio) {
+        state.assets.studio = { owned: true, plants: 0, limit: 50, botanists: 0, lamps: 0, growing: 0, mature: 0 };
+    }
+    if (!state.propertyProgress.studio) {
+        state.propertyProgress.studio = {
+            planting: 0,
+            growing: 0,
+            plantingActive: false,
+            growingActive: false,
+            plantingStart: 0,
+            growingStart: 0
+        };
+    }
+    if (!state.plantingQueues.studio) {
+        state.plantingQueues.studio = 0;
+    }
+
+    purchasableAssets.filter(a => a.type === 'plantLimit').forEach(asset => {
+        if (state.assets[asset.id] && !state.assets[asset.id].botanists) {
+            state.assets[asset.id].plants = state.assets[asset.id].plants || 0;
+            state.assets[asset.id].limit = asset.bonus;
+            state.assets[asset.id].botanists = 0;
+            state.assets[asset.id].lamps = 0;
+            state.assets[asset.id].growing = 0;
+            state.assets[asset.id].mature = 0;
+        }
+        if (state.assets[asset.id] && !state.propertyProgress[asset.id]) {
+            state.propertyProgress[asset.id] = {
+                planting: 0,
+                growing: 0,
+                plantingActive: false,
+                growingActive: false,
+                plantingStart: 0,
+                growingStart: 0
+            };
+        }
+        if (state.assets[asset.id] && !state.plantingQueues[asset.id]) {
+            state.plantingQueues[asset.id] = 0;
+        }
+    });
+
+    // Charts instances (pour éviter les fuites mémoire)
+    let chartInstances = {};
+
+    const fmt = n => `$${n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const fmtCrypto = n => `$${n.toLocaleString()}`;
+
+    function fmtCash(num) {
+        if (num >= 1000000000) {
+            return `$${(num / 1000000000).toFixed(1)}Md`;
+        }
+        if (num >= 1000000) {
+            return `$${(num / 1000000).toFixed(1)}M`;
+        }
+        if (num >= 1000) {
+            return `$${(num / 1000).toFixed(1)}k`;
+        }
+        return fmt(num);
+    }
+
+    const el = id => document.getElementById(id);
+
+    // NOUVEAU: Système de notifications
+    function showNotification(title, message, type = 'success') {
+        const container = el('notificationContainer');
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <h4>${title}</h4>
+            <p>${message}</p>
+        `;
+        container.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.animation = 'slideIn 0.3s ease-out reverse';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // AMELIORE: Système de plantation avec file d'attente
+    function addToPlantingQueue(propertyId, count = 1) {
+        const property = state.assets[propertyId];
+        if (!property) return 0;
+
+        let planted = 0;
+        for (let i = 0; i < count; i++) {
+            if (state.seeds > 0 && (property.plants + property.growing + property.mature + state.plantingQueues[propertyId]) < property.limit) {
+                state.plantingQueues[propertyId]++;
+                state.seeds--;
+                planted++;
+            } else {
+                break;
+            }
+        }
+
+        if (planted > 0) {
+            startPlanting(propertyId);
+        }
+
+        return planted;
+    }
+
+    function startPlanting(propertyId) {
+        const property = state.assets[propertyId];
+        const progress = state.propertyProgress[propertyId];
+
+        if (!progress.plantingActive && state.plantingQueues[propertyId] > 0) {
+            state.plantingQueues[propertyId]--;
+            property.plants++;
+            progress.plantingActive = true;
+            progress.plantingStart = Date.now();
+            progress.planting = 0;
+        }
+    }
+
+    function startGrowing(propertyId) {
+        const property = state.assets[propertyId];
+        const progress = state.propertyProgress[propertyId];
+        if (!progress.growingActive && property.growing > 0) {
+            progress.growingActive = true;
+            progress.growingStart = Date.now();
+            progress.growing = 0;
+        }
+    }
+
+    function updateProgressBars() {
+        const now = Date.now();
+        const plantingCycleTime = 5000;
+        const properties = ['studio', ...purchasableAssets.filter(a => a.type === 'plantLimit' && state.assets[a.id]).map(a => a.id)];
+
+        properties.forEach(propertyId => {
+            const property = state.assets[propertyId];
+            const progress = state.propertyProgress[propertyId];
+            if (!property || !progress) return;
+
+            // Gestion de la plantation
+            if (progress.plantingActive) {
+                const timeSinceStart = now - progress.plantingStart;
+                const plantingProgress = Math.min(100, (timeSinceStart / plantingCycleTime) * 100);
+                progress.planting = plantingProgress;
+
+                const plantingBar = el(`${propertyId}-planting-progress`);
+                if (plantingBar) {
+                    plantingBar.style.width = `${plantingProgress}%`;
+                }
+
+                if (plantingProgress >= 100) {
+                    property.plants--;
+                    property.growing++;
+
+                    progress.planting = 0;
+                    progress.plantingStart = now;
+                    progress.plantingActive = false;
+
+                    if (!progress.growingActive) {
+                        startGrowing(propertyId);
+                    }
+
+                    // Planter le suivant dans la file
+                    if (state.plantingQueues[propertyId] > 0) {
+                        startPlanting(propertyId);
+                    }
+                }
+            } else {
+                const plantingBar = el(`${propertyId}-planting-progress`);
+                if (plantingBar) {
+                    plantingBar.style.width = '0%';
+                }
+            }
+
+            // Gestion de la croissance
+            const baseGrowthTime = 10000;
+            const growthSpeedMultiplier = 1 + (property.lamps * 0.2);
+            const growthCycleTime = baseGrowthTime / growthSpeedMultiplier;
+
+            if (progress.growingActive && property.growing > 0) {
+                const timeSinceGrowthStart = now - progress.growingStart;
+                const growthProgress = Math.min(100, (timeSinceGrowthStart / growthCycleTime) * 100);
+                progress.growing = growthProgress;
+
+                const growthBar = el(`${propertyId}-growing-progress`);
+                if (growthBar) {
+                    growthBar.style.width = `${growthProgress}%`;
+                }
+
+                if (growthProgress >= 100 && property.growing > 0) {
+                    property.growing--;
+                    property.mature++;
+
+                    updateTotalMaturePlants();
+                    progress.growing = 0;
+                    progress.growingStart = now;
+
+                    // Production
+                    const baseProduction = 0.1;
+                    const lampBonus = property.lamps * 0.05;
+                    const production = baseProduction * (1 + lampBonus);
+                    state.stockGrams += production;
+
+                    if (property.growing === 0) {
+                        progress.growingActive = false;
+                        const growthBar = el(`${propertyId}-growing-progress`);
+                        if (growthBar) {
+                            growthBar.style.width = '0%';
+                        }
+                    }
+                }
+            } else if (property.growing === 0) {
+                progress.growingActive = false;
+                const growthBar = el(`${propertyId}-growing-progress`);
+                if (growthBar) {
+                    growthBar.style.width = '0%';
+                }
+            }
+        });
+    }
+
+    function updateTotalMaturePlants() {
+        let total = 0;
+        const properties = ['studio', ...purchasableAssets.filter(a => a.type === 'plantLimit' && state.assets[a.id]).map(a => a.id)];
+        properties.forEach(propertyId => {
+            total += state.assets[propertyId].mature;
+        });
+        state.plants = total;
+    }
+
+    function handleAutomaticPlanting() {
+        const properties = ['studio', ...purchasableAssets.filter(a => a.type === 'plantLimit' && state.assets[a.id]).map(a => a.id)];
+        properties.forEach(propertyId => {
+            const property = state.assets[propertyId];
+            const progress = state.propertyProgress[propertyId];
+
+            if (property && property.botanists > 0 && !progress.plantingActive && state.seeds > 0) {
+                const canPlant = property.limit - (property.plants + property.growing + property.mature + state.plantingQueues[propertyId]);
+                if (canPlant > 0) {
+                    addToPlantingQueue(propertyId, 1);
+                }
+            }
+        });
+    }
+
+    // NOUVEAU: Fonction de récolte
+    function harvestProperty(propertyId) {
+        const property = state.assets[propertyId];
+        if (property && property.mature > 0) {
+            const harvested = property.mature;
+            const baseProduction = 0.1;
+            const lampBonus = property.lamps * 0.05;
+            const totalProduction = harvested * baseProduction * (1 + lampBonus);
+
+            state.stockGrams += totalProduction;
+            property.mature = 0;
+            updateTotalMaturePlants();
+
+            showNotification('🌾 Récolte!', `Vous avez récolté ${totalProduction.toFixed(2)}g de ${harvested} plants!`, 'success');
+            updateUI();
+        }
+    }
+
+    function updateUI() {
+        el('cashDisplay').textContent = fmtCash(state.cash);
+        el('cashDisplay2').textContent = fmtCash(state.cash);
+        el('seedCount').textContent = state.seeds;
+        el('stockDisplay').textContent = state.stockGrams.toFixed(2);
+        el('stockDisplay2').textContent = state.stockGrams.toFixed(2);
+        el('dealerCount').textContent = state.dealerCount;
+        el('weaponLevel').textContent = state.weaponLevel;
+        el('dealerRate').textContent = (state.dealerCount * 0.5 * (1 + state.weaponLevel * 0.3)).toFixed(2);
+        el('weaponBonus').textContent = (state.weaponLevel * 30);
+        el('marketPrice').textContent = fmt(marketPrice);
+        el('playerName').value = state.playerName;
+
+        // Dashboard stats
+        el('dashCash').textContent = fmtCash(state.cash);
+        el('dashPlants').textContent = state.plants;
+        el('dashStock').textContent = state.stockGrams.toFixed(1);
+        el('dashDealers').textContent = state.dealerCount;
+        el('dashWeapons').textContent = state.weaponLevel;
+
+        // Calcul des totaux
+        let totalPlantLimit = 0;
+        let totalProduction = 0;
+        let totalPlanting = 0;
+        let totalGrowing = 0;
+
+        const ownedPlantPropertiesDiv = el('plantProperties');
+
+        // Mise à jour du studio
+        const studioEl = ownedPlantPropertiesDiv.querySelector('[data-asset-id="studio"]');
+        if (studioEl) {
+            const studioCapacitySpan = el('studio-capacity');
+            if (studioCapacitySpan) {
+                studioCapacitySpan.textContent = `${state.assets.studio.mature} / ${state.assets.studio.limit}`;
+            }
+            const studioPlantsSpan = el('studio-plants');
+            if (studioPlantsSpan) {
+                studioPlantsSpan.textContent = state.assets.studio.plants + (state.plantingQueues.studio || 0);
+            }
+            const studioGrowingSpan = el('studio-growing');
+            if (studioGrowingSpan) {
+                studioGrowingSpan.textContent = state.assets.studio.growing;
+            }
+
+            const botanistSpan = el('studio-botanists');
+            const lampSpan = el('studio-lamps');
+            if (botanistSpan) botanistSpan.textContent = state.assets.studio.botanists;
+            if (lampSpan) lampSpan.textContent = state.assets.studio.lamps;
+
+            totalProduction += state.assets.studio.mature * (0.1 * (1 + state.assets.studio.lamps * 0.05));
+            totalPlanting += state.assets.studio.plants + (state.plantingQueues.studio || 0);
+            totalGrowing += state.assets.studio.growing;
+        }
+        totalPlantLimit += state.assets.studio.limit;
+
+        // Supprime les anciennes cartes d'assets
+        const existingAssets = ownedPlantPropertiesDiv.querySelectorAll('.asset:not([data-asset-id="studio"])');
+        existingAssets.forEach(asset => asset.remove());
+
+        // Ajoute les nouvelles propriétés achetées
+        purchasableAssets.filter(a => a.type === 'plantLimit' && state.assets[a.id]).forEach(asset => {
+            const assetCard = document.createElement('div');
+            assetCard.className = 'asset owned';
+            assetCard.dataset.assetId = asset.id;
+            assetCard.innerHTML = `
+                <div class="media">${asset.icon}</div>
+                <h4>${asset.name}</h4>
+                <p class="bonus">Capacité: <span id="${asset.id}-capacity">${state.assets[asset.id].mature} / ${state.assets[asset.id].limit}</span></p>
+                <div class="quick-actions">
+                    <button class="primary plant-seed-btn" data-asset-id="${asset.id}">Planter 1</button>
+                    <button class="plant-seed-btn-10" data-asset-id="${asset.id}">Planter 10</button>
+                </div>
+                <button class="success harvest-btn" data-asset-id="${asset.id}">🌾 Récolter tout</button>
+                <div class="planted-counter">En plantation: <span id="${asset.id}-plants">${state.assets[asset.id].plants + (state.plantingQueues[asset.id] || 0)}</span></div>
+                <div class="progress-container" id="${asset.id}-planting-container">
+                    <div class="progress-label">Plantation</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill planting" id="${asset.id}-planting-progress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="planted-counter">En croissance: <span id="${asset.id}-growing">${state.assets[asset.id].growing}</span></div>
+                <div class="progress-container">
+                    <div class="progress-label">Croissance des plants</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill growing" id="${asset.id}-growing-progress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="property-upgrades">
+                    <h5>🔧 Améliorations</h5>
+                    <div class="upgrade-row">
+                        <span>🧑‍🌾 Botanistes: <strong id="${asset.id}-botanists">${state.assets[asset.id].botanists}</strong></span>
+                        <div class="upgrade-buttons">
+                            <button class="primary hire-botanist" data-asset-id="${asset.id}">+1 ($2,000)</button>
+                        </div>
+                    </div>
+                    <div class="upgrade-row">
+                        <span>💡 Lampes UV: <strong id="${asset.id}-lamps">${state.assets[asset.id].lamps}</strong></span>
+                        <div class="upgrade-buttons">
+                            <button class="primary buy-lamp" data-asset-id="${asset.id}">+1 ($3,000)</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            ownedPlantPropertiesDiv.appendChild(assetCard);
+            totalPlantLimit += state.assets[asset.id].limit;
+            totalProduction += state.assets[asset.id].mature * (0.1 * (1 + state.assets[asset.id].lamps * 0.05));
+            totalPlanting += state.assets[asset.id].plants + (state.plantingQueues[asset.id] || 0);
+            totalGrowing += state.assets[asset.id].growing;
+        });
+
+        state.plantLimit = totalPlantLimit;
+        el('plantCount').textContent = `${state.plants} / ${state.plantLimit}`;
+        el('productionRate').textContent = totalProduction.toFixed(2);
+        el('dashProduction').textContent = totalProduction.toFixed(2);
+        el('totalPlanting').textContent = totalPlanting;
+        el('totalGrowing').textContent = totalGrowing;
+
+        // Dashboard properties
+        const dashPropDiv = el('dashboardProperties');
+        if (dashPropDiv) {
+            dashPropDiv.innerHTML = '';
+            const allProps = ['studio', ...purchasableAssets.filter(a => a.type === 'plantLimit' && state.assets[a.id]).map(a => a.id)];
+            allProps.forEach(propId => {
+                const prop = state.assets[propId];
+                const propInfo = purchasableAssets.find(a => a.id === propId) || { name: 'Petit studio miteux', icon: '🏠' };
+                dashPropDiv.innerHTML += `
+                    <div style="padding: 8px; margin: 4px 0; background: var(--bg); border-radius: 8px;">
+                        ${propInfo.icon} <strong>${propInfo.name}</strong>:
+                        ${prop.mature}/${prop.limit} mûrs,
+                        ${prop.growing} en croissance,
+                        ${prop.plants + (state.plantingQueues[propId] || 0)} en plantation
+                    </div>
+                `;
+            });
+        }
+
+        // Mise à jour des biens disponibles à l'achat
+        el('plantAssets').innerHTML = '';
+        el('carAssets').innerHTML = '';
+        el('artAssets').innerHTML = '';
+        el('jewelryAssets').innerHTML = '';
+
+        purchasableAssets.forEach(asset => {
+            if (!state.assets[asset.id]) {
+                const assetCard = document.createElement('div');
+                assetCard.className = 'asset';
+                let bonusText = '';
+                if (asset.type === 'plantLimit') {
+                    bonusText = `Max plants: <strong class="limit-bonus">${asset.bonus}</strong>`;
+                } else if (asset.type === 'deliverySpeed') {
+                    bonusText = `+${asset.bonus * 100}% vitesse de livraison`;
+                } else if (asset.type === 'credibility') {
+                    bonusText = `+${asset.bonus * 100}% crédibilité`;
+                } else if (asset.type === 'avoidInvestigation') {
+                    bonusText = `+${asset.bonus * 100}% éviter enquêtes`;
+                } else if (asset.type === 'salesBonus') {
+                    bonusText = `+${asset.bonus * 100}% prix de vente`;
+                }
+                assetCard.innerHTML = `
+                    <div class="media">${asset.icon}</div>
+                    <h4>${asset.name}</h4>
+                    <p class="price">${fmt(asset.price)}</p>
+                    <p class="bonus">${bonusText}</p>
+                    <button class="primary buy-asset" data-asset-id="${asset.id}">Acheter</button>
+                `;
+                if (asset.type === 'plantLimit') {
+                    el('plantAssets').appendChild(assetCard);
+                } else if (['deliverySpeed', 'credibility'].includes(asset.type)) {
+                    el('carAssets').appendChild(assetCard);
+                } else if (['avoidInvestigation', 'salesBonus'].includes(asset.type) && asset.icon !== '💍') {
+                    el('artAssets').appendChild(assetCard);
+                } else if (asset.icon === '💍') {
+                    el('jewelryAssets').appendChild(assetCard);
+                }
+            }
+        });
+
+        attachEventListeners();
+
+        // Mise à jour des cryptos
+        el('btcPrice').textContent = fmtCrypto(cryptoPrices.btc);
+        el('ethPrice').textContent = fmtCrypto(cryptoPrices.eth);
+        el('dogePrice').textContent = fmtCrypto(cryptoPrices.doge);
+        el('btcOwned').textContent = state.crypto.btc.toFixed(4);
+        el('ethOwned').textContent = state.crypto.eth.toFixed(4);
+        el('dogeOwned').textContent = state.crypto.doge.toFixed(4);
+
+        // Valeurs des cryptos
+        el('btcValue').textContent = fmtCash(state.crypto.btc * cryptoPrices.btc);
+        el('ethValue').textContent = fmtCash(state.crypto.eth * cryptoPrices.eth);
+        el('dogeValue').textContent = fmtCash(state.crypto.doge * cryptoPrices.doge);
+        const totalCryptoValue = (state.crypto.btc * cryptoPrices.btc) +
+                                  (state.crypto.eth * cryptoPrices.eth) +
+                                  (state.crypto.doge * cryptoPrices.doge);
+        el('totalCryptoValue').textContent = fmtCash(totalCryptoValue);
+
+        updateProgressBars();
+        updateJobUI();
+    }
+
+    function attachEventListeners() {
+        document.querySelectorAll('.buy-asset').forEach(button => {
+            button.onclick = handleAssetPurchase;
+        });
+        document.querySelectorAll('.plant-seed-btn').forEach(button => {
+            button.onclick = handlePlantSeed;
+        });
+        document.querySelectorAll('.plant-seed-btn-10').forEach(button => {
+            button.onclick = handlePlantSeed10;
+        });
+        document.querySelectorAll('.harvest-btn').forEach(button => {
+            button.onclick = (e) => {
+                const assetId = e.target.dataset.assetId;
+                harvestProperty(assetId);
+            };
+        });
+        document.querySelectorAll('.hire-botanist').forEach(button => {
+            button.onclick = handleHireBotanist;
+        });
+        document.querySelectorAll('.buy-lamp').forEach(button => {
+            button.onclick = handleBuyLamp;
+        });
+    }
+
+    function handleAssetPurchase(e) {
+        const assetId = e.target.dataset.assetId;
+        const asset = purchasableAssets.find(a => a.id === assetId);
+        if (state.cash >= asset.price && !state.assets[assetId]) {
+            state.cash -= asset.price;
+            state.assets[assetId] = { owned: true, plants: 0, limit: asset.bonus, botanists: 0, lamps: 0, growing: 0, mature: 0 };
+            state.propertyProgress[assetId] = {
+                planting: 0,
+                growing: 0,
+                plantingActive: false,
+                growingActive: false,
+                plantingStart: 0,
+                growingStart: 0
+            };
+            state.plantingQueues[assetId] = 0;
+
+            if (asset.type === 'passiveIncome') {
+                state.passiveIncome += asset.bonus;
+            }
+
+            showNotification('✅ Achat réussi!', `Vous avez acheté: ${asset.name}`, 'success');
+            updateUI();
+        } else if (state.assets[assetId]) {
+            showNotification('⚠️ Erreur', 'Vous avez déjà acheté cet asset!', 'warning');
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    }
+
+    function handlePlantSeed(e) {
+        const assetId = e.target.dataset.assetId;
+        const planted = addToPlantingQueue(assetId, 1);
+
+        if (planted > 0) {
+            const button = e.target;
+            const rect = button.getBoundingClientRect();
+            const animation = document.createElement('div');
+            animation.className = 'planting-animation';
+            animation.textContent = '🌱 Planté!';
+            animation.style.left = `${rect.left + rect.width / 2}px`;
+            animation.style.top = `${rect.top}px`;
+            document.body.appendChild(animation);
+            setTimeout(() => animation.remove(), 1000);
+            updateUI();
+        } else {
+            showNotification('⚠️ Attention', 'Pas assez de graines ou capacité atteinte!', 'warning');
+        }
+    }
+
+    function handlePlantSeed10(e) {
+        const assetId = e.target.dataset.assetId;
+        const planted = addToPlantingQueue(assetId, 10);
+
+        if (planted > 0) {
+            const button = e.target;
+            const rect = button.getBoundingClientRect();
+            const animation = document.createElement('div');
+            animation.className = 'planting-animation';
+            animation.textContent = `🌱 ${planted} plantées!`;
+            animation.style.left = `${rect.left + rect.width / 2}px`;
+            animation.style.top = `${rect.top}px`;
+            document.body.appendChild(animation);
+            setTimeout(() => animation.remove(), 1000);
+            updateUI();
+        } else {
+            showNotification('⚠️ Attention', 'Pas assez de graines ou capacité atteinte!', 'warning');
+        }
+    }
+
+    function handleHireBotanist(e) {
+        const assetId = e.target.dataset.assetId;
+        if (state.cash >= 2000) {
+            state.cash -= 2000;
+            state.assets[assetId].botanists++;
+            showNotification('✅ Embauche réussie!', 'Un botaniste a été embauché. Plantation automatique activée!', 'success');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash pour embaucher un botaniste!', 'error');
+        }
+    }
+
+    function handleBuyLamp(e) {
+        const assetId = e.target.dataset.assetId;
+        if (state.cash >= 3000) {
+            state.cash -= 3000;
+            state.assets[assetId].lamps++;
+            showNotification('✅ Achat réussi!', 'Lampe UV installée! Production augmentée!', 'success');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash pour acheter une lampe UV!', 'error');
+        }
+    }
+
+    function gameLoop() {
+        // Ventes automatiques par les dealers
+        const dealerSellRate = state.dealerCount * 0.5 * (1 + state.weaponLevel * 0.3);
+        const sellAmount = Math.min(state.stockGrams, dealerSellRate / 10); // Divisé par 10 car appelé 10x/sec
+        if (sellAmount > 0) {
+            state.cash += sellAmount * marketPrice;
+            state.stockGrams -= sellAmount;
+        }
+
+        // Revenus passifs des assets
+        if (state.passiveIncome > 0) {
+            state.cash += state.passiveIncome / (24 * 60 * 60 * 10); // Divisé par 10 car appelé 10x/sec
+        }
+
+        // Plantation automatique
+        handleAutomaticPlanting();
+
+        // Fluctuation du prix du marché
+        marketPrice += (Math.random() - 0.5) * 0.05;
+        marketPrice = Math.max(0.5, Math.min(5, marketPrice));
+    }
+
+    function updateJobUI() {
+        const now = Date.now();
+        const doJobBtn = el('doJob');
+        const jobCooldownMsg = el('jobCooldown');
+        const jobTimer = el('jobTimer');
+
+        if (now < state.jobCooldownEnd) {
+            doJobBtn.disabled = true;
+            doJobBtn.style.display = 'none';
+            jobCooldownMsg.style.display = 'block';
+            const remainingTime = Math.ceil((state.jobCooldownEnd - now) / 1000);
+            if (jobTimer) {
+                jobTimer.textContent = remainingTime;
+            }
+        } else {
+            doJobBtn.disabled = false;
+            doJobBtn.style.display = 'block';
+            jobCooldownMsg.style.display = 'none';
+        }
+    }
+
+    function updateCryptoPrices() {
+        const volatility = 0.01;
+        ['btc', 'eth', 'doge'].forEach(crypto => {
+            let change = (Math.random() - 0.5) * cryptoPrices[crypto] * volatility;
+            cryptoPrices[crypto] += change;
+            if (cryptoPrices[crypto] <= 0) cryptoPrices[crypto] = 0.01;
+
+            const changeEl = el(crypto + 'Change');
+            const changePercent = (change / cryptoPrices[crypto]) * 100;
+            changeEl.textContent = changePercent.toFixed(2) + '%';
+            changeEl.className = 'change ' + (change > 0 ? 'pos' : 'neg');
+
+            cryptoHistory[crypto].push(cryptoPrices[crypto]);
+            if (cryptoHistory[crypto].length > 60) {
+                cryptoHistory[crypto].shift();
+            }
+        });
+        localStorage.setItem('crypto-prices', JSON.stringify(cryptoPrices));
+        localStorage.setItem('crypto-history', JSON.stringify(cryptoHistory));
+        updateCharts();
+    }
+
+    // FIX CRITIQUE: Correction du bug dans updateCharts
+    function updateCharts() {
+        const chartOptions = {
+            animation: false,
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: { display: false },
+            tooltips: { enabled: false },
+            scales: {
+                xAxes: [{ display: false }],
+                yAxes: [{ display: false }]
+            },
+            elements: { point: { radius: 0 } }
+        };
+
+        const createChart = (id, data, color) => {
+            const canvas = el(id);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+
+            // Détruire l'ancien chart s'il existe
+            if (chartInstances[id]) {
+                chartInstances[id].destroy();
+            }
+
+            chartInstances[id] = new Chart(ctx, {
+                type: 'line',
+                data: { // FIX: Ajout de "data:"
+                    labels: Array(data.length).fill(''),
+                    datasets: [{
+                        data: data,
+                        borderColor: color,
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: chartOptions
+            });
+        };
+
+        createChart('btcSpark', cryptoHistory.btc, '#f7931a');
+        createChart('ethSpark', cryptoHistory.eth, '#627eea');
+        createChart('dogeSpark', cryptoHistory.doge, '#c2a633');
+    }
+
+    function showSeedGainAnimation(amount, buttonId) {
+        const button = el(buttonId);
+        if (!button) return;
+
+        const rect = button.getBoundingClientRect();
+        const animation = document.createElement('div');
+        animation.className = 'seed-gain-animation';
+        animation.textContent = `+${amount} 🌱`;
+        animation.style.left = `${rect.left + rect.width / 2}px`;
+        animation.style.top = `${rect.top}px`;
+        document.body.appendChild(animation);
+
+        setTimeout(() => animation.remove(), 1000);
+    }
+
+    // Événements des boutons de base
+    el('buySeed').onclick = () => {
+        if (state.cash >= 10) {
+            state.seeds++;
+            state.cash -= 10;
+            showSeedGainAnimation(1, 'buySeed');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    };
+
+    el('buySeed10').onclick = () => {
+        if (state.cash >= 100) {
+            state.seeds += 10;
+            state.cash -= 100;
+            showSeedGainAnimation(10, 'buySeed10');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    };
+
+    // NOUVEAU: Acheter max de graines
+    el('buySeedMax').onclick = () => {
+        const maxSeeds = Math.floor(state.cash / 10);
+        if (maxSeeds > 0) {
+            state.seeds += maxSeeds;
+            state.cash -= maxSeeds * 10;
+            showSeedGainAnimation(maxSeeds, 'buySeedMax');
+            showNotification('✅ Achat réussi!', `Vous avez acheté ${maxSeeds} graines!`, 'success');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    };
+
+    el('sellBtn').onclick = () => {
+        let qty = Math.min(parseInt(el('sellAmount').value) || 0, state.stockGrams);
+        if (qty > 0) {
+            const revenue = qty * marketPrice;
+            state.cash += revenue;
+            state.stockGrams -= qty;
+            el('sellAmount').value = '';
+            showNotification('💰 Vente réussie!', `Vendu ${qty}g pour ${fmtCash(revenue)}!`, 'success');
+            updateUI();
+        } else {
+            showNotification('⚠️ Attention', 'Quantité invalide!', 'warning');
+        }
+    };
+
+    // NOUVEAU: Vendre tout
+    el('sellAllBtn').onclick = () => {
+        if (state.stockGrams > 0) {
+            const qty = state.stockGrams;
+            const revenue = qty * marketPrice;
+            state.cash += revenue;
+            state.stockGrams = 0;
+            showNotification('💰 Vente totale!', `Vendu ${qty.toFixed(2)}g pour ${fmtCash(revenue)}!`, 'success');
+            updateUI();
+        } else {
+            showNotification('⚠️ Attention', 'Pas de stock à vendre!', 'warning');
+        }
+    };
+
+    el('hireDealer').onclick = () => {
+        if (state.cash >= 1000) {
+            state.dealerCount++;
+            state.cash -= 1000;
+            showNotification('✅ Embauche réussie!', 'Un dealer a été embauché!', 'success');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    };
+
+    el('buyWeapon').onclick = () => {
+        if (state.cash >= 2000) {
+            state.weaponLevel++;
+            state.cash -= 2000;
+            showNotification('✅ Achat réussi!', 'Armes achetées! Dealers plus efficaces!', 'success');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    };
+
+    // Gestion des cryptos
+    document.querySelectorAll('.buy-crypto').forEach(button => {
+        button.onclick = () => {
+            const crypto = button.dataset.crypto;
+            const price = cryptoPrices[crypto];
+            const qtyInput = el(crypto + 'BuyAmount');
+            const qty = parseFloat(qtyInput.value) || 0;
+
+            if (qty <= 0) {
+                showNotification('⚠️ Attention', 'Veuillez entrer une quantité valide.', 'warning');
+                return;
+            }
+
+            const totalCost = qty * price;
+            if (state.cash >= totalCost) {
+                state.cash -= totalCost;
+                state.crypto[crypto] += qty;
+                qtyInput.value = '';
+                showNotification('✅ Achat crypto!', `Acheté ${qty.toFixed(4)} ${crypto.toUpperCase()}`, 'success');
+                updateUI();
+            } else {
+                showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+            }
+        };
+    });
+
+    document.querySelectorAll('.sell-crypto').forEach(button => {
+        button.onclick = () => {
+            const crypto = button.dataset.crypto;
+            const qtyInput = el(crypto + 'SellAmount');
+            const qty = parseFloat(qtyInput.value) || 0;
+
+            if (state.crypto[crypto] >= qty && qty > 0) {
+                const price = cryptoPrices[crypto];
+                const revenue = qty * price;
+                state.cash += revenue;
+                state.crypto[crypto] -= qty;
+                qtyInput.value = '';
+                showNotification('💰 Vente crypto!', `Vendu ${qty.toFixed(4)} ${crypto.toUpperCase()} pour ${fmtCash(revenue)}`, 'success');
+                updateUI();
+            } else {
+                showNotification('❌ Erreur', "Pas assez de crypto à vendre!", 'error');
+            }
+        };
+    });
+
+    el('doJob').onclick = () => {
+        const now = Date.now();
+        if (now >= state.jobCooldownEnd) {
+            state.cash += 10;
+            state.jobCooldownEnd = now + 30000;
+            showNotification('✅ Livraison!', 'Vous avez gagné $10!', 'success');
+            updateUI();
+        }
+    };
+
+    el('adminBtn').onclick = () => {
+        state.cash += 1000000;
+        showNotification('💰 Admin', 'Vous avez reçu $1,000,000!', 'success');
+        updateUI();
+    };
+
+    el('saveBtn').onclick = () => {
+        state.playerName = el('playerName').value;
+        saveGame();
+        showNotification('✅ Sauvegarde', 'Partie sauvegardée!', 'success');
+    };
+
+    el('resetBtn').onclick = () => {
+        if (confirm('Réinitialiser la partie ? Cette action est irréversible!')) {
+            localStorage.removeItem('illicit-empire');
+            localStorage.removeItem('crypto-prices');
+            localStorage.removeItem('crypto-history');
+            showNotification('🔄 Reset', 'Partie réinitialisée! Rechargement...', 'warning');
+            setTimeout(() => location.reload(), 1000);
+        }
+    };
+
+    function saveGame() {
+        localStorage.setItem('illicit-empire', JSON.stringify(state));
+    }
+
+    // Tabs
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(t => t.onclick = () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        t.classList.add('active');
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(t.dataset.tab).classList.add('active');
+        if (t.dataset.tab === 'crypto') {
+            // Attendre un peu que le canvas soit visible
+            setTimeout(() => updateCharts(), 100);
+        }
+    });
+
+    // Timers et initialisation
+    setInterval(saveGame, 10000); // Sauvegarde toutes les 10 secondes
+    setInterval(updateCryptoPrices, 5000); // Prix crypto toutes les 5 secondes
+    setInterval(updateJobUI, 1000); // Cooldown job chaque seconde
+    setInterval(gameLoop, 100); // Game loop 10x par seconde
+    setInterval(updateProgressBars, 100); // Barres de progression 10x par seconde
+    setInterval(updateUI, 1000); // UI mise à jour chaque seconde
+
+    // Initialisation
+    updateUI();
+    updateCharts();
+})();
+</script>
+</body>
+</html>
