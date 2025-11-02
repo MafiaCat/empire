@@ -451,12 +451,12 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     margin-top: 8px;
 }
 
-/* Carte interactive */
+/* Carte interactive - Style Google Maps */
 .map-container {
     position: relative;
     width: 100%;
     height: 700px;
-    background: linear-gradient(135deg, #87CEEB 0%, #98D8E8 50%, #90EE90 100%);
+    background: #e5e3df;
     border-radius: 16px;
     overflow: hidden;
     cursor: grab;
@@ -471,8 +471,9 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 2000px;
+    height: 2000px;
+    background: #e5e3df;
 }
 
 .map-controls {
@@ -482,7 +483,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     display: flex;
     flex-direction: column;
     gap: 8px;
-    z-index: 10;
+    z-index: 100;
 }
 
 .map-controls button {
@@ -514,7 +515,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     padding: 12px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    z-index: 10;
+    z-index: 100;
 }
 
 .map-legend-item {
@@ -545,26 +546,34 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     position: absolute;
     transform: translate(-50%, -50%);
     cursor: pointer;
-    transition: transform 0.2s;
-    z-index: 5;
+    transition: all 0.3s;
+    z-index: 50;
 }
 
 .property-marker:hover {
-    transform: translate(-50%, -50%) scale(1.2);
-    z-index: 6;
+    z-index: 60;
+}
+
+.property-marker.active {
+    z-index: 70;
 }
 
 .property-icon {
-    font-size: 32px;
+    font-size: 36px;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
     background: white;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px solid #dc2626;
+    border: 4px solid #dc2626;
+    transition: all 0.3s;
+}
+
+.property-marker:hover .property-icon {
+    transform: scale(1.2);
 }
 
 .property-marker.owned .property-icon {
@@ -572,60 +581,53 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     background: #f0fdf4;
 }
 
-.property-tooltip {
-    position: absolute;
-    bottom: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 7;
+.property-marker.poi .property-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 40px;
+    border-width: 5px;
 }
 
-.property-marker:hover .property-tooltip {
-    opacity: 1;
-}
-
-.tooltip-name {
-    font-weight: bold;
-    margin-bottom: 4px;
-}
-
-.tooltip-price {
-    color: var(--primary);
-    font-size: 14px;
-}
-
-.tooltip-status {
-    color: var(--accent);
-    font-size: 12px;
-    margin-top: 4px;
-}
-
+/* Éléments de la ville */
 .city-element {
     position: absolute;
     pointer-events: none;
 }
 
 .building {
-    background: #94a3b8;
-    border-radius: 2px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background: #d1d5db;
+    border: 1px solid #9ca3af;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .road {
-    background: #475569;
+    background: #ffffff;
+    border: 1px solid #fbbf24;
+}
+
+.road.highway {
+    background: #fef3c7;
+    border: 2px solid #f59e0b;
 }
 
 .park {
     background: #86efac;
-    border-radius: 8px;
+    border: 1px solid #22c55e;
+}
+
+.forest {
+    background: #166534;
+    opacity: 0.7;
+}
+
+.water {
+    background: #93c5fd;
+    border: 1px solid #3b82f6;
+}
+
+.downtown {
+    background: rgba(156, 163, 175, 0.2);
+    border: 2px dashed #6b7280;
 }
 
 .zoom-level {
@@ -638,7 +640,224 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     font-size: 12px;
     font-weight: bold;
-    z-index: 10;
+    z-index: 100;
+}
+
+/* Modal de propriété */
+.property-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s;
+}
+
+.property-modal.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+}
+
+.modal-icon {
+    font-size: 48px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--bg);
+}
+
+.modal-title {
+    flex: 1;
+}
+
+.modal-title h3 {
+    margin: 0 0 4px 0;
+    font-size: 20px;
+}
+
+.modal-title .price {
+    color: var(--primary);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.modal-close:hover {
+    background: var(--border);
+}
+
+.modal-description {
+    margin-bottom: 16px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.modal-bonus {
+    background: #f0fdf4;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--accent);
+}
+
+.modal-bonus strong {
+    color: var(--accent);
+}
+
+.modal-items {
+    display: grid;
+    gap: 12px;
+}
+
+.modal-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 2px solid var(--border);
+}
+
+.modal-item.owned {
+    background: #f0fdf4;
+    border-color: var(--accent);
+}
+
+.modal-item-icon {
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: white;
+}
+
+.modal-item-info {
+    flex: 1;
+}
+
+.modal-item-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+}
+
+.modal-item-info .price {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.modal-item-info .bonus {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.modal-item-info .owned-badge {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* Assets dans le Dashboard */
+.asset-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.asset-showcase-item {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+}
+
+.asset-showcase-item .icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.asset-showcase-item .name {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.asset-showcase-item .type {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
 }
 </style>
 </head>
@@ -651,7 +870,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         <button class="tab active" data-tab="plantation">🌱 Plantation</button>
         <button class="tab" data-tab="vente">📈 Vente</button>
         <button class="tab" data-tab="dealers">🤝 Dealers</button>
-        <button class="tab" data-tab="map">🗺️ Carte</button>
         <button class="tab" data-tab="assets">💎 Magasin</button>
         <button class="tab" data-tab="crypto">₿ Crypto</button>
         <button class="tab" data-tab="profil">👤 Profil</button>
@@ -693,7 +911,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             <div id="dashboardProperties"></div>
         </div>
         <div class="card">
-            <h2>💼 Vos actifs</h2>
+            <h2>💼 Vos actifs commerciaux</h2>
             <div class="grid two">
                 <div>
                     <strong>Dealers:</strong> <span id="dashDealers">0</span>
@@ -702,6 +920,21 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                     <strong>Armes:</strong> Niveau <span id="dashWeapons">0</span>
                 </div>
             </div>
+        </div>
+        <div class="card">
+            <h2>🏎️ Vos voitures</h2>
+            <p class="muted">Collection de véhicules de luxe</p>
+            <div class="asset-showcase" id="dashCars"></div>
+        </div>
+        <div class="card">
+            <h2>🎨 Vos œuvres d'art</h2>
+            <p class="muted">Collection d'art pour blanchir votre argent</p>
+            <div class="asset-showcase" id="dashArt"></div>
+        </div>
+        <div class="card">
+            <h2>💎 Vos bijoux</h2>
+            <p class="muted">Collection de bijoux précieux</p>
+            <div class="asset-showcase" id="dashJewelry"></div>
         </div>
     </section>
 
@@ -842,11 +1075,11 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         </div>
     </section>
 
-    <section id="map" class="panel">
+    <section id="assets" class="panel">
         <div class="banner"></div>
         <div class="card">
-            <h2>🗺️ Carte de la ville</h2>
-            <p class="muted">Explorez la ville et achetez des propriétés. Zoom avec les boutons ou la molette. Déplacez-vous en glissant.</p>
+            <h2>💎 Magasin - Carte interactive</h2>
+            <p class="muted">Explorez la ville et achetez des propriétés en cliquant sur la carte. Zoom avec la molette ou les boutons +/-. Déplacez-vous en glissant.</p>
         </div>
         <div class="card">
             <div class="map-container" id="mapContainer">
@@ -866,36 +1099,20 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                         <span>Possédée</span>
                     </div>
                 </div>
-                <div id="mapContent" style="position: absolute; width: 100%; height: 100%; transform-origin: center center;"></div>
+                <div id="mapContent"></div>
             </div>
         </div>
-    </section>
-
-    <section id="assets" class="panel">
-        <div class="banner"></div>
         <div class="card">
-            <h2>💎 Magasin</h2>
-            <p class="muted">Achetez des articles pour améliorer vos affaires.</p>
-        </div>
-        <div class="card">
-            <h3>Lieux de production</h3>
-            <p class="muted">Des propriétés pour augmenter votre capacité de culture.</p>
-            <div class="shop" id="plantAssets"></div>
-        </div>
-        <div class="card">
-            <h3>Voitures</h3>
-            <p class="muted">Des voitures de luxe pour une livraison plus rapide et un meilleur profil.</p>
-            <div class="shop" id="carAssets"></div>
-        </div>
-        <div class="card">
-            <h3>Œuvres d'art</h3>
-            <p class="muted">Investissez dans l'art pour diversifier votre patrimoine et blanchir de l'argent.</p>
-            <div class="shop" id="artAssets"></div>
-        </div>
-        <div class="card">
-            <h3>Bijoux</h3>
-            <p class="muted">Investissez dans des bijoux pour des gains rapides et diversifier votre patrimoine.</p>
-            <div class="shop" id="jewelryAssets"></div>
+            <h3>Légende de la carte</h3>
+            <p class="muted">Cliquez sur les marqueurs pour voir les détails et acheter des propriétés.</p>
+            <div class="grid three">
+                <div>🏠 Propriétés résidentielles</div>
+                <div>🏎️ Garage de voitures de luxe</div>
+                <div>🎨 Musée d'art</div>
+                <div>🌲 Fermes dans les forêts</div>
+                <div>💎 Bijouterie de luxe</div>
+                <div>🏙️ Centre-ville animé</div>
+            </div>
         </div>
     </section>
 
@@ -1006,6 +1223,24 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
 
 <!-- Notifications Container -->
 <div id="notificationContainer"></div>
+
+<!-- Property Modal -->
+<div id="propertyModal" class="property-modal">
+    <div class="modal-content">
+        <button class="modal-close" id="modalClose">×</button>
+        <div class="modal-header">
+            <div class="modal-icon" id="modalIcon"></div>
+            <div class="modal-title">
+                <h3 id="modalTitle"></h3>
+                <div class="price" id="modalPrice"></div>
+            </div>
+        </div>
+        <div class="modal-description" id="modalDescription"></div>
+        <div class="modal-bonus" id="modalBonus" style="display: none;"></div>
+        <div class="modal-items" id="modalItems"></div>
+        <div class="modal-actions" id="modalActions"></div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 <script>
