@@ -494,6 +494,8 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     border: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     font-size: 20px;
+    font-weight: bold;
+    color: #333;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -2380,6 +2382,20 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         initialOffsetX: 0,
         initialOffsetY: 0
     };
+
+    function updateMapTransform() {
+        const mapContent = el('mapContent');
+        if (!mapContent) return;
+
+        // Appliquer le zoom et le déplacement
+        mapContent.style.transform = `translate(${mapState.offsetX}px, ${mapState.offsetY}px) scale(${mapState.zoom})`;
+
+        // Mettre à jour l'affichage du niveau de zoom
+        const zoomDisplay = el('zoomDisplay');
+        if (zoomDisplay) {
+            zoomDisplay.textContent = Math.round(mapState.zoom * 100) + '%';
+        }
+    }
 
     function initMap() {
         const mapContent = el('mapContent');
