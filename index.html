@@ -1099,7 +1099,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                         <span>Possédée</span>
                     </div>
                 </div>
-                <div id="mapContent"></div>
+                <div id="mapContent" style="position: absolute; top: 0; left: 0; width: 2000px; height: 2000px; transform-origin: 0 0;"></div>
             </div>
         </div>
         <div class="card">
@@ -1283,19 +1283,162 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     // Prix du marché pour la vente
     let marketPrice = 1 + Math.random();
 
-    // Définition des propriétés avec positions sur la carte (centre-ville = 50%, banlieue = 10-90%)
+    // Définition des propriétés avec positions sur la carte (positions en px sur 2000x2000)
     const purchasableAssets = [
-        { id: 'local', type: 'plantLimit', name: 'Local Abandonné', bonus: 500, price: 5000, icon: '🏪', x: 45, y: 55 },
-        { id: 'small-apt', type: 'plantLimit', name: 'Petit Appartement', bonus: 1000, price: 25000, icon: '🏙️', x: 55, y: 45 },
-        { id: 'house', type: 'plantLimit', name: 'Maison avec Jardin', bonus: 5000, price: 100000, icon: '🏡', x: 65, y: 35 },
-        { id: 'farm-small', type: 'plantLimit', name: 'Corps de Ferme Caché', bonus: 10000, price: 500000, icon: '🌲', x: 75, y: 25 },
-        { id: 'farm-large', type: 'plantLimit', name: 'Grosse Ferme Cachée', bonus: 50000, price: 2000000, icon: '🌳', x: 15, y: 75 },
-        { id: 'huge-farm', type: 'plantLimit', name: 'Exploitation Géante', bonus: 100000, price: 10000000, icon: '🏭', x: 85, y: 85 },
-        { id: 'lamborghini', type: 'deliverySpeed', name: 'Lamborghini Huracán', bonus: 0.1, price: 250000, icon: '🏎️', x: 50, y: 48 },
-        { id: 'rollsroyce', type: 'credibility', name: 'Rolls-Royce Phantom', bonus: 0.15, price: 450000, icon: '🚗', x: 52, y: 52 },
-        { id: 'picasso', type: 'avoidInvestigation', name: 'Tableau de Picasso', bonus: 0.05, price: 1000000, icon: '🎨', x: 48, y: 50 },
-        { id: 'monet', type: 'salesBonus', name: 'Tableau de Monet', bonus: 0.02, price: 800000, icon: '🖼️', x: 52, y: 48 },
-        { id: 'diamond-ring', type: 'salesBonus', name: 'Bague en diamant', bonus: 0.05, price: 500000, icon: '💍', x: 48, y: 52 },
+        // Propriétés résidentielles
+        {
+            id: 'local',
+            type: 'plantLimit',
+            name: 'Local Abandonné',
+            description: 'Un local miteux au cœur de la ville. Discret mais petit.',
+            bonus: 500,
+            price: 5000,
+            icon: '🏪',
+            x: 900,
+            y: 1100
+        },
+        {
+            id: 'small-apt',
+            type: 'plantLimit',
+            name: 'Petit Appartement',
+            description: 'Appartement urbain parfait pour démarrer vos activités.',
+            bonus: 1000,
+            price: 25000,
+            icon: '🏙️',
+            x: 1100,
+            y: 900
+        },
+        {
+            id: 'house',
+            type: 'plantLimit',
+            name: 'Maison avec Jardin',
+            description: 'Maison en banlieue avec jardin secret pour cultiver tranquillement.',
+            bonus: 5000,
+            price: 100000,
+            icon: '🏡',
+            x: 1400,
+            y: 600
+        },
+        {
+            id: 'farm-small',
+            type: 'plantLimit',
+            name: 'Corps de Ferme Caché',
+            description: 'Ferme isolée au cœur d\'une forêt dense. Parfaite pour la discrétion.',
+            bonus: 10000,
+            price: 500000,
+            icon: '🌲',
+            x: 1600,
+            y: 300
+        },
+        {
+            id: 'farm-large',
+            type: 'plantLimit',
+            name: 'Grosse Ferme Cachée',
+            description: 'Grande exploitation agricole perdue dans les bois. Capacité énorme.',
+            bonus: 50000,
+            price: 2000000,
+            icon: '🌳',
+            x: 200,
+            y: 1700
+        },
+        {
+            id: 'huge-farm',
+            type: 'plantLimit',
+            name: 'Exploitation Géante',
+            description: 'Complexe industriel forestier. L\'ultime propriété pour un empire.',
+            bonus: 100000,
+            price: 10000000,
+            icon: '🏭',
+            x: 1800,
+            y: 1800
+        },
+        // Voitures (regroupées dans un garage)
+        {
+            id: 'lamborghini',
+            type: 'deliverySpeed',
+            name: 'Lamborghini Huracán',
+            description: 'Supercar italienne. Vitesse et style pour vos livraisons express.',
+            bonus: 0.1,
+            price: 250000,
+            icon: '🏎️',
+            category: 'cars'
+        },
+        {
+            id: 'rollsroyce',
+            type: 'credibility',
+            name: 'Rolls-Royce Phantom',
+            description: 'Luxe britannique absolu. Augmente votre crédibilité dans le milieu.',
+            bonus: 0.15,
+            price: 450000,
+            icon: '🚗',
+            category: 'cars'
+        },
+        // Œuvres d'art (regroupées dans un musée)
+        {
+            id: 'picasso',
+            type: 'avoidInvestigation',
+            name: 'Tableau de Picasso',
+            description: 'Chef-d\'œuvre cubiste. Idéal pour blanchir de l\'argent.',
+            bonus: 0.05,
+            price: 1000000,
+            icon: '🎨',
+            category: 'art'
+        },
+        {
+            id: 'monet',
+            type: 'salesBonus',
+            name: 'Tableau de Monet',
+            description: 'Impressionnisme français. Augmente vos revenus de vente.',
+            bonus: 0.02,
+            price: 800000,
+            icon: '🖼️',
+            category: 'art'
+        },
+        // Bijoux (regroupés dans une bijouterie)
+        {
+            id: 'diamond-ring',
+            type: 'salesBonus',
+            name: 'Bague en Diamant',
+            description: 'Bijou étincelant qui impressionne vos clients et augmente vos ventes.',
+            bonus: 0.05,
+            price: 500000,
+            icon: '💍',
+            category: 'jewelry'
+        },
+    ];
+
+    // POI (Points d'intérêt) sur la carte
+    const mapPOI = [
+        {
+            id: 'garage',
+            name: 'Garage de Luxe',
+            description: 'Concessionnaire de voitures haut de gamme pour impressionner vos clients.',
+            icon: '🏎️',
+            x: 1000,
+            y: 950,
+            category: 'cars',
+            items: purchasableAssets.filter(a => a.category === 'cars')
+        },
+        {
+            id: 'museum',
+            name: 'Musée d\'Art Moderne',
+            description: 'Galerie d\'art pour investir dans des œuvres prestigieuses et blanchir votre argent.',
+            icon: '🎨',
+            x: 950,
+            y: 1000,
+            category: 'art',
+            items: purchasableAssets.filter(a => a.category === 'art')
+        },
+        {
+            id: 'jeweler',
+            name: 'Bijouterie de Luxe',
+            description: 'Boutique de bijoux précieux pour diversifier vos investissements.',
+            icon: '💎',
+            x: 1050,
+            y: 1050,
+            category: 'jewelry',
+            items: purchasableAssets.filter(a => a.category === 'jewelry')
+        }
     ];
 
     // Initialisation des propriétés
