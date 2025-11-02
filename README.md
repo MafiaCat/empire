@@ -13,6 +13,23 @@ Ouvrez simplement `index.html` dans votre navigateur pour commencer à jouer!
 - Statistiques en temps réel (cash, plants, stock, production)
 - Résumé de toutes vos propriétés
 
+### 🗺️ Carte interactive (NOUVEAU v2.1)
+- **Carte virtuelle de la ville**: Explorez une carte avec zoom/dézoom
+- **Positionnement géographique**: Les propriétés sont placées selon leur type
+  - Centre-ville: Propriétés urbaines et luxueuses
+  - Banlieue: Maisons et fermes
+  - Périphérie: Grandes exploitations agricoles
+- **Achat en un clic**: Cliquez sur une propriété pour l'acheter directement
+- **Indicateurs visuels**:
+  - 🔴 Rouge = Propriété disponible à l'achat
+  - 🟢 Vert = Propriété déjà possédée
+- **Contrôles**:
+  - Zoom: Boutons +/- ou molette de souris
+  - Déplacement: Glissez avec la souris
+  - Reset: Bouton pour revenir à la vue initiale
+- **Tooltips**: Survolez une propriété pour voir son nom, prix et bonus
+- **Décor urbain**: Routes, bâtiments et parcs pour l'immersion
+
 ### 🔔 Système de notifications
 - Notifications toast pour tous les événements importants
 - Feedback visuel pour chaque action
