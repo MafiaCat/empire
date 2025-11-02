@@ -455,59 +455,13 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
 .map-container {
     position: relative;
     width: 100%;
-    height: 700px;
+    height: 800px;
     background: #e5e3df;
     border-radius: 16px;
     overflow: hidden;
-    cursor: grab;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-.map-container:active {
-    cursor: grabbing;
-}
-
-.map-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2000px;
-    height: 2000px;
-    background: #e5e3df;
-}
-
-.map-controls {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    z-index: 100;
-}
-
-.map-controls button {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background: white;
-    border: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-    padding: 0;
-    transition: transform 0.2s;
-}
-
-.map-controls button:hover {
-    transform: scale(1.1);
-}
 
 .map-legend {
     position: absolute;
@@ -588,61 +542,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     height: 70px;
     font-size: 40px;
     border-width: 5px;
-}
-
-/* Éléments de la ville */
-.city-element {
-    position: absolute;
-    pointer-events: none;
-}
-
-.building {
-    background: #d1d5db;
-    border: 1px solid #9ca3af;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.road {
-    background: #ffffff;
-    border: 1px solid #fbbf24;
-}
-
-.road.highway {
-    background: #fef3c7;
-    border: 2px solid #f59e0b;
-}
-
-.park {
-    background: #86efac;
-    border: 1px solid #22c55e;
-}
-
-.forest {
-    background: #166534;
-    opacity: 0.7;
-}
-
-.water {
-    background: #93c5fd;
-    border: 1px solid #3b82f6;
-}
-
-.downtown {
-    background: rgba(156, 163, 175, 0.2);
-    border: 2px dashed #6b7280;
-}
-
-.zoom-level {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    background: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    font-size: 12px;
-    font-weight: bold;
-    z-index: 100;
 }
 
 /* Modal de propriété */
@@ -1081,16 +980,10 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         <div class="banner"></div>
         <div class="card">
             <h2>💎 Magasin - Carte interactive</h2>
-            <p class="muted">Explorez la ville et achetez des propriétés en cliquant sur la carte. Zoom avec la molette ou les boutons +/-. Déplacez-vous en glissant.</p>
+            <p class="muted">Explorez la ville avec Google Maps et achetez des propriétés en cliquant sur les marqueurs colorés. Utilisez les contrôles de la carte pour naviguer.</p>
         </div>
         <div class="card">
             <div class="map-container" id="mapContainer">
-                <div class="zoom-level">Zoom: <span id="zoomDisplay">100%</span></div>
-                <div class="map-controls">
-                    <button id="zoomIn" title="Zoom avant">+</button>
-                    <button id="zoomOut" title="Zoom arrière">−</button>
-                    <button id="resetMap" title="Réinitialiser la vue">⟲</button>
-                </div>
                 <div class="map-legend">
                     <div class="map-legend-item">
                         <div class="legend-dot available"></div>
@@ -1101,7 +994,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                         <span>Possédée</span>
                     </div>
                 </div>
-                <div id="mapContent" style="position: absolute; top: 0; left: 0; width: 2000px; height: 2000px; transform-origin: 0 0;"></div>
+                <div id="mapContent" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
             </div>
         </div>
         <div class="card">
@@ -2372,194 +2265,35 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     // CARTE INTERACTIVE
     // ========================================
 
-    const mapState = {
-        zoom: 1,
-        offsetX: 0,
-        offsetY: 0,
-        isDragging: false,
-        dragStartX: 0,
-        dragStartY: 0,
-        initialOffsetX: 0,
-        initialOffsetY: 0
-    };
-
-    function updateMapTransform() {
-        const mapContent = el('mapContent');
-        if (!mapContent) return;
-
-        // Appliquer le zoom et le déplacement
-        mapContent.style.transform = `translate(${mapState.offsetX}px, ${mapState.offsetY}px) scale(${mapState.zoom})`;
-
-        // Mettre à jour l'affichage du niveau de zoom
-        const zoomDisplay = el('zoomDisplay');
-        if (zoomDisplay) {
-            zoomDisplay.textContent = Math.round(mapState.zoom * 100) + '%';
-        }
-    }
-
     function initMap() {
         const mapContent = el('mapContent');
         const mapContainer = el('mapContainer');
 
         if (!mapContent || !mapContainer) return;
 
-        // Créer les éléments de décor de la ville
+        // Créer l'iframe Google Maps comme fond
         createCityElements(mapContent);
 
-        // Créer les marqueurs de propriétés
+        // Créer les marqueurs de propriétés superposés sur la carte
         createPropertyMarkers(mapContent);
-
-        // Événements de zoom
-        el('zoomIn').onclick = () => {
-            mapState.zoom = Math.min(mapState.zoom + 0.2, 3);
-            updateMapTransform();
-        };
-
-        el('zoomOut').onclick = () => {
-            mapState.zoom = Math.max(mapState.zoom - 0.2, 0.5);
-            updateMapTransform();
-        };
-
-        el('resetMap').onclick = () => {
-            mapState.zoom = 1;
-            mapState.offsetX = 0;
-            mapState.offsetY = 0;
-            updateMapTransform();
-        };
-
-        // Zoom avec la molette
-        mapContainer.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const delta = e.deltaY > 0 ? -0.1 : 0.1;
-            mapState.zoom = Math.max(0.5, Math.min(3, mapState.zoom + delta));
-            updateMapTransform();
-        });
-
-        // Déplacement avec drag
-        mapContainer.addEventListener('mousedown', (e) => {
-            if (e.target.closest('.property-marker')) return; // Ignore si on clique sur une propriété
-            mapState.isDragging = true;
-            mapState.dragStartX = e.clientX;
-            mapState.dragStartY = e.clientY;
-            mapState.initialOffsetX = mapState.offsetX;
-            mapState.initialOffsetY = mapState.offsetY;
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!mapState.isDragging) return;
-            const dx = e.clientX - mapState.dragStartX;
-            const dy = e.clientY - mapState.dragStartY;
-            mapState.offsetX = mapState.initialOffsetX + dx;
-            mapState.offsetY = mapState.initialOffsetY + dy;
-            updateMapTransform();
-        });
-
-        document.addEventListener('mouseup', () => {
-            mapState.isDragging = false;
-        });
     }
 
     function createCityElements(container) {
         container.innerHTML = ''; // Vider le contenu précédent
-    
-        // Zone centre-ville (gris clair)
-        const downtown = document.createElement('div');
-        downtown.className = 'city-element downtown';
-        downtown.style.left = '800px';
-        downtown.style.top = '800px';
-        downtown.style.width = '400px';
-        downtown.style.height = '400px';
-        container.appendChild(downtown);
-    
-        // Créer des routes principales (jaune, style Google Maps)
-        const roads = [
-            { x: 960, y: 0, width: 80, height: 2000, highway: true }, // Route verticale principale
-            { x: 0, y: 960, width: 2000, height: 80, highway: true }, // Route horizontale principale
-            { x: 600, y: 0, width: 40, height: 2000 }, // Route secondaire
-            { x: 1400, y: 0, width: 40, height: 2000 }, // Route secondaire
-            { x: 0, y: 600, width: 2000, height: 40 }, // Route secondaire
-            { x: 0, y: 1400, width: 2000, height: 40 }  // Route secondaire
-        ];
-    
-        roads.forEach(road => {
-            const roadEl = document.createElement('div');
-            roadEl.className = road.highway ? 'city-element road highway' : 'city-element road';
-            roadEl.style.left = road.x + 'px';
-            roadEl.style.top = road.y + 'px';
-            roadEl.style.width = road.width + 'px';
-            roadEl.style.height = road.height + 'px';
-            container.appendChild(roadEl);
-        });
-    
-        // Créer des bâtiments dans le centre-ville
-        const buildings = [
-            { x: 850, y: 850, w: 50, h: 80 },
-            { x: 950, y: 850, w: 60, h: 70 },
-            { x: 1050, y: 850, w: 55, h: 90 },
-            { x: 1150, y: 850, w: 45, h: 75 },
-            { x: 850, y: 1050, w: 50, h: 60 },
-            { x: 950, y: 1050, w: 60, h: 55 },
-            { x: 1050, y: 1050, w: 55, h: 70 },
-            { x: 1150, y: 1050, w: 45, h: 65 },
-        ];
-    
-        buildings.forEach(building => {
-            const buildingEl = document.createElement('div');
-            buildingEl.className = 'city-element building';
-            buildingEl.style.left = building.x + 'px';
-            buildingEl.style.top = building.y + 'px';
-            buildingEl.style.width = building.w + 'px';
-            buildingEl.style.height = building.h + 'px';
-            container.appendChild(buildingEl);
-        });
-    
-        // Créer des parcs (vert)
-        const parks = [
-            { x: 200, y: 200, size: 150 },
-            { x: 1650, y: 200, size: 130 },
-            { x: 200, y: 1650, size: 140 },
-            { x: 700, y: 700, size: 80 },
-            { x: 1220, y: 1220, size: 90 }
-        ];
-    
-        parks.forEach(park => {
-            const parkEl = document.createElement('div');
-            parkEl.className = 'city-element park';
-            parkEl.style.left = park.x + 'px';
-            parkEl.style.top = park.y + 'px';
-            parkEl.style.width = park.size + 'px';
-            parkEl.style.height = park.size + 'px';
-            parkEl.style.borderRadius = '8px';
-            container.appendChild(parkEl);
-        });
-    
-        // Créer des forêts pour les fermes (vert foncé)
-        const forests = [
-            { x: 1500, y: 150, size: 250 }, // Forêt nord-est (pour farm-small)
-            { x: 50, y: 1550, size: 300 }, // Forêt sud-ouest (pour farm-large)
-            { x: 1700, y: 1700, size: 250 } // Forêt sud-est (pour huge-farm)
-        ];
-    
-        forests.forEach(forest => {
-            const forestEl = document.createElement('div');
-            forestEl.className = 'city-element forest';
-            forestEl.style.left = forest.x + 'px';
-            forestEl.style.top = forest.y + 'px';
-            forestEl.style.width = forest.size + 'px';
-            forestEl.style.height = forest.size + 'px';
-            forestEl.style.borderRadius = '50%';
-            container.appendChild(forestEl);
-        });
-    
-        // Créer une rivière (bleu)
-        const waterEl = document.createElement('div');
-        waterEl.className = 'city-element water';
-        waterEl.style.left = '400px';
-        waterEl.style.top = '0';
-        waterEl.style.width = '80px';
-        waterEl.style.height = '800px';
-        waterEl.style.borderRadius = '40px';
-        container.appendChild(waterEl);
+
+        // Créer l'iframe Google Maps comme fond de carte
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://www.google.com/maps/d/embed?mid=18irSSr6CplDMijkOx5oX--MiWK698c0&ehbc=2E312F';
+        iframe.style.position = 'absolute';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.style.borderRadius = '16px';
+        iframe.style.zIndex = '1';
+        iframe.allow = 'geolocation';
+        container.appendChild(iframe);
     }
     
     function createPropertyMarkers(container) {
