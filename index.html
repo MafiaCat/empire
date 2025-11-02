@@ -450,6 +450,196 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     width: 100%;
     margin-top: 8px;
 }
+
+/* Carte interactive */
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 700px;
+    background: linear-gradient(135deg, #87CEEB 0%, #98D8E8 50%, #90EE90 100%);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: grab;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.map-container:active {
+    cursor: grabbing;
+}
+
+.map-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.map-controls {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+}
+
+.map-controls button {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    transition: transform 0.2s;
+}
+
+.map-controls button:hover {
+    transform: scale(1.1);
+}
+
+.map-legend {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 10;
+}
+
+.map-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+    font-size: 12px;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-dot.available {
+    background: #ef4444;
+    border: 2px solid #dc2626;
+}
+
+.legend-dot.owned {
+    background: #10b981;
+    border: 2px solid #059669;
+}
+
+.property-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 5;
+}
+
+.property-marker:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    z-index: 6;
+}
+
+.property-icon {
+    font-size: 32px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    background: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #dc2626;
+}
+
+.property-marker.owned .property-icon {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+.property-tooltip {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 7;
+}
+
+.property-marker:hover .property-tooltip {
+    opacity: 1;
+}
+
+.tooltip-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.tooltip-price {
+    color: var(--primary);
+    font-size: 14px;
+}
+
+.tooltip-status {
+    color: var(--accent);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.city-element {
+    position: absolute;
+    pointer-events: none;
+}
+
+.building {
+    background: #94a3b8;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.road {
+    background: #475569;
+}
+
+.park {
+    background: #86efac;
+    border-radius: 8px;
+}
+
+.zoom-level {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 10;
+}
 </style>
 </head>
 <body>
@@ -461,6 +651,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         <button class="tab active" data-tab="plantation">🌱 Plantation</button>
         <button class="tab" data-tab="vente">📈 Vente</button>
         <button class="tab" data-tab="dealers">🤝 Dealers</button>
+        <button class="tab" data-tab="map">🗺️ Carte</button>
         <button class="tab" data-tab="assets">💎 Magasin</button>
         <button class="tab" data-tab="crypto">₿ Crypto</button>
         <button class="tab" data-tab="profil">👤 Profil</button>
@@ -651,6 +842,35 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         </div>
     </section>
 
+    <section id="map" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>🗺️ Carte de la ville</h2>
+            <p class="muted">Explorez la ville et achetez des propriétés. Zoom avec les boutons ou la molette. Déplacez-vous en glissant.</p>
+        </div>
+        <div class="card">
+            <div class="map-container" id="mapContainer">
+                <div class="zoom-level">Zoom: <span id="zoomDisplay">100%</span></div>
+                <div class="map-controls">
+                    <button id="zoomIn" title="Zoom avant">+</button>
+                    <button id="zoomOut" title="Zoom arrière">−</button>
+                    <button id="resetMap" title="Réinitialiser la vue">⟲</button>
+                </div>
+                <div class="map-legend">
+                    <div class="map-legend-item">
+                        <div class="legend-dot available"></div>
+                        <span>Disponible</span>
+                    </div>
+                    <div class="map-legend-item">
+                        <div class="legend-dot owned"></div>
+                        <span>Possédée</span>
+                    </div>
+                </div>
+                <div id="mapContent" style="position: absolute; width: 100%; height: 100%; transform-origin: center center;"></div>
+            </div>
+        </div>
+    </section>
+
     <section id="assets" class="panel">
         <div class="banner"></div>
         <div class="card">
@@ -828,19 +1048,19 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     // Prix du marché pour la vente
     let marketPrice = 1 + Math.random();
 
-    // Définition des propriétés
+    // Définition des propriétés avec positions sur la carte (centre-ville = 50%, banlieue = 10-90%)
     const purchasableAssets = [
-        { id: 'local', type: 'plantLimit', name: 'Local Abandonné', bonus: 500, price: 5000, icon: '🏪' },
-        { id: 'small-apt', type: 'plantLimit', name: 'Petit Appartement', bonus: 1000, price: 25000, icon: '🏙️' },
-        { id: 'house', type: 'plantLimit', name: 'Maison avec Jardin', bonus: 5000, price: 100000, icon: '🏡' },
-        { id: 'farm-small', type: 'plantLimit', name: 'Corps de Ferme Caché', bonus: 10000, price: 500000, icon: '🌲' },
-        { id: 'farm-large', type: 'plantLimit', name: 'Grosse Ferme Cachée', bonus: 50000, price: 2000000, icon: '🌳' },
-        { id: 'huge-farm', type: 'plantLimit', name: 'Exploitation Géante', bonus: 100000, price: 10000000, icon: '🏭' },
-        { id: 'lamborghini', type: 'deliverySpeed', name: 'Lamborghini Huracán', bonus: 0.1, price: 250000, icon: '🏎️' },
-        { id: 'rollsroyce', type: 'credibility', name: 'Rolls-Royce Phantom', bonus: 0.15, price: 450000, icon: '🚗' },
-        { id: 'picasso', type: 'avoidInvestigation', name: 'Tableau de Picasso', bonus: 0.05, price: 1000000, icon: '🎨' },
-        { id: 'monet', type: 'salesBonus', name: 'Tableau de Monet', bonus: 0.02, price: 800000, icon: '🖼️' },
-        { id: 'diamond-ring', type: 'salesBonus', name: 'Bague en diamant', bonus: 0.05, price: 500000, icon: '💍' },
+        { id: 'local', type: 'plantLimit', name: 'Local Abandonné', bonus: 500, price: 5000, icon: '🏪', x: 45, y: 55 },
+        { id: 'small-apt', type: 'plantLimit', name: 'Petit Appartement', bonus: 1000, price: 25000, icon: '🏙️', x: 55, y: 45 },
+        { id: 'house', type: 'plantLimit', name: 'Maison avec Jardin', bonus: 5000, price: 100000, icon: '🏡', x: 65, y: 35 },
+        { id: 'farm-small', type: 'plantLimit', name: 'Corps de Ferme Caché', bonus: 10000, price: 500000, icon: '🌲', x: 75, y: 25 },
+        { id: 'farm-large', type: 'plantLimit', name: 'Grosse Ferme Cachée', bonus: 50000, price: 2000000, icon: '🌳', x: 15, y: 75 },
+        { id: 'huge-farm', type: 'plantLimit', name: 'Exploitation Géante', bonus: 100000, price: 10000000, icon: '🏭', x: 85, y: 85 },
+        { id: 'lamborghini', type: 'deliverySpeed', name: 'Lamborghini Huracán', bonus: 0.1, price: 250000, icon: '🏎️', x: 50, y: 48 },
+        { id: 'rollsroyce', type: 'credibility', name: 'Rolls-Royce Phantom', bonus: 0.15, price: 450000, icon: '🚗', x: 52, y: 52 },
+        { id: 'picasso', type: 'avoidInvestigation', name: 'Tableau de Picasso', bonus: 0.05, price: 1000000, icon: '🎨', x: 48, y: 50 },
+        { id: 'monet', type: 'salesBonus', name: 'Tableau de Monet', bonus: 0.02, price: 800000, icon: '🖼️', x: 52, y: 48 },
+        { id: 'diamond-ring', type: 'salesBonus', name: 'Bague en diamant', bonus: 0.05, price: 500000, icon: '💍', x: 48, y: 52 },
     ];
 
     // Initialisation des propriétés
@@ -1715,6 +1935,268 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         localStorage.setItem('illicit-empire', JSON.stringify(state));
     }
 
+    // ========================================
+    // CARTE INTERACTIVE
+    // ========================================
+
+    const mapState = {
+        zoom: 1,
+        offsetX: 0,
+        offsetY: 0,
+        isDragging: false,
+        dragStartX: 0,
+        dragStartY: 0,
+        initialOffsetX: 0,
+        initialOffsetY: 0
+    };
+
+    function initMap() {
+        const mapContent = el('mapContent');
+        const mapContainer = el('mapContainer');
+
+        if (!mapContent || !mapContainer) return;
+
+        // Créer les éléments de décor de la ville
+        createCityElements(mapContent);
+
+        // Créer les marqueurs de propriétés
+        createPropertyMarkers(mapContent);
+
+        // Événements de zoom
+        el('zoomIn').onclick = () => {
+            mapState.zoom = Math.min(mapState.zoom + 0.2, 3);
+            updateMapTransform();
+        };
+
+        el('zoomOut').onclick = () => {
+            mapState.zoom = Math.max(mapState.zoom - 0.2, 0.5);
+            updateMapTransform();
+        };
+
+        el('resetMap').onclick = () => {
+            mapState.zoom = 1;
+            mapState.offsetX = 0;
+            mapState.offsetY = 0;
+            updateMapTransform();
+        };
+
+        // Zoom avec la molette
+        mapContainer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? -0.1 : 0.1;
+            mapState.zoom = Math.max(0.5, Math.min(3, mapState.zoom + delta));
+            updateMapTransform();
+        });
+
+        // Déplacement avec drag
+        mapContainer.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.property-marker')) return; // Ignore si on clique sur une propriété
+            mapState.isDragging = true;
+            mapState.dragStartX = e.clientX;
+            mapState.dragStartY = e.clientY;
+            mapState.initialOffsetX = mapState.offsetX;
+            mapState.initialOffsetY = mapState.offsetY;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!mapState.isDragging) return;
+            const dx = e.clientX - mapState.dragStartX;
+            const dy = e.clientY - mapState.dragStartY;
+            mapState.offsetX = mapState.initialOffsetX + dx;
+            mapState.offsetY = mapState.initialOffsetY + dy;
+            updateMapTransform();
+        });
+
+        document.addEventListener('mouseup', () => {
+            mapState.isDragging = false;
+        });
+    }
+
+    function createCityElements(container) {
+        container.innerHTML = ''; // Vider le contenu précédent
+
+        // Créer des routes
+        const roads = [
+            { x: 48, y: 0, width: 4, height: 100 }, // Route verticale
+            { x: 0, y: 48, width: 100, height: 4 }, // Route horizontale
+            { x: 25, y: 0, width: 2, height: 100 }, // Route secondaire
+            { x: 75, y: 0, width: 2, height: 100 }, // Route secondaire
+            { x: 0, y: 25, width: 100, height: 2 }, // Route secondaire
+            { x: 0, y: 75, width: 100, height: 2 }  // Route secondaire
+        ];
+
+        roads.forEach(road => {
+            const roadEl = document.createElement('div');
+            roadEl.className = 'city-element road';
+            roadEl.style.left = road.x + '%';
+            roadEl.style.top = road.y + '%';
+            roadEl.style.width = road.width + '%';
+            roadEl.style.height = road.height + '%';
+            container.appendChild(roadEl);
+        });
+
+        // Créer des bâtiments de décor
+        const buildings = [
+            { x: 40, y: 40, size: 6 },
+            { x: 55, y: 40, size: 5 },
+            { x: 40, y: 55, size: 4 },
+            { x: 60, y: 55, size: 7 },
+            { x: 30, y: 30, size: 4 },
+            { x: 70, y: 30, size: 5 },
+            { x: 30, y: 70, size: 6 },
+            { x: 70, y: 70, size: 4 },
+            { x: 20, y: 40, size: 3 },
+            { x: 80, y: 40, size: 3 },
+            { x: 40, y: 20, size: 3 },
+            { x: 40, y: 80, size: 3 }
+        ];
+
+        buildings.forEach(building => {
+            const buildingEl = document.createElement('div');
+            buildingEl.className = 'city-element building';
+            buildingEl.style.left = building.x + '%';
+            buildingEl.style.top = building.y + '%';
+            buildingEl.style.width = building.size + '%';
+            buildingEl.style.height = building.size + '%';
+            container.appendChild(buildingEl);
+        });
+
+        // Créer des parcs
+        const parks = [
+            { x: 10, y: 10, size: 8 },
+            { x: 85, y: 10, size: 8 },
+            { x: 10, y: 85, size: 8 },
+            { x: 60, y: 65, size: 6 }
+        ];
+
+        parks.forEach(park => {
+            const parkEl = document.createElement('div');
+            parkEl.className = 'city-element park';
+            parkEl.style.left = park.x + '%';
+            parkEl.style.top = park.y + '%';
+            parkEl.style.width = park.size + '%';
+            parkEl.style.height = park.size + '%';
+            container.appendChild(parkEl);
+        });
+    }
+
+    function createPropertyMarkers(container) {
+        // Supprimer les anciens marqueurs
+        container.querySelectorAll('.property-marker').forEach(m => m.remove());
+
+        // Créer les marqueurs pour toutes les propriétés
+        purchasableAssets.forEach(asset => {
+            const marker = document.createElement('div');
+            marker.className = 'property-marker';
+            marker.dataset.assetId = asset.id;
+
+            const isOwned = state.assets[asset.id] && state.assets[asset.id].owned;
+            if (isOwned) {
+                marker.classList.add('owned');
+            }
+
+            marker.style.left = asset.x + '%';
+            marker.style.top = asset.y + '%';
+
+            let bonusText = '';
+            if (asset.type === 'plantLimit') {
+                bonusText = `+${asset.bonus} plants`;
+            } else if (asset.type === 'deliverySpeed') {
+                bonusText = `+${asset.bonus * 100}% vitesse`;
+            } else if (asset.type === 'credibility') {
+                bonusText = `+${asset.bonus * 100}% crédibilité`;
+            } else if (asset.type === 'avoidInvestigation') {
+                bonusText = `+${asset.bonus * 100}% discrétion`;
+            } else if (asset.type === 'salesBonus') {
+                bonusText = `+${asset.bonus * 100}% vente`;
+            }
+
+            marker.innerHTML = `
+                <div class="property-icon">${asset.icon}</div>
+                <div class="property-tooltip">
+                    <div class="tooltip-name">${asset.name}</div>
+                    <div class="tooltip-price">${fmt(asset.price)}</div>
+                    <div>${bonusText}</div>
+                    <div class="tooltip-status">${isOwned ? '✓ Possédée' : 'Cliquez pour acheter'}</div>
+                </div>
+            `;
+
+            // Événement de clic pour acheter
+            if (!isOwned) {
+                marker.onclick = () => {
+                    handleMapPropertyPurchase(asset.id);
+                };
+            }
+
+            container.appendChild(marker);
+        });
+    }
+
+    function handleMapPropertyPurchase(assetId) {
+        const asset = purchasableAssets.find(a => a.id === assetId);
+
+        if (state.cash >= asset.price && !state.assets[assetId]) {
+            state.cash -= asset.price;
+
+            if (asset.type === 'plantLimit') {
+                state.assets[assetId] = {
+                    owned: true,
+                    plants: 0,
+                    limit: asset.bonus,
+                    botanists: 0,
+                    lamps: 0,
+                    growing: 0,
+                    mature: 0
+                };
+                state.propertyProgress[assetId] = {
+                    planting: 0,
+                    growing: 0,
+                    plantingActive: false,
+                    growingActive: false,
+                    plantingStart: 0,
+                    growingStart: 0
+                };
+                state.plantingQueues[assetId] = 0;
+            } else {
+                state.assets[assetId] = { owned: true };
+            }
+
+            if (asset.type === 'passiveIncome') {
+                state.passiveIncome += asset.bonus;
+            }
+
+            showNotification('✅ Propriété achetée!', `Vous avez acheté: ${asset.name}`, 'success');
+
+            // Mettre à jour la carte
+            updateMapMarkers();
+            updateUI();
+        } else if (state.assets[assetId]) {
+            showNotification('⚠️ Erreur', 'Vous possédez déjà cette propriété!', 'warning');
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    }
+
+    function updateMapMarkers() {
+        const mapContent = el('mapContent');
+        if (mapContent) {
+            createPropertyMarkers(mapContent);
+        }
+    }
+
+    function updateMapTransform() {
+        const mapContent = el('mapContent');
+        const zoomDisplay = el('zoomDisplay');
+
+        if (mapContent) {
+            mapContent.style.transform = `translate(${mapState.offsetX}px, ${mapState.offsetY}px) scale(${mapState.zoom})`;
+        }
+
+        if (zoomDisplay) {
+            zoomDisplay.textContent = Math.round(mapState.zoom * 100) + '%';
+        }
+    }
+
     // Tabs
     const tabs = document.querySelectorAll('.tab');
     tabs.forEach(t => t.onclick = () => {
@@ -1725,6 +2207,13 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         if (t.dataset.tab === 'crypto') {
             // Attendre un peu que le canvas soit visible
             setTimeout(() => updateCharts(), 100);
+        }
+        if (t.dataset.tab === 'map') {
+            // Initialiser ou mettre à jour la carte
+            setTimeout(() => {
+                initMap();
+                updateMapMarkers();
+            }, 100);
         }
     });
 
@@ -1739,6 +2228,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     // Initialisation
     updateUI();
     updateCharts();
+    initMap();
 })();
 </script>
 </body>
