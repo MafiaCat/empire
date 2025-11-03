@@ -535,6 +535,17 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     min-height: 280px;
     padding: 0;
     display: block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.property-marker.expanded.bottom-position .property-bubble {
+    bottom: 70px;
+}
+
+.property-marker.expanded.top-position .property-bubble {
+    top: 70px;
 }
 
 .property-icon {
@@ -1309,6 +1320,123 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         </div>
     </section>
 
+    <section id="stocks" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>📈 Bourse</h2>
+            <p class="muted">Investissez dans des actions d'entreprises. Les cours fluctuent en fonction du marché.</p>
+            <div class="grid two">
+                <div class="coin">
+                    <div>
+                        <h4>Apple Inc.</h4>
+                        <span class="price" id="aaplPrice">$0</span>
+                        <span class="change pos" id="aaplChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="aaplSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="aaplBuyAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="primary buy-stock" data-stock="aapl">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="aaplSellAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="danger sell-stock" data-stock="aapl">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="coin">
+                    <div>
+                        <h4>Tesla Inc.</h4>
+                        <span class="price" id="tslaPrice">$0</span>
+                        <span class="change pos" id="tslaChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="tslaSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="tslaBuyAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="primary buy-stock" data-stock="tsla">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="tslaSellAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="danger sell-stock" data-stock="tsla">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="coin">
+                    <div>
+                        <h4>Amazon.com</h4>
+                        <span class="price" id="amznPrice">$0</span>
+                        <span class="change pos" id="amznChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="amznSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="amznBuyAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="primary buy-stock" data-stock="amzn">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="amznSellAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="danger sell-stock" data-stock="amzn">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="coin">
+                    <div>
+                        <h4>Microsoft</h4>
+                        <span class="price" id="msftPrice">$0</span>
+                        <span class="change pos" id="msftChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="msftSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="msftBuyAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="primary buy-stock" data-stock="msft">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="msftSellAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="danger sell-stock" data-stock="msft">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>💼 Votre Portefeuille Actions</h2>
+            <p>Vos actions et leur valeur actuelle.</p>
+            <div class="icon-row">
+                <span class="crypto-icon">🍎</span>
+                <div>
+                    <div>Apple: <strong id="aaplOwned">0</strong> actions</div>
+                    <div class="muted">Valeur: <strong id="aaplValue">$0</strong></div>
+                </div>
+            </div>
+            <div class="icon-row">
+                <span class="crypto-icon">⚡</span>
+                <div>
+                    <div>Tesla: <strong id="tslaOwned">0</strong> actions</div>
+                    <div class="muted">Valeur: <strong id="tslaValue">$0</strong></div>
+                </div>
+            </div>
+            <div class="icon-row">
+                <span class="crypto-icon">📦</span>
+                <div>
+                    <div>Amazon: <strong id="amznOwned">0</strong> actions</div>
+                    <div class="muted">Valeur: <strong id="amznValue">$0</strong></div>
+                </div>
+            </div>
+            <div class="icon-row">
+                <span class="crypto-icon">🪟</span>
+                <div>
+                    <div>Microsoft: <strong id="msftOwned">0</strong> actions</div>
+                    <div class="muted">Valeur: <strong id="msftValue">$0</strong></div>
+                </div>
+            </div>
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+                <strong>Valeur totale du portefeuille: <span id="totalStockValue">$0</span></strong>
+            </div>
+        </div>
+    </section>
+
     <section id="profil" class="panel">
         <div class="banner"></div>
         <div class="card">
@@ -1364,6 +1492,12 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             eth: 0,
             doge: 0
         },
+        stocks: savedState.stocks || {
+            aapl: 0,
+            tsla: 0,
+            amzn: 0,
+            msft: 0
+        },
         jobCooldownEnd: savedState.jobCooldownEnd || 0,
         propertyProgress: savedState.propertyProgress || {},
         plantingQueues: savedState.plantingQueues || {} // NOUVEAU: Files d'attente pour plantation
@@ -1379,6 +1513,20 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         btc: Array(60).fill(10000),
         eth: Array(60).fill(1000),
         doge: Array(60).fill(0.1)
+    };
+
+    // État des actions (Bourse)
+    const stockPrices = JSON.parse(localStorage.getItem('stock-prices')) || {
+        aapl: 150,
+        tsla: 200,
+        amzn: 120,
+        msft: 300
+    };
+    const stockHistory = JSON.parse(localStorage.getItem('stock-history')) || {
+        aapl: Array(60).fill(150),
+        tsla: Array(60).fill(200),
+        amzn: Array(60).fill(120),
+        msft: Array(60).fill(300)
     };
 
     // Prix du marché pour la vente
@@ -2051,6 +2199,27 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                                   (state.crypto.doge * cryptoPrices.doge);
         el('totalCryptoValue').textContent = fmtCash(totalCryptoValue);
 
+        // Prix et possessions actions (Bourse)
+        el('aaplPrice').textContent = fmtCash(stockPrices.aapl);
+        el('tslaPrice').textContent = fmtCash(stockPrices.tsla);
+        el('amznPrice').textContent = fmtCash(stockPrices.amzn);
+        el('msftPrice').textContent = fmtCash(stockPrices.msft);
+        el('aaplOwned').textContent = state.stocks.aapl;
+        el('tslaOwned').textContent = state.stocks.tsla;
+        el('amznOwned').textContent = state.stocks.amzn;
+        el('msftOwned').textContent = state.stocks.msft;
+
+        // Valeurs des actions
+        el('aaplValue').textContent = fmtCash(state.stocks.aapl * stockPrices.aapl);
+        el('tslaValue').textContent = fmtCash(state.stocks.tsla * stockPrices.tsla);
+        el('amznValue').textContent = fmtCash(state.stocks.amzn * stockPrices.amzn);
+        el('msftValue').textContent = fmtCash(state.stocks.msft * stockPrices.msft);
+        const totalStockValue = (state.stocks.aapl * stockPrices.aapl) +
+                                (state.stocks.tsla * stockPrices.tsla) +
+                                (state.stocks.amzn * stockPrices.amzn) +
+                                (state.stocks.msft * stockPrices.msft);
+        el('totalStockValue').textContent = fmtCash(totalStockValue);
+
         updateProgressBars();
         updateJobUI();
     }
@@ -2237,6 +2406,28 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         updateCharts();
     }
 
+    function updateStockPrices() {
+        const volatility = 0.015;
+        ['aapl', 'tsla', 'amzn', 'msft'].forEach(stock => {
+            let change = (Math.random() - 0.5) * stockPrices[stock] * volatility;
+            stockPrices[stock] += change;
+            if (stockPrices[stock] <= 1) stockPrices[stock] = 1;
+
+            const changeEl = el(stock + 'Change');
+            const changePercent = (change / stockPrices[stock]) * 100;
+            changeEl.textContent = changePercent.toFixed(2) + '%';
+            changeEl.className = 'change ' + (change > 0 ? 'pos' : 'neg');
+
+            stockHistory[stock].push(stockPrices[stock]);
+            if (stockHistory[stock].length > 60) {
+                stockHistory[stock].shift();
+            }
+        });
+        localStorage.setItem('stock-prices', JSON.stringify(stockPrices));
+        localStorage.setItem('stock-history', JSON.stringify(stockHistory));
+        updateStockCharts();
+    }
+
     // FIX CRITIQUE: Correction du bug dans updateCharts
     function updateCharts() {
         const chartOptions = {
@@ -2281,6 +2472,52 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         createChart('btcSpark', cryptoHistory.btc, '#f7931a');
         createChart('ethSpark', cryptoHistory.eth, '#627eea');
         createChart('dogeSpark', cryptoHistory.doge, '#c2a633');
+    }
+
+    function updateStockCharts() {
+        const chartOptions = {
+            animation: false,
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: { display: false },
+            tooltips: { enabled: false },
+            scales: {
+                xAxes: [{ display: false }],
+                yAxes: [{ display: false }]
+            },
+            elements: { point: { radius: 0 } }
+        };
+
+        const createChart = (id, data, color) => {
+            const canvas = el(id);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+
+            if (chartInstances[id]) {
+                chartInstances[id].destroy();
+            }
+
+            chartInstances[id] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map((v, i) => i),
+                    datasets: [{
+                        data: data,
+                        borderColor: color,
+                        backgroundColor: color + '33',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: chartOptions
+            });
+        };
+
+        createChart('aaplSpark', stockHistory.aapl, '#555555');
+        createChart('tslaSpark', stockHistory.tsla, '#cc0000');
+        createChart('amznSpark', stockHistory.amzn, '#ff9900');
+        createChart('msftSpark', stockHistory.msft, '#00a4ef');
     }
 
     function showSeedGainAnimation(amount, buttonId) {
@@ -2427,6 +2664,52 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                 updateUI();
             } else {
                 showNotification('❌ Erreur', "Pas assez de crypto à vendre!", 'error');
+            }
+        };
+    });
+
+    // Gestion des actions (Bourse)
+    document.querySelectorAll('.buy-stock').forEach(button => {
+        button.onclick = () => {
+            const stock = button.dataset.stock;
+            const price = stockPrices[stock];
+            const qtyInput = el(stock + 'BuyAmount');
+            const qty = parseInt(qtyInput.value) || 0;
+
+            if (qty <= 0) {
+                showNotification('⚠️ Attention', 'Veuillez entrer une quantité valide.', 'warning');
+                return;
+            }
+
+            const totalCost = qty * price;
+            if (state.cash >= totalCost) {
+                state.cash -= totalCost;
+                state.stocks[stock] += qty;
+                qtyInput.value = '';
+                showNotification('✅ Achat action!', `Acheté ${qty} ${stock.toUpperCase()} pour ${fmtCash(totalCost)}`, 'success');
+                updateUI();
+            } else {
+                showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+            }
+        };
+    });
+
+    document.querySelectorAll('.sell-stock').forEach(button => {
+        button.onclick = () => {
+            const stock = button.dataset.stock;
+            const qtyInput = el(stock + 'SellAmount');
+            const qty = parseInt(qtyInput.value) || 0;
+
+            if (state.stocks[stock] >= qty && qty > 0) {
+                const price = stockPrices[stock];
+                const revenue = qty * price;
+                state.cash += revenue;
+                state.stocks[stock] -= qty;
+                qtyInput.value = '';
+                showNotification('💰 Vente action!', `Vendu ${qty} ${stock.toUpperCase()} pour ${fmtCash(revenue)}`, 'success');
+                updateUI();
+            } else {
+                showNotification('❌ Erreur', "Pas assez d'actions à vendre!", 'error');
             }
         };
     });
@@ -2638,11 +2921,30 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     function toggleBubble(marker) {
         // Fermer toutes les autres bulles
         document.querySelectorAll('.property-marker.expanded').forEach(m => {
-            if (m !== marker) m.classList.remove('expanded');
+            if (m !== marker) {
+                m.classList.remove('expanded');
+                m.classList.remove('bottom-position');
+                m.classList.remove('top-position');
+            }
         });
 
         // Toggle cette bulle
         marker.classList.toggle('expanded');
+
+        // Déterminer la position de la bulle pour éviter qu'elle sorte de l'écran
+        if (marker.classList.contains('expanded')) {
+            const markerY = parseFloat(marker.style.top);
+
+            // Si la bulle est en bas de l'écran (> 70%), afficher vers le haut
+            if (markerY > 70) {
+                marker.classList.add('bottom-position');
+            } else {
+                marker.classList.add('top-position');
+            }
+        } else {
+            marker.classList.remove('bottom-position');
+            marker.classList.remove('top-position');
+        }
     }
 
     function closeBubble(id) {
@@ -2656,8 +2958,8 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         const asset = purchasableAssets.find(a => a.id === assetId);
         if (!asset) return;
 
-        if (state.money >= asset.price) {
-            state.money -= asset.price;
+        if (state.cash >= asset.price) {
+            state.cash -= asset.price;
 
             if (!state.assets[assetId]) {
                 state.assets[assetId] = { owned: false, level: 0 };
@@ -2862,6 +3164,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     // Timers et initialisation
     setInterval(saveGame, 10000); // Sauvegarde toutes les 10 secondes
     setInterval(updateCryptoPrices, 5000); // Prix crypto toutes les 5 secondes
+    setInterval(updateStockPrices, 5000); // Prix actions toutes les 5 secondes
     setInterval(updateJobUI, 1000); // Cooldown job chaque seconde
     setInterval(gameLoop, 100); // Game loop 10x par seconde
     setInterval(updateProgressBars, 100); // Barres de progression 10x par seconde
@@ -2870,6 +3173,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     // Initialisation
     updateUI();
     updateCharts();
+    updateStockCharts();
     initMap();
     initModalEvents();
 })();
