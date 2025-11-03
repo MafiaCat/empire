@@ -979,8 +979,8 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     <section id="assets" class="panel">
         <div class="banner"></div>
         <div class="card">
-            <h2>💎 Magasin - Carte interactive</h2>
-            <p class="muted">Explorez la ville avec Google Maps et achetez des propriétés en cliquant sur les marqueurs colorés. Utilisez les contrôles de la carte pour naviguer.</p>
+            <h2>💎 Magasin - Carte de la ville</h2>
+            <p class="muted">Explorez la ville et achetez des propriétés en cliquant sur les marqueurs colorés sur la carte.</p>
         </div>
         <div class="card">
             <div class="map-container" id="mapContainer">
@@ -2281,19 +2281,19 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     function createCityElements(container) {
         container.innerHTML = ''; // Vider le contenu précédent
 
-        // Créer l'iframe Google Maps comme fond de carte
-        const iframe = document.createElement('iframe');
-        iframe.src = 'https://www.google.com/maps/d/embed?mid=18irSSr6CplDMijkOx5oX--MiWK698c0&ehbc=2E312F';
-        iframe.style.position = 'absolute';
-        iframe.style.top = '0';
-        iframe.style.left = '0';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
-        iframe.style.borderRadius = '16px';
-        iframe.style.zIndex = '1';
-        iframe.allow = 'geolocation';
-        container.appendChild(iframe);
+        // Créer l'image de la carte Google Maps comme fond
+        const mapImage = document.createElement('img');
+        mapImage.src = 'https://image.noelshack.com/fichiers/2025/45/1/1762159683-capture-d-cran-2025-11-02-19-06-10.png';
+        mapImage.alt = 'Carte de la ville';
+        mapImage.style.position = 'absolute';
+        mapImage.style.top = '0';
+        mapImage.style.left = '0';
+        mapImage.style.width = '100%';
+        mapImage.style.height = '100%';
+        mapImage.style.objectFit = 'cover';
+        mapImage.style.borderRadius = '16px';
+        mapImage.style.zIndex = '1';
+        container.appendChild(mapImage);
     }
     
     function createPropertyMarkers(container) {
