@@ -502,7 +502,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     position: absolute;
     transform: translate(-50%, -50%);
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     z-index: 50;
 }
 
@@ -510,26 +510,42 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     z-index: 60;
 }
 
-.property-marker.active {
-    z-index: 70;
+.property-marker.expanded {
+    z-index: 100;
+}
+
+.property-bubble {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    min-width: 60px;
+}
+
+.property-marker.expanded .property-bubble {
+    padding: 16px;
+    min-width: 280px;
+    max-width: 320px;
 }
 
 .property-icon {
     font-size: 36px;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-    background: white;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 4px solid #dc2626;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fee;
+    border: 3px solid #dc2626;
     transition: all 0.3s;
+    margin: 0 auto;
 }
 
 .property-marker:hover .property-icon {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 .property-marker.owned .property-icon {
@@ -538,11 +554,79 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
 }
 
 .property-marker.poi .property-icon {
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     font-size: 40px;
-    border-width: 5px;
+    border-width: 4px;
 }
+
+.property-bubble-content {
+    display: none;
+    margin-top: 12px;
+    text-align: left;
+}
+
+.property-marker.expanded .property-bubble-content {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+.property-bubble-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 6px;
+}
+
+.property-bubble-desc {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+.property-bubble-price {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.property-bubble-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.property-bubble-actions button {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.property-bubble-actions button.primary {
+    background: var(--primary);
+    color: white;
+}
+
+.property-bubble-actions button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.property-bubble-actions button.secondary {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.property-bubble-actions button.secondary:hover {
+    background: #e5e7eb;
+}
+
 
 /* Modal de propriété */
 .property-modal {
@@ -1189,8 +1273,8 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             bonus: 500,
             price: 5000,
             icon: '🏪',
-            x: 900,
-            y: 1100
+            x: 850,
+            y: 1150
         },
         {
             id: 'small-apt',
@@ -1200,8 +1284,8 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             bonus: 1000,
             price: 25000,
             icon: '🏙️',
-            x: 1100,
-            y: 900
+            x: 1150,
+            y: 850
         },
         {
             id: 'house',
@@ -1211,8 +1295,8 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             bonus: 5000,
             price: 100000,
             icon: '🏡',
-            x: 1400,
-            y: 600
+            x: 1500,
+            y: 1000
         },
         {
             id: 'farm-small',
@@ -1222,8 +1306,8 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             bonus: 10000,
             price: 500000,
             icon: '🌲',
-            x: 1600,
-            y: 300
+            x: 1650,
+            y: 400
         },
         {
             id: 'farm-large',
@@ -1233,8 +1317,8 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             bonus: 50000,
             price: 2000000,
             icon: '🌳',
-            x: 200,
-            y: 1700
+            x: 350,
+            y: 1650
         },
         {
             id: 'huge-farm',
@@ -1244,7 +1328,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             bonus: 100000,
             price: 10000000,
             icon: '🏭',
-            x: 1800,
+            x: 1700,
             y: 1800
         },
         // Voitures (regroupées dans un garage)
@@ -1309,7 +1393,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             name: 'Garage de Luxe',
             description: 'Concessionnaire de voitures haut de gamme pour impressionner vos clients.',
             icon: '🏎️',
-            x: 1000,
+            x: 1050,
             y: 950,
             category: 'cars',
             items: purchasableAssets.filter(a => a.category === 'cars')
@@ -1319,7 +1403,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             name: 'Musée d\'Art Moderne',
             description: 'Galerie d\'art pour investir dans des œuvres prestigieuses et blanchir votre argent.',
             icon: '🎨',
-            x: 950,
+            x: 900,
             y: 1000,
             category: 'art',
             items: purchasableAssets.filter(a => a.category === 'art')
@@ -1329,8 +1413,8 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             name: 'Bijouterie de Luxe',
             description: 'Boutique de bijoux précieux pour diversifier vos investissements.',
             icon: '💎',
-            x: 1050,
-            y: 1050,
+            x: 1100,
+            y: 1100,
             category: 'jewelry',
             items: purchasableAssets.filter(a => a.category === 'jewelry')
         }
@@ -2299,56 +2383,161 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     function createPropertyMarkers(container) {
         // Supprimer les anciens marqueurs
         container.querySelectorAll('.property-marker').forEach(m => m.remove());
-    
+
         // Créer les marqueurs pour les propriétés ayant une position x,y
         purchasableAssets.filter(a => a.x && a.y).forEach(asset => {
             const marker = document.createElement('div');
             marker.className = 'property-marker';
             marker.dataset.assetId = asset.id;
-    
+
             const isOwned = state.assets[asset.id] && state.assets[asset.id].owned;
             if (isOwned) {
                 marker.classList.add('owned');
             }
-    
-            marker.style.left = asset.x + 'px';
-            marker.style.top = asset.y + 'px';
-    
-            marker.innerHTML = `<div class="property-icon">${asset.icon}</div>`;
-    
-            // Événement de clic pour ouvrir le modal
-            marker.onclick = () => {
-                openPropertyModal(asset);
+
+            // Convertir les coordonnées de l'ancienne carte (2000x2000) vers la nouvelle (pourcentage)
+            marker.style.left = (asset.x / 2000 * 100) + '%';
+            marker.style.top = (asset.y / 2000 * 100) + '%';
+
+            // Créer la structure de la bulle
+            marker.innerHTML = `
+                <div class="property-bubble">
+                    <div class="property-icon">${asset.icon}</div>
+                    <div class="property-bubble-content">
+                        <div class="property-bubble-title">${asset.name}</div>
+                        <div class="property-bubble-desc">${asset.description}</div>
+                        <div class="property-bubble-price">${isOwned ? '✓ Possédée' : fmt(asset.price)}</div>
+                        ${!isOwned ? `
+                            <div class="property-bubble-actions">
+                                <button class="primary" onclick="buyAsset('${asset.id}'); event.stopPropagation();">Acheter</button>
+                                <button class="secondary" onclick="closeBubble('${asset.id}'); event.stopPropagation();">Fermer</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // Événement de clic pour agrandir/réduire la bulle
+            marker.onclick = (e) => {
+                e.stopPropagation();
+                toggleBubble(marker);
             };
-    
+
             container.appendChild(marker);
         });
-    
+
         // Créer les marqueurs POI (garage, musée, bijouterie)
         mapPOI.forEach(poi => {
             const marker = document.createElement('div');
             marker.className = 'property-marker poi';
             marker.dataset.poiId = poi.id;
-    
+
             // Vérifier si tous les items du POI sont possédés
             const allOwned = poi.items.every(item => state.assets[item.id] && state.assets[item.id].owned);
             if (allOwned) {
                 marker.classList.add('owned');
             }
-    
-            marker.style.left = poi.x + 'px';
-            marker.style.top = poi.y + 'px';
-    
-            marker.innerHTML = `<div class="property-icon">${poi.icon}</div>`;
-    
-            // Événement de clic pour ouvrir le modal du POI
-            marker.onclick = () => {
-                openPOIModal(poi);
+
+            // Convertir les coordonnées
+            marker.style.left = (poi.x / 2000 * 100) + '%';
+            marker.style.top = (poi.y / 2000 * 100) + '%';
+
+            // Liste des items pour le POI avec boutons d'achat
+            const itemsList = poi.items.map(item => {
+                const itemOwned = state.assets[item.id] && state.assets[item.id].owned;
+                return `<div style="display: flex; justify-content: space-between; align-items: center; margin: 6px 0; padding: 6px; background: ${itemOwned ? '#f0fdf4' : '#fef2f2'}; border-radius: 6px; font-size: 12px;">
+                    <div style="flex: 1;">
+                        <span style="font-size: 16px;">${item.icon}</span>
+                        <strong>${item.name}</strong>
+                        <div style="color: #6b7280; font-size: 11px;">${fmt(item.price)}</div>
+                    </div>
+                    ${!itemOwned ?
+                        `<button class="primary" style="padding: 4px 10px; font-size: 11px;" onclick="buyAsset('${item.id}'); event.stopPropagation();">Acheter</button>`
+                        : `<span style="color: #10b981; font-weight: bold;">✓ Possédé</span>`
+                    }
+                </div>`;
+            }).join('');
+
+            // Créer la structure de la bulle POI
+            marker.innerHTML = `
+                <div class="property-bubble">
+                    <div class="property-icon">${poi.icon}</div>
+                    <div class="property-bubble-content">
+                        <div class="property-bubble-title">${poi.name}</div>
+                        <div class="property-bubble-desc">${poi.description}</div>
+                        <div style="margin-top: 10px; max-height: 300px; overflow-y: auto;">${itemsList}</div>
+                        <div class="property-bubble-actions" style="margin-top: 12px;">
+                            <button class="secondary" onclick="closeBubble('${poi.id}'); event.stopPropagation();">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Événement de clic pour agrandir/réduire la bulle
+            marker.onclick = (e) => {
+                e.stopPropagation();
+                toggleBubble(marker);
             };
-    
+
             container.appendChild(marker);
         });
     }
+
+    function toggleBubble(marker) {
+        // Fermer toutes les autres bulles
+        document.querySelectorAll('.property-marker.expanded').forEach(m => {
+            if (m !== marker) m.classList.remove('expanded');
+        });
+
+        // Toggle cette bulle
+        marker.classList.toggle('expanded');
+    }
+
+    function closeBubble(id) {
+        const marker = document.querySelector(`[data-asset-id="${id}"], [data-poi-id="${id}"]`);
+        if (marker) {
+            marker.classList.remove('expanded');
+        }
+    }
+
+    function buyAsset(assetId) {
+        const asset = purchasableAssets.find(a => a.id === assetId);
+        if (!asset) return;
+
+        if (state.money >= asset.price) {
+            state.money -= asset.price;
+
+            if (!state.assets[assetId]) {
+                state.assets[assetId] = { owned: false, level: 0 };
+            }
+
+            state.assets[assetId].owned = true;
+
+            if (asset.type === 'plantLimit') {
+                state.plantLimit += asset.bonus;
+            }
+
+            saveGame();
+            updateUI();
+
+            // Fermer la bulle et rafraîchir les marqueurs
+            closeBubble(assetId);
+            createPropertyMarkers(el('mapContent'));
+
+            showNotification(`✓ ${asset.name} acheté!`, 'success');
+        } else {
+            showNotification('Pas assez d\'argent!', 'error');
+        }
+    }
+
+    // Fermer les bulles en cliquant à l'extérieur
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.property-marker')) {
+            document.querySelectorAll('.property-marker.expanded').forEach(m => {
+                m.classList.remove('expanded');
+            });
+        }
+    });
     
     function openPropertyModal(asset) {
         const modal = el('propertyModal');
