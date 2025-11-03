@@ -458,8 +458,18 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     height: 800px;
     background: #e5e3df;
     border-radius: 16px;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+#mapContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 16px;
 }
 
 
@@ -512,6 +522,23 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
 
 .property-marker.expanded {
     z-index: 100;
+    position: absolute !important;
+}
+
+.property-marker.purchased {
+    animation: purchaseAnimation 1s ease;
+}
+
+@keyframes purchaseAnimation {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
 }
 
 .property-bubble {
@@ -533,19 +560,27 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     background: white;
     width: 400px;
     min-height: 280px;
+    max-height: 500px;
     padding: 0;
     display: block;
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    overflow-y: auto;
 }
 
 .property-marker.expanded.bottom-position .property-bubble {
-    bottom: 70px;
+    top: auto;
+    bottom: 100%;
+    margin-bottom: 10px;
+    transform: translateX(-50%);
 }
 
 .property-marker.expanded.top-position .property-bubble {
-    top: 70px;
+    top: 100%;
+    margin-top: 10px;
+    transform: translateX(-50%);
 }
 
 .property-icon {
@@ -967,6 +1002,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         <button class="tab" data-tab="dealers">🤝 Dealers</button>
         <button class="tab" data-tab="assets">💎 Magasin</button>
         <button class="tab" data-tab="crypto">₿ Crypto</button>
+        <button class="tab" data-tab="stocks">📈 Bourse</button>
         <button class="tab" data-tab="profil">👤 Profil</button>
     </div>
     <div class="wallet">
@@ -2958,6 +2994,12 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         const asset = purchasableAssets.find(a => a.id === assetId);
         if (!asset) return;
 
+        // Vérifier si déjà possédé
+        if (state.assets[assetId] && state.assets[assetId].owned) {
+            showNotification('⚠️ Déjà possédé!', 'Vous possédez déjà ce bien.', 'warning');
+            return;
+        }
+
         if (state.cash >= asset.price) {
             state.cash -= asset.price;
 
@@ -2974,13 +3016,24 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             saveGame();
             updateUI();
 
-            // Fermer la bulle et rafraîchir les marqueurs
-            closeBubble(assetId);
-            createPropertyMarkers(el('mapContent'));
+            // Animation d'achat
+            const marker = document.querySelector(`[data-asset-id="${assetId}"], [data-poi-id="${assetId}"]`);
+            if (marker) {
+                marker.classList.add('purchased');
+                setTimeout(() => {
+                    marker.classList.remove('purchased');
+                }, 1000);
+            }
 
-            showNotification(`✓ ${asset.name} acheté!`, 'success');
+            // Fermer la bulle et rafraîchir les marqueurs
+            setTimeout(() => {
+                closeBubble(assetId);
+                createPropertyMarkers(el('mapContent'));
+            }, 500);
+
+            showNotification('✅ Achat réussi!', `${asset.name} acheté pour ${fmtCash(asset.price)}!`, 'success');
         } else {
-            showNotification('Pas assez d\'argent!', 'error');
+            showNotification('❌ Pas assez d\'argent!', `Il vous faut ${fmtCash(asset.price)}`, 'error');
         }
     }
 
