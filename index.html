@@ -558,16 +558,16 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
 .property-marker.expanded .property-bubble {
     border-radius: 24px;
     background: white;
-    width: 400px;
-    min-height: 280px;
-    max-height: 500px;
+    width: 450px;
+    height: auto;
+    min-height: 400px;
     padding: 0;
     display: block;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    overflow-y: auto;
+    overflow: visible;
 }
 
 .property-marker.expanded.bottom-position .property-bubble {
@@ -700,8 +700,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
 }
 
 .property-bubble-items {
-    max-height: 200px;
-    overflow-y: auto;
     margin-bottom: 12px;
 }
 
@@ -3016,20 +3014,25 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             saveGame();
             updateUI();
 
-            // Animation d'achat
+            // Fermer la bulle immédiatement
             const marker = document.querySelector(`[data-asset-id="${assetId}"], [data-poi-id="${assetId}"]`);
             if (marker) {
-                marker.classList.add('purchased');
-                setTimeout(() => {
-                    marker.classList.remove('purchased');
-                }, 1000);
+                marker.classList.remove('expanded');
             }
 
-            // Fermer la bulle et rafraîchir les marqueurs
+            // Rafraîchir les marqueurs immédiatement pour afficher le statut "possédé"
+            createPropertyMarkers(el('mapContent'));
+
+            // Animation d'achat après rafraîchissement
             setTimeout(() => {
-                closeBubble(assetId);
-                createPropertyMarkers(el('mapContent'));
-            }, 500);
+                const updatedMarker = document.querySelector(`[data-asset-id="${assetId}"], [data-poi-id="${assetId}"]`);
+                if (updatedMarker) {
+                    updatedMarker.classList.add('purchased');
+                    setTimeout(() => {
+                        updatedMarker.classList.remove('purchased');
+                    }, 1000);
+                }
+            }, 50);
 
             showNotification('✅ Achat réussi!', `${asset.name} acheté pour ${fmtCash(asset.price)}!`, 'success');
         } else {
