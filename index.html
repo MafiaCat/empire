@@ -516,54 +516,60 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
 
 .property-bubble {
     position: relative;
-    background: white;
-    border-radius: 20px;
-    padding: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-    min-width: 60px;
-}
-
-.property-marker.expanded .property-bubble {
-    padding: 16px;
-    min-width: 280px;
-    max-width: 320px;
-}
-
-.property-icon {
-    font-size: 36px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    padding: 0;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #fee;
-    border: 3px solid #dc2626;
+}
+
+.property-marker.expanded .property-bubble {
+    border-radius: 24px;
+    background: white;
+    width: 400px;
+    min-height: 280px;
+    padding: 0;
+    display: block;
+}
+
+.property-icon {
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     transition: all 0.3s;
-    margin: 0 auto;
+}
+
+.property-marker.expanded .property-icon {
+    display: none;
 }
 
 .property-marker:hover .property-icon {
-    transform: scale(1.1);
+    transform: scale(1.15) rotate(5deg);
 }
 
-.property-marker.owned .property-icon {
-    border-color: #10b981;
-    background: #f0fdf4;
+.property-marker.owned .property-bubble {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.property-marker.poi .property-bubble {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    width: 70px;
+    height: 70px;
 }
 
 .property-marker.poi .property-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 40px;
-    border-width: 4px;
+    font-size: 38px;
 }
 
 .property-bubble-content {
     display: none;
-    margin-top: 12px;
-    text-align: left;
 }
 
 .property-marker.expanded .property-bubble-content {
@@ -571,25 +577,45 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     animation: fadeIn 0.3s;
 }
 
+.property-bubble-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+}
+
+.property-bubble-body {
+    padding: 20px;
+}
+
 .property-bubble-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     color: #1f2937;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .property-bubble-desc {
     font-size: 13px;
     color: #6b7280;
-    line-height: 1.4;
-    margin-bottom: 10px;
+    line-height: 1.5;
+    margin-bottom: 12px;
 }
 
 .property-bubble-price {
-    font-size: 14px;
+    font-size: 20px;
     font-weight: bold;
     color: var(--primary);
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+.property-bubble-price.owned {
+    color: #10b981;
 }
 
 .property-bubble-actions {
@@ -599,23 +625,23 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
 
 .property-bubble-actions button {
     flex: 1;
-    padding: 8px 12px;
+    padding: 12px 16px;
     border: none;
-    border-radius: 8px;
-    font-size: 13px;
+    border-radius: 12px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
 }
 
 .property-bubble-actions button.primary {
-    background: var(--primary);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
 }
 
 .property-bubble-actions button.primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
 }
 
 .property-bubble-actions button.secondary {
@@ -626,6 +652,79 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
 .property-bubble-actions button.secondary:hover {
     background: #e5e7eb;
 }
+
+.property-bubble-items {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+}
+
+.property-bubble-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+    padding: 12px;
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+    transition: all 0.2s;
+}
+
+.property-bubble-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.property-bubble-item.owned {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-left-color: #10b981;
+}
+
+.property-bubble-item-info {
+    flex: 1;
+}
+
+.property-bubble-item-icon {
+    font-size: 24px;
+    margin-right: 8px;
+}
+
+.property-bubble-item-name {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 13px;
+}
+
+.property-bubble-item-price {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.property-bubble-item button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transition: all 0.2s;
+}
+
+.property-bubble-item button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.property-bubble-item-owned {
+    color: #10b981;
+    font-weight: bold;
+    font-size: 13px;
+}
+
 
 
 /* Modal de propriété */
@@ -1069,28 +1168,51 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         <div class="card">
             <div class="map-container" id="mapContainer">
                 <div class="map-legend">
+                    <div style="font-weight: bold; margin-bottom: 8px; font-size: 13px;">Catégories</div>
                     <div class="map-legend-item">
-                        <div class="legend-dot available"></div>
-                        <span>Disponible</span>
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                        <span>Lieux de production</span>
                     </div>
                     <div class="map-legend-item">
-                        <div class="legend-dot owned"></div>
-                        <span>Possédée</span>
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"></div>
+                        <span>Automobile</span>
+                    </div>
+                    <div class="map-legend-item">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"></div>
+                        <span>Art</span>
+                    </div>
+                    <div class="map-legend-item">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"></div>
+                        <span>Bijoux</span>
+                    </div>
+                    <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #6b7280;">
+                        <div style="margin: 4px 0;">🟣 Violet = Disponible</div>
+                        <div style="margin: 4px 0;">🟢 Vert = Possédé</div>
                     </div>
                 </div>
                 <div id="mapContent" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
             </div>
         </div>
         <div class="card">
-            <h3>Légende de la carte</h3>
-            <p class="muted">Cliquez sur les marqueurs pour voir les détails et acheter des propriétés.</p>
-            <div class="grid three">
-                <div>🏠 Propriétés résidentielles</div>
-                <div>🏎️ Garage de voitures de luxe</div>
-                <div>🎨 Musée d'art</div>
-                <div>🌲 Fermes dans les forêts</div>
-                <div>💎 Bijouterie de luxe</div>
-                <div>🏙️ Centre-ville animé</div>
+            <h3>📍 Catégories de biens</h3>
+            <p class="muted">Cliquez sur les bulles colorées pour explorer et acheter.</p>
+            <div class="grid two">
+                <div style="padding: 12px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; border-left: 4px solid #667eea;">
+                    <strong>🏭 Lieux de production</strong>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Propriétés résidentielles et fermes pour cultiver</p>
+                </div>
+                <div style="padding: 12px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
+                    <strong>🏎️ Automobile</strong>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Voitures de luxe pour impressionner</p>
+                </div>
+                <div style="padding: 12px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
+                    <strong>🎨 Art</strong>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Œuvres d'art pour blanchir votre argent</p>
+                </div>
+                <div style="padding: 12px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
+                    <strong>💎 Bijoux</strong>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Bijoux précieux pour diversifier vos investissements</p>
+                </div>
             </div>
         </div>
     </section>
@@ -2404,24 +2526,37 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                 <div class="property-bubble">
                     <div class="property-icon">${asset.icon}</div>
                     <div class="property-bubble-content">
-                        <div class="property-bubble-title">${asset.name}</div>
-                        <div class="property-bubble-desc">${asset.description}</div>
-                        <div class="property-bubble-price">${isOwned ? '✓ Possédée' : fmt(asset.price)}</div>
-                        ${!isOwned ? `
+                        <div class="property-bubble-image">${asset.icon}</div>
+                        <div class="property-bubble-body">
+                            <div class="property-bubble-title">${asset.name}</div>
+                            <div class="property-bubble-desc">${asset.description}</div>
+                            <div class="property-bubble-price ${isOwned ? 'owned' : ''}">${isOwned ? '✓ Possédée' : fmt(asset.price)}</div>
                             <div class="property-bubble-actions">
-                                <button class="primary" onclick="buyAsset('${asset.id}'); event.stopPropagation();">Acheter</button>
-                                <button class="secondary" onclick="closeBubble('${asset.id}'); event.stopPropagation();">Fermer</button>
+                                ${!isOwned ? `<button class="primary buy-btn" data-asset-id="${asset.id}">Acheter</button>` : ''}
+                                <button class="secondary close-btn">Fermer</button>
                             </div>
-                        ` : ''}
+                        </div>
                     </div>
                 </div>
             `;
 
             // Événement de clic pour agrandir/réduire la bulle
-            marker.onclick = (e) => {
-                e.stopPropagation();
-                toggleBubble(marker);
-            };
+            marker.addEventListener('click', (e) => {
+                if (e.target.classList.contains('buy-btn')) {
+                    e.stopPropagation();
+                    buyAsset(e.target.dataset.assetId);
+                    return;
+                }
+                if (e.target.classList.contains('close-btn')) {
+                    e.stopPropagation();
+                    marker.classList.remove('expanded');
+                    return;
+                }
+                if (!e.target.closest('.property-bubble-content')) {
+                    e.stopPropagation();
+                    toggleBubble(marker);
+                }
+            });
 
             container.appendChild(marker);
         });
@@ -2445,15 +2580,17 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             // Liste des items pour le POI avec boutons d'achat
             const itemsList = poi.items.map(item => {
                 const itemOwned = state.assets[item.id] && state.assets[item.id].owned;
-                return `<div style="display: flex; justify-content: space-between; align-items: center; margin: 6px 0; padding: 6px; background: ${itemOwned ? '#f0fdf4' : '#fef2f2'}; border-radius: 6px; font-size: 12px;">
-                    <div style="flex: 1;">
-                        <span style="font-size: 16px;">${item.icon}</span>
-                        <strong>${item.name}</strong>
-                        <div style="color: #6b7280; font-size: 11px;">${fmt(item.price)}</div>
+                return `<div class="property-bubble-item ${itemOwned ? 'owned' : ''}">
+                    <div class="property-bubble-item-info">
+                        <span class="property-bubble-item-icon">${item.icon}</span>
+                        <div style="display: inline-block; vertical-align: middle;">
+                            <div class="property-bubble-item-name">${item.name}</div>
+                            <div class="property-bubble-item-price">${fmt(item.price)}</div>
+                        </div>
                     </div>
                     ${!itemOwned ?
-                        `<button class="primary" style="padding: 4px 10px; font-size: 11px;" onclick="buyAsset('${item.id}'); event.stopPropagation();">Acheter</button>`
-                        : `<span style="color: #10b981; font-weight: bold;">✓ Possédé</span>`
+                        `<button class="buy-btn" data-asset-id="${item.id}">Acheter</button>`
+                        : `<span class="property-bubble-item-owned">✓ Possédé</span>`
                     }
                 </div>`;
             }).join('');
@@ -2463,21 +2600,36 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                 <div class="property-bubble">
                     <div class="property-icon">${poi.icon}</div>
                     <div class="property-bubble-content">
-                        <div class="property-bubble-title">${poi.name}</div>
-                        <div class="property-bubble-desc">${poi.description}</div>
-                        <div style="margin-top: 10px; max-height: 300px; overflow-y: auto;">${itemsList}</div>
-                        <div class="property-bubble-actions" style="margin-top: 12px;">
-                            <button class="secondary" onclick="closeBubble('${poi.id}'); event.stopPropagation();">Fermer</button>
+                        <div class="property-bubble-image">${poi.icon}</div>
+                        <div class="property-bubble-body">
+                            <div class="property-bubble-title">${poi.name}</div>
+                            <div class="property-bubble-desc">${poi.description}</div>
+                            <div class="property-bubble-items">${itemsList}</div>
+                            <div class="property-bubble-actions">
+                                <button class="secondary close-btn">Fermer</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
 
             // Événement de clic pour agrandir/réduire la bulle
-            marker.onclick = (e) => {
-                e.stopPropagation();
-                toggleBubble(marker);
-            };
+            marker.addEventListener('click', (e) => {
+                if (e.target.classList.contains('buy-btn')) {
+                    e.stopPropagation();
+                    buyAsset(e.target.dataset.assetId);
+                    return;
+                }
+                if (e.target.classList.contains('close-btn')) {
+                    e.stopPropagation();
+                    marker.classList.remove('expanded');
+                    return;
+                }
+                if (!e.target.closest('.property-bubble-content')) {
+                    e.stopPropagation();
+                    toggleBubble(marker);
+                }
+            });
 
             container.appendChild(marker);
         });
