@@ -561,26 +561,16 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     width: 450px;
     height: auto;
     min-height: 400px;
+    max-height: 80vh;
     padding: 0;
     display: block;
-    position: absolute;
+    position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    overflow: visible;
-}
-
-.property-marker.expanded.bottom-position .property-bubble {
-    top: auto;
-    bottom: 100%;
-    margin-bottom: 10px;
-    transform: translateX(-50%);
-}
-
-.property-marker.expanded.top-position .property-bubble {
-    top: 100%;
-    margin-top: 10px;
-    transform: translateX(-50%);
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
 
 .property-icon {
@@ -999,326 +989,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     margin-top: 4px;
 }
 
-/* Événements */
-.events-container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.event-card {
-    background: linear-gradient(135deg, #fff 0%, #f9fafb 100%);
-    border-left: 4px solid;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.event-card.police { border-left-color: #ef4444; }
-.event-card.vip { border-left-color: #f59e0b; }
-.event-card.market { border-left-color: #3b82f6; }
-.event-card.gang { border-left-color: #8b5cf6; }
-
-.event-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.event-title {
-    font-size: 18px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.event-timer {
-    background: rgba(0,0,0,0.1);
-    padding: 4px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.event-description {
-    color: #6b7280;
-    margin-bottom: 16px;
-    line-height: 1.5;
-}
-
-.event-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.event-history {
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.event-history-item {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    color: var(--muted);
-}
-
-/* Missions */
-.missions-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.mission-card {
-    background: var(--card);
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    position: relative;
-    overflow: hidden;
-}
-
-.mission-card.completed {
-    border-color: #10b981;
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-}
-
-.mission-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-}
-
-.mission-title {
-    font-weight: bold;
-    font-size: 16px;
-}
-
-.mission-reward {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.mission-description {
-    color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 12px;
-}
-
-.mission-progress {
-    background: #f3f4f6;
-    border-radius: 8px;
-    height: 20px;
-    overflow: hidden;
-    margin-bottom: 8px;
-}
-
-.mission-progress-bar {
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    height: 100%;
-    transition: width 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.mission-progress-text {
-    font-size: 12px;
-    color: var(--muted);
-    text-align: center;
-}
-
-/* Améliorations */
-.upgrades-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 16px;
-    margin-top: 12px;
-}
-
-.upgrade-card {
-    background: var(--card);
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    transition: all 0.2s;
-}
-
-.upgrade-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-}
-
-.upgrade-card.maxed {
-    border-color: #10b981;
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-}
-
-.upgrade-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.upgrade-icon {
-    font-size: 32px;
-}
-
-.upgrade-level {
-    background: #667eea;
-    color: white;
-    padding: 4px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.upgrade-title {
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 8px;
-}
-
-.upgrade-description {
-    color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 12px;
-    min-height: 40px;
-}
-
-.upgrade-stats {
-    background: #f9fafb;
-    padding: 8px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    font-size: 13px;
-}
-
-.upgrade-price {
-    font-weight: bold;
-    color: var(--primary);
-    margin-bottom: 12px;
-}
-
-/* Territoires */
-.territory-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
-}
-
-.territory-card {
-    background: var(--card);
-    border: 3px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-    transition: all 0.2s;
-    cursor: pointer;
-}
-
-.territory-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-}
-
-.territory-card.owned {
-    border-color: #10b981;
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-}
-
-.territory-card.rival {
-    border-color: #ef4444;
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-}
-
-.territory-icon {
-    font-size: 48px;
-    margin-bottom: 8px;
-}
-
-.territory-name {
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 4px;
-}
-
-.territory-income {
-    color: #10b981;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.territory-status {
-    margin-top: 8px;
-    font-size: 12px;
-    color: var(--muted);
-}
-
-.gangs-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.gang-card {
-    background: var(--card);
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.gang-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.gang-icon {
-    font-size: 32px;
-}
-
-.gang-name {
-    font-weight: bold;
-    font-size: 16px;
-}
-
-.gang-territory {
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.gang-strength {
-    text-align: right;
-}
-
-.gang-strength-label {
-    font-size: 12px;
-    color: var(--muted);
-}
-
-.gang-strength-value {
-    font-weight: bold;
-    font-size: 18px;
-    color: #ef4444;
-}
-
 /* Succès */
 .achievements-grid {
     display: grid;
@@ -1385,10 +1055,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         <button class="tab" data-tab="assets">💎 Magasin</button>
         <button class="tab" data-tab="crypto">₿ Crypto</button>
         <button class="tab" data-tab="stocks">📈 Bourse</button>
-        <button class="tab" data-tab="events">⚡ Événements</button>
-        <button class="tab" data-tab="missions">🎯 Missions</button>
-        <button class="tab" data-tab="upgrades">💪 Améliorations</button>
-        <button class="tab" data-tab="territories">⚔️ Territoires</button>
         <button class="tab" data-tab="achievements">🏅 Succès</button>
         <button class="tab" data-tab="profil">👤 Profil</button>
     </div>
@@ -1860,75 +1526,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         </div>
     </section>
 
-    <!-- Événements aléatoires -->
-    <section id="events" class="panel">
-        <div class="banner"></div>
-        <div class="card">
-            <h2>⚡ Événements en cours</h2>
-            <p class="muted">Des situations qui affectent votre empire en temps réel</p>
-            <div id="activeEvents" class="events-container"></div>
-            <div id="noEvents" style="text-align: center; padding: 40px; color: var(--muted);">
-                <div style="font-size: 64px; margin-bottom: 16px;">😴</div>
-                <p>Aucun événement en cours. Profitez du calme pendant qu'il dure...</p>
-            </div>
-        </div>
-        <div class="card">
-            <h2>📜 Historique des événements</h2>
-            <div id="eventHistory" class="event-history"></div>
-        </div>
-    </section>
-
-    <!-- Missions -->
-    <section id="missions" class="panel">
-        <div class="banner"></div>
-        <div class="card">
-            <h2>🎯 Missions quotidiennes</h2>
-            <p class="muted">Réinitialisées chaque jour à minuit</p>
-            <div id="dailyMissions" class="missions-container"></div>
-        </div>
-        <div class="card">
-            <h2>📅 Missions hebdomadaires</h2>
-            <p class="muted">Récompenses plus importantes, réinitialisées chaque lundi</p>
-            <div id="weeklyMissions" class="missions-container"></div>
-        </div>
-    </section>
-
-    <!-- Améliorations -->
-    <section id="upgrades" class="panel">
-        <div class="banner"></div>
-        <div class="card">
-            <h2>💪 Améliorations disponibles</h2>
-            <p class="muted">Améliorez vos opérations pour augmenter vos profits</p>
-
-            <h3 style="margin-top: 24px;">🔬 Laboratoires</h3>
-            <div id="labUpgrades" class="upgrades-grid"></div>
-
-            <h3 style="margin-top: 24px;">🚗 Véhicules</h3>
-            <div id="vehicleUpgrades" class="upgrades-grid"></div>
-
-            <h3 style="margin-top: 24px;">🛡️ Sécurité</h3>
-            <div id="securityUpgrades" class="upgrades-grid"></div>
-
-            <h3 style="margin-top: 24px;">📣 Marketing</h3>
-            <div id="marketingUpgrades" class="upgrades-grid"></div>
-        </div>
-    </section>
-
-    <!-- Territoires -->
-    <section id="territories" class="panel">
-        <div class="banner"></div>
-        <div class="card">
-            <h2>⚔️ Contrôle des territoires</h2>
-            <p class="muted">Vos revenus: <strong id="territoryIncome">$0/min</strong></p>
-            <div id="territoryGrid" class="territory-grid"></div>
-        </div>
-        <div class="card">
-            <h2>👥 Gangs rivaux</h2>
-            <p class="muted">Informations sur les gangs contrôlant d'autres territoires</p>
-            <div id="rivalGangs" class="gangs-list"></div>
-        </div>
-    </section>
-
     <!-- Succès -->
     <section id="achievements" class="panel">
         <div class="banner"></div>
@@ -2015,28 +1612,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         propertyProgress: savedState.propertyProgress || {},
         plantingQueues: savedState.plantingQueues || {}, // NOUVEAU: Files d'attente pour plantation
 
-        // Nouveaux systèmes de gameplay
-        events: savedState.events || [],
-        eventHistory: savedState.eventHistory || [],
-        lastEventTime: savedState.lastEventTime || 0,
-
-        missions: savedState.missions || {
-            daily: [],
-            weekly: [],
-            lastDailyReset: 0,
-            lastWeeklyReset: 0
-        },
-
-        upgrades: savedState.upgrades || {
-            lab: 0,
-            vehicle: 0,
-            security: 0,
-            marketing: 0
-        },
-
-        territories: savedState.territories || {},
-        territoryIncome: savedState.territoryIncome || 0,
-
+        // Système de succès et progression
         achievements: savedState.achievements || {},
         totalEarnings: savedState.totalEarnings || 0,
         totalSales: savedState.totalSales || 0,
@@ -2330,7 +1906,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
 
         if (planted > 0) {
             startPlanting(propertyId);
-            updateMissionProgress('daily_plant', planted);
         }
 
         return planted;
@@ -3118,14 +2693,11 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     el('sellBtn').onclick = () => {
         let qty = Math.min(parseInt(el('sellAmount').value) || 0, state.stockGrams);
         if (qty > 0) {
-            const baseRevenue = qty * marketPrice;
-            const marketingBonus = state.upgrades.marketing > 0 ? upgradeDefs.marketing[state.upgrades.marketing - 1].bonus : 0;
-            const revenue = baseRevenue * (1 + marketingBonus);
+            const revenue = qty * marketPrice;
             state.cash += revenue;
             state.totalEarnings += revenue;
             state.stockGrams -= qty;
             el('sellAmount').value = '';
-            updateMissionProgress('daily_sell', qty);
             checkAchievements();
             showNotification('💰 Vente réussie!', `Vendu ${qty}g pour ${fmtCash(revenue)}!`, 'success');
             updateUI();
@@ -3138,13 +2710,10 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     el('sellAllBtn').onclick = () => {
         if (state.stockGrams > 0) {
             const qty = state.stockGrams;
-            const baseRevenue = qty * marketPrice;
-            const marketingBonus = state.upgrades.marketing > 0 ? upgradeDefs.marketing[state.upgrades.marketing - 1].bonus : 0;
-            const revenue = baseRevenue * (1 + marketingBonus);
+            const revenue = qty * marketPrice;
             state.cash += revenue;
             state.totalEarnings += revenue;
             state.stockGrams = 0;
-            updateMissionProgress('daily_sell', qty);
             checkAchievements();
             showNotification('💰 Vente totale!', `Vendu ${qty.toFixed(2)}g pour ${fmtCash(revenue)}!`, 'success');
             updateUI();
@@ -3193,7 +2762,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                 state.cash -= totalCost;
                 state.crypto[crypto] += qty;
                 qtyInput.value = '';
-                updateMissionProgress('weekly_trades', 1);
                 checkAchievements();
                 showNotification('✅ Achat crypto!', `Acheté ${qty.toFixed(4)} ${crypto.toUpperCase()}`, 'success');
                 updateUI();
@@ -3216,7 +2784,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                 state.totalEarnings += revenue;
                 state.crypto[crypto] -= qty;
                 qtyInput.value = '';
-                updateMissionProgress('weekly_trades', 1);
                 checkAchievements();
                 showNotification('💰 Vente crypto!', `Vendu ${qty.toFixed(4)} ${crypto.toUpperCase()} pour ${fmtCash(revenue)}`, 'success');
                 updateUI();
@@ -3244,7 +2811,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                 state.cash -= totalCost;
                 state.stocks[stock] += qty;
                 qtyInput.value = '';
-                updateMissionProgress('weekly_trades', 1);
                 checkAchievements();
                 showNotification('✅ Achat action!', `Acheté ${qty} ${stock.toUpperCase()} pour ${fmtCash(totalCost)}`, 'success');
                 updateUI();
@@ -3267,7 +2833,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                 state.totalEarnings += revenue;
                 state.stocks[stock] -= qty;
                 qtyInput.value = '';
-                updateMissionProgress('weekly_trades', 1);
                 checkAchievements();
                 showNotification('💰 Vente action!', `Vendu ${qty} ${stock.toUpperCase()} pour ${fmtCash(revenue)}`, 'success');
                 updateUI();
@@ -3285,7 +2850,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             state.totalEarnings += earnings;
             state.totalDeliveries++;
             state.jobCooldownEnd = now + 30000;
-            updateMissionProgress('daily_earn', earnings);
             checkAchievements();
             showNotification('✅ Livraison!', 'Vous avez gagné $10!', 'success');
             updateUI();
@@ -3491,28 +3055,11 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         document.querySelectorAll('.property-marker.expanded').forEach(m => {
             if (m !== marker) {
                 m.classList.remove('expanded');
-                m.classList.remove('bottom-position');
-                m.classList.remove('top-position');
             }
         });
 
-        // Toggle cette bulle
+        // Toggle cette bulle (elle s'ouvrira centrée grâce au CSS position: fixed)
         marker.classList.toggle('expanded');
-
-        // Déterminer la position de la bulle pour éviter qu'elle sorte de l'écran
-        if (marker.classList.contains('expanded')) {
-            const markerY = parseFloat(marker.style.top);
-
-            // Si la bulle est en bas de l'écran (> 70%), afficher vers le haut
-            if (markerY > 70) {
-                marker.classList.add('bottom-position');
-            } else {
-                marker.classList.add('top-position');
-            }
-        } else {
-            marker.classList.remove('bottom-position');
-            marker.classList.remove('top-position');
-        }
     }
 
     function closeBubble(id) {
@@ -3545,7 +3092,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
                 state.plantLimit += asset.bonus;
             }
 
-            updateMissionProgress('weekly_properties', 1);
             checkAchievements();
 
             saveGame();
@@ -3775,531 +3321,8 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         { id: 'untouchable', name: 'Intouchable', icon: '🛡️', description: '50 livraisons sans arrestation', check: () => state.totalDeliveries >= 50 },
         { id: 'crypto_king', name: 'Roi du Crypto', icon: '₿', description: 'Posséder au moins 1 BTC, 10 ETH et 1000 DOGE', check: () => state.crypto.btc >= 1 && state.crypto.eth >= 10 && state.crypto.doge >= 1000 },
         { id: 'empire_builder', name: 'Bâtisseur d\'empire', icon: '🏗️', description: 'Posséder 10 propriétés', check: () => Object.keys(state.assets).filter(k => state.assets[k].owned).length >= 10 },
-        { id: 'big_boss', name: 'Grand patron', icon: '👑', description: 'Atteindre le rang d\'Empereur', check: () => state.rank >= 4 },
-        { id: 'territory_control', name: 'Contrôle territorial', icon: '⚔️', description: 'Contrôler 3 territoires', check: () => Object.keys(state.territories).filter(k => state.territories[k].owned).length >= 3 }
+        { id: 'big_boss', name: 'Grand patron', icon: '👑', description: 'Atteindre le rang d\'Empereur', check: () => state.rank >= 4 }
     ];
-
-    // Définitions des territoires
-    const territoryDefs = [
-        { id: 'downtown', name: 'Centre-ville', icon: '🏙️', income: 100, price: 50000 },
-        { id: 'docks', name: 'Les Docks', icon: '⚓', income: 150, price: 75000 },
-        { id: 'suburbs', name: 'Banlieue Nord', icon: '🏘️', income: 80, price: 40000 },
-        { id: 'industrial', name: 'Zone Industrielle', icon: '🏭', income: 120, price: 60000 },
-        { id: 'beach', name: 'Front de Mer', icon: '🏖️', income: 200, price: 100000 },
-        { id: 'airport', name: 'Aéroport', icon: '✈️', income: 250, price: 150000 }
-    ];
-
-    // Définitions des gangs rivaux
-    const rivalGangs = [
-        { name: 'Los Serpientes', icon: '🐍', territory: 'Quartier Latin', strength: 75 },
-        { name: 'Dragon Rouge', icon: '🐉', territory: 'Chinatown', strength: 90 },
-        { name: 'Iron Wolves', icon: '🐺', territory: 'Zone Ouest', strength: 60 },
-        { name: 'Black Scorpions', icon: '🦂', territory: 'Eastside', strength: 85 }
-    ];
-
-    // Définitions des améliorations
-    const upgradeDefs = {
-        lab: [
-            { level: 1, name: 'Laboratoire basique', description: 'Améliore la production de 20%', price: 10000, bonus: 0.2 },
-            { level: 2, name: 'Laboratoire avancé', description: 'Améliore la production de 40%', price: 25000, bonus: 0.4 },
-            { level: 3, name: 'Laboratoire professionnel', description: 'Améliore la production de 60%', price: 50000, bonus: 0.6 },
-            { level: 4, name: 'Super laboratoire', description: 'Améliore la production de 80%', price: 100000, bonus: 0.8 },
-            { level: 5, name: 'Laboratoire industriel', description: 'Double la production!', price: 250000, bonus: 1.0 }
-        ],
-        vehicle: [
-            { level: 1, name: 'Voiture rapide', description: 'Livraisons 20% plus rapides', price: 15000, bonus: 0.2 },
-            { level: 2, name: 'Voiture blindée', description: 'Livraisons 40% plus rapides', price: 35000, bonus: 0.4 },
-            { level: 3, name: 'SUV de luxe', description: 'Livraisons 60% plus rapides', price: 70000, bonus: 0.6 },
-            { level: 4, name: 'Supercar', description: 'Livraisons 80% plus rapides', price: 150000, bonus: 0.8 },
-            { level: 5, name: 'Hypercar', description: 'Livraisons instantanées!', price: 350000, bonus: 1.0 }
-        ],
-        security: [
-            { level: 1, name: 'Alarmes', description: 'Réduit risques de 20%', price: 8000, bonus: 0.2 },
-            { level: 2, name: 'Gardes de sécurité', description: 'Réduit risques de 40%', price: 20000, bonus: 0.4 },
-            { level: 3, name: 'Système avancé', description: 'Réduit risques de 60%', price: 45000, bonus: 0.6 },
-            { level: 4, name: 'Bunker fortifié', description: 'Réduit risques de 80%', price: 100000, bonus: 0.8 },
-            { level: 5, name: 'Forteresse', description: 'Presque invulnérable!', price: 250000, bonus: 0.95 }
-        ],
-        marketing: [
-            { level: 1, name: 'Bouche à oreille', description: '+10% prix de vente', price: 5000, bonus: 0.1 },
-            { level: 2, name: 'Réseau de contacts', description: '+20% prix de vente', price: 15000, bonus: 0.2 },
-            { level: 3, name: 'Réputation solide', description: '+30% prix de vente', price: 35000, bonus: 0.3 },
-            { level: 4, name: 'Marque reconnue', description: '+40% prix de vente', price: 75000, bonus: 0.4 },
-            { level: 5, name: 'Légende urbaine', description: '+50% prix de vente', price: 200000, bonus: 0.5 }
-        ]
-    };
-
-    // Types d'événements
-    const eventTypes = [
-        {
-            id: 'police_raid',
-            type: 'police',
-            title: '🚨 Raid policier!',
-            description: 'La police a repéré vos opérations. Production réduite de 50% pendant 2 minutes.',
-            duration: 120000,
-            effect: () => { /* Production réduite */ },
-            actions: [
-                { label: 'Corrompre ($50k)', cost: 50000, action: (event) => { state.cash -= 50000; removeEvent(event.id); showNotification('✅ Corrompu', 'Raid évité!', 'success'); } },
-                { label: 'Attendre', action: () => {} }
-            ]
-        },
-        {
-            id: 'vip_client',
-            type: 'vip',
-            title: '💎 Client VIP!',
-            description: 'Un client riche est prêt à payer 3x le prix normal pour 100g. Offre valable 1 minute.',
-            duration: 60000,
-            actions: [
-                { label: 'Vendre (100g)', action: (event) => {
-                    if (state.stockGrams >= 100) {
-                        state.stockGrams -= 100;
-                        const earnings = 100 * 50 * 3;
-                        state.cash += earnings;
-                        state.totalEarnings += earnings;
-                        state.totalSales++;
-                        removeEvent(event.id);
-                        showNotification('✅ Vente VIP', `+${fmtCash(earnings)}!`, 'success');
-                        checkAchievements();
-                    } else {
-                        showNotification('❌ Stock insuffisant', 'Il vous faut 100g en stock', 'error');
-                    }
-                }},
-                { label: 'Refuser', action: (event) => { removeEvent(event.id); } }
-            ]
-        },
-        {
-            id: 'market_crash',
-            type: 'market',
-            title: '📉 Crash du marché!',
-            description: 'Le marché des cryptos et actions s\'effondre! Tous les prix chutent de 30%.',
-            duration: 0,
-            instant: true,
-            effect: () => {
-                Object.keys(cryptoPrices).forEach(crypto => {
-                    cryptoPrices[crypto] *= 0.7;
-                    cryptoHistory[crypto].push(cryptoPrices[crypto]);
-                });
-                Object.keys(stockPrices).forEach(stock => {
-                    stockPrices[stock] *= 0.7;
-                    stockHistory[stock].push(stockPrices[stock]);
-                });
-                updateCharts();
-                updateStockCharts();
-            },
-            actions: []
-        },
-        {
-            id: 'gang_attack',
-            type: 'gang',
-            title: '⚔️ Attaque de gang rival!',
-            description: 'Un gang rival attaque un de vos territoires! Défendez-vous ou négociez.',
-            duration: 90000,
-            actions: [
-                { label: 'Défendre ($30k)', cost: 30000, action: (event) => {
-                    state.cash -= 30000;
-                    removeEvent(event.id);
-                    showNotification('🛡️ Défendu', 'Territoire protégé!', 'success');
-                }},
-                { label: 'Négocier ($20k)', cost: 20000, action: (event) => {
-                    state.cash -= 20000;
-                    removeEvent(event.id);
-                    showNotification('🤝 Négocié', 'Trêve temporaire', 'success');
-                }},
-                { label: 'Ignorer', action: (event) => {
-                    // 50% de chance de perdre un territoire
-                    if (Math.random() < 0.5) {
-                        const ownedTerritories = Object.keys(state.territories).filter(k => state.territories[k].owned);
-                        if (ownedTerritories.length > 0) {
-                            const lost = ownedTerritories[Math.floor(Math.random() * ownedTerritories.length)];
-                            state.territories[lost].owned = false;
-                            recalculateTerritoryIncome();
-                            showNotification('❌ Territoire perdu', 'Vous avez perdu un territoire!', 'error');
-                        }
-                    }
-                    removeEvent(event.id);
-                }}
-            ]
-        }
-    ];
-
-    // Fonctions pour les événements
-    function triggerRandomEvent() {
-        const now = Date.now();
-        // Événement aléatoire toutes les 3-5 minutes
-        if (now - state.lastEventTime < 180000) return;
-
-        // 20% de chance de déclencher un événement
-        if (Math.random() > 0.2) return;
-
-        const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
-        const event = {
-            ...eventType,
-            id: 'event_' + now,
-            startTime: now,
-            endTime: eventType.duration ? now + eventType.duration : now
-        };
-
-        state.events.push(event);
-        state.lastEventTime = now;
-
-        if (event.instant && event.effect) {
-            event.effect();
-        }
-
-        updateEventsUI();
-        saveGame();
-    }
-
-    function removeEvent(eventId) {
-        const event = state.events.find(e => e.id === eventId);
-        if (event) {
-            state.eventHistory.unshift({
-                title: event.title,
-                time: new Date().toLocaleString()
-            });
-            if (state.eventHistory.length > 20) state.eventHistory.pop();
-        }
-        state.events = state.events.filter(e => e.id !== eventId);
-        updateEventsUI();
-        saveGame();
-    }
-
-    function updateEventsUI() {
-        const activeContainer = el('activeEvents');
-        const historyContainer = el('eventHistory');
-        const noEventsDiv = el('noEvents');
-
-        if (!activeContainer) return;
-
-        if (state.events.length === 0) {
-            activeContainer.style.display = 'none';
-            noEventsDiv.style.display = 'block';
-        } else {
-            activeContainer.style.display = 'flex';
-            noEventsDiv.style.display = 'none';
-        }
-
-        activeContainer.innerHTML = state.events.map(event => {
-            const remaining = event.duration ? Math.max(0, event.endTime - Date.now()) : 0;
-            const minutes = Math.floor(remaining / 60000);
-            const seconds = Math.floor((remaining % 60000) / 1000);
-
-            return `
-                <div class="event-card ${event.type}">
-                    <div class="event-header">
-                        <div class="event-title">${event.title}</div>
-                        ${event.duration ? `<div class="event-timer">${minutes}:${seconds.toString().padStart(2, '0')}</div>` : ''}
-                    </div>
-                    <div class="event-description">${event.description}</div>
-                    ${event.actions.length > 0 ? `
-                        <div class="event-actions">
-                            ${event.actions.map((action, idx) => `
-                                <button class="primary" onclick="window.handleEventAction('${event.id}', ${idx})" ${action.cost && state.cash < action.cost ? 'disabled' : ''}>
-                                    ${action.label}
-                                </button>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-        }).join('');
-
-        if (historyContainer) {
-            historyContainer.innerHTML = state.eventHistory.map(h => `
-                <div class="event-history-item">
-                    <strong>${h.title}</strong> - ${h.time}
-                </div>
-            `).join('') || '<div class="event-history-item">Aucun événement passé</div>';
-        }
-
-        // Vérifier si des événements sont expirés
-        const now = Date.now();
-        state.events = state.events.filter(e => {
-            if (e.duration && now > e.endTime) {
-                state.eventHistory.unshift({
-                    title: e.title + ' (expiré)',
-                    time: new Date().toLocaleString()
-                });
-                return false;
-            }
-            return true;
-        });
-    }
-
-    window.handleEventAction = function(eventId, actionIdx) {
-        const event = state.events.find(e => e.id === eventId);
-        if (!event) return;
-
-        const action = event.actions[actionIdx];
-        if (action.cost && state.cash < action.cost) {
-            showNotification('❌ Pas assez d\'argent', `Il vous faut ${fmtCash(action.cost)}`, 'error');
-            return;
-        }
-
-        action.action(event);
-        updateUI();
-        saveGame();
-    };
-
-    // Fonctions pour les missions
-    function generateMissions() {
-        const now = Date.now();
-        const oneDayMs = 86400000;
-        const oneWeekMs = 604800000;
-
-        // Réinitialiser les missions quotidiennes
-        if (now - state.missions.lastDailyReset > oneDayMs) {
-            state.missions.daily = [
-                { id: 'daily_sell', title: '📦 Vendre 50g', description: 'Vendez 50 grammes aujourd\'hui', target: 50, progress: 0, reward: 5000, completed: false },
-                { id: 'daily_plant', title: '🌱 Planter 20 graines', description: 'Plantez 20 graines aujourd\'hui', target: 20, progress: 0, reward: 3000, completed: false },
-                { id: 'daily_earn', title: '💰 Gagner $10k', description: 'Gagnez $10,000 aujourd\'hui', target: 10000, progress: 0, reward: 2000, completed: false }
-            ];
-            state.missions.lastDailyReset = now;
-        }
-
-        // Réinitialiser les missions hebdomadaires
-        if (now - state.missions.lastWeeklyReset > oneWeekMs) {
-            state.missions.weekly = [
-                { id: 'weekly_properties', title: '🏠 Acheter 3 propriétés', description: 'Achetez 3 propriétés cette semaine', target: 3, progress: 0, reward: 25000, completed: false },
-                { id: 'weekly_trades', title: '📈 Faire 10 transactions', description: 'Crypto ou actions: 10 transactions', target: 10, progress: 0, reward: 15000, completed: false },
-                { id: 'weekly_income', title: '💵 Revenu passif $500/min', description: 'Atteignez $500/min de revenu passif', target: 500, progress: 0, reward: 50000, completed: false }
-            ];
-            state.missions.lastWeeklyReset = now;
-        }
-
-        updateMissionsUI();
-    }
-
-    function updateMissionProgress(missionId, amount) {
-        // Daily missions
-        const daily = state.missions.daily.find(m => m.id === missionId);
-        if (daily && !daily.completed) {
-            daily.progress = Math.min(daily.progress + amount, daily.target);
-            if (daily.progress >= daily.target) {
-                daily.completed = true;
-                state.cash += daily.reward;
-                showNotification('🎯 Mission complétée!', `+${fmtCash(daily.reward)}`, 'success');
-            }
-            updateMissionsUI();
-        }
-
-        // Weekly missions
-        const weekly = state.missions.weekly.find(m => m.id === missionId);
-        if (weekly && !weekly.completed) {
-            weekly.progress = Math.min(weekly.progress + amount, weekly.target);
-            if (weekly.progress >= weekly.target) {
-                weekly.completed = true;
-                state.cash += weekly.reward;
-                showNotification('🎯 Mission hebdomadaire complétée!', `+${fmtCash(weekly.reward)}`, 'success');
-            }
-            updateMissionsUI();
-        }
-
-        saveGame();
-    }
-
-    function updateMissionsUI() {
-        const dailyContainer = el('dailyMissions');
-        const weeklyContainer = el('weeklyMissions');
-
-        if (dailyContainer) {
-            dailyContainer.innerHTML = state.missions.daily.map(m => {
-                const percent = Math.min(100, (m.progress / m.target) * 100);
-                return `
-                    <div class="mission-card ${m.completed ? 'completed' : ''}">
-                        <div class="mission-header">
-                            <div class="mission-title">${m.title}</div>
-                            <div class="mission-reward">${fmtCash(m.reward)}</div>
-                        </div>
-                        <div class="mission-description">${m.description}</div>
-                        <div class="mission-progress">
-                            <div class="mission-progress-bar" style="width: ${percent}%">${percent.toFixed(0)}%</div>
-                        </div>
-                        <div class="mission-progress-text">${m.progress} / ${m.target} ${m.completed ? '✓' : ''}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        if (weeklyContainer) {
-            weeklyContainer.innerHTML = state.missions.weekly.map(m => {
-                const percent = Math.min(100, (m.progress / m.target) * 100);
-                return `
-                    <div class="mission-card ${m.completed ? 'completed' : ''}">
-                        <div class="mission-header">
-                            <div class="mission-title">${m.title}</div>
-                            <div class="mission-reward">${fmtCash(m.reward)}</div>
-                        </div>
-                        <div class="mission-description">${m.description}</div>
-                        <div class="mission-progress">
-                            <div class="mission-progress-bar" style="width: ${percent}%">${percent.toFixed(0)}%</div>
-                        </div>
-                        <div class="mission-progress-text">${m.progress} / ${m.target} ${m.completed ? '✓' : ''}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-    }
-
-    // Fonctions pour les améliorations
-    function updateUpgradesUI() {
-        ['lab', 'vehicle', 'security', 'marketing'].forEach(category => {
-            const container = el(category + 'Upgrades');
-            if (!container) return;
-
-            const currentLevel = state.upgrades[category];
-            const upgrades = upgradeDefs[category];
-
-            container.innerHTML = upgrades.map((upgrade, idx) => {
-                const isOwned = idx < currentLevel;
-                const isCurrent = idx === currentLevel;
-                const isLocked = idx > currentLevel;
-
-                return `
-                    <div class="upgrade-card ${isOwned ? 'maxed' : ''}">
-                        <div class="upgrade-header">
-                            <div class="upgrade-icon">${getCategoryIcon(category)}</div>
-                            <div class="upgrade-level">Niv. ${upgrade.level}</div>
-                        </div>
-                        <div class="upgrade-title">${upgrade.name}</div>
-                        <div class="upgrade-description">${upgrade.description}</div>
-                        <div class="upgrade-stats">
-                            Bonus: +${(upgrade.bonus * 100).toFixed(0)}%
-                        </div>
-                        ${!isOwned && isCurrent ? `
-                            <div class="upgrade-price">${fmtCash(upgrade.price)}</div>
-                            <button class="primary" onclick="window.buyUpgrade('${category}', ${idx})" ${state.cash < upgrade.price ? 'disabled' : ''}>
-                                Acheter
-                            </button>
-                        ` : isOwned ? `
-                            <div style="color: #10b981; font-weight: bold; text-align: center;">✓ Possédé</div>
-                        ` : `
-                            <div style="color: var(--muted); text-align: center;">🔒 Débloqué au niveau ${upgrade.level}</div>
-                        `}
-                    </div>
-                `;
-            }).join('');
-        });
-    }
-
-    function getCategoryIcon(category) {
-        const icons = { lab: '🔬', vehicle: '🚗', security: '🛡️', marketing: '📣' };
-        return icons[category] || '⭐';
-    }
-
-    window.buyUpgrade = function(category, level) {
-        const upgrade = upgradeDefs[category][level];
-        if (!upgrade) return;
-
-        if (state.cash < upgrade.price) {
-            showNotification('❌ Pas assez d\'argent', `Il vous faut ${fmtCash(upgrade.price)}`, 'error');
-            return;
-        }
-
-        if (state.upgrades[category] !== level) {
-            showNotification('❌ Erreur', 'Vous devez acheter les niveaux dans l\'ordre', 'error');
-            return;
-        }
-
-        state.cash -= upgrade.price;
-        state.upgrades[category]++;
-
-        showNotification('✅ Amélioration achetée!', upgrade.name, 'success');
-        updateUpgradesUI();
-        updateUI();
-        saveGame();
-    };
-
-    // Fonctions pour les territoires
-    function initializeTerritories() {
-        territoryDefs.forEach(t => {
-            if (!state.territories[t.id]) {
-                state.territories[t.id] = { owned: false };
-            }
-        });
-        recalculateTerritoryIncome();
-        updateTerritoriesUI();
-    }
-
-    function recalculateTerritoryIncome() {
-        state.territoryIncome = 0;
-        territoryDefs.forEach(t => {
-            if (state.territories[t.id] && state.territories[t.id].owned) {
-                state.territoryIncome += t.income;
-            }
-        });
-    }
-
-    function updateTerritoriesUI() {
-        const container = el('territoryGrid');
-        const incomeDisplay = el('territoryIncome');
-
-        if (incomeDisplay) {
-            incomeDisplay.textContent = fmtCash(state.territoryIncome) + '/min';
-        }
-
-        if (!container) return;
-
-        container.innerHTML = territoryDefs.map(t => {
-            const owned = state.territories[t.id] && state.territories[t.id].owned;
-            return `
-                <div class="territory-card ${owned ? 'owned' : ''}" onclick="window.buyTerritory('${t.id}')">
-                    <div class="territory-icon">${t.icon}</div>
-                    <div class="territory-name">${t.name}</div>
-                    <div class="territory-income">+${fmtCash(t.income)}/min</div>
-                    <div class="territory-status">
-                        ${owned ? '✓ Contrôlé' : fmtCash(t.price)}
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        // Gangs rivaux
-        const gangsContainer = el('rivalGangs');
-        if (gangsContainer) {
-            gangsContainer.innerHTML = rivalGangs.map(g => `
-                <div class="gang-card">
-                    <div class="gang-info">
-                        <div class="gang-icon">${g.icon}</div>
-                        <div>
-                            <div class="gang-name">${g.name}</div>
-                            <div class="gang-territory">${g.territory}</div>
-                        </div>
-                    </div>
-                    <div class="gang-strength">
-                        <div class="gang-strength-label">Force</div>
-                        <div class="gang-strength-value">${g.strength}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-    }
-
-    window.buyTerritory = function(territoryId) {
-        const territory = territoryDefs.find(t => t.id === territoryId);
-        if (!territory) return;
-
-        if (state.territories[territoryId].owned) {
-            showNotification('⚠️ Déjà possédé', 'Vous contrôlez déjà ce territoire', 'warning');
-            return;
-        }
-
-        if (state.cash < territory.price) {
-            showNotification('❌ Pas assez d\'argent', `Il vous faut ${fmtCash(territory.price)}`, 'error');
-            return;
-        }
-
-        state.cash -= territory.price;
-        state.territories[territoryId].owned = true;
-        recalculateTerritoryIncome();
-        updateMissionProgress('weekly_properties', 1);
-
-        showNotification('✅ Territoire conquis!', `${territory.name} est maintenant sous votre contrôle`, 'success');
-        updateTerritoriesUI();
-        checkAchievements();
-        updateUI();
-        saveGame();
-    };
 
     // Fonctions pour les succès et progression
     function checkAchievements() {
@@ -4396,26 +3419,6 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         }).join('');
     }
 
-    // Initialiser tous les nouveaux systèmes
-    function initNewSystems() {
-        generateMissions();
-        initializeTerritories();
-        updateUpgradesUI();
-        updateAchievementsUI();
-        updateEventsUI();
-    }
-
-    // Boucle de jeu pour les revenus territoriaux
-    setInterval(() => {
-        if (state.territoryIncome > 0) {
-            const perSecond = state.territoryIncome / 60;
-            state.cash += perSecond;
-            state.totalEarnings += perSecond;
-        }
-        triggerRandomEvent();
-        checkAchievements();
-    }, 1000);
-
     // Timers et initialisation
     setInterval(saveGame, 10000); // Sauvegarde toutes les 10 secondes
     setInterval(updateCryptoPrices, 5000); // Prix crypto toutes les 5 secondes
@@ -4431,7 +3434,7 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
     updateStockCharts();
     initMap();
     initModalEvents();
-    initNewSystems();
+    updateAchievementsUI();
 })();
 </script>
 </body>
