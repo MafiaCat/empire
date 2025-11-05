@@ -1627,11 +1627,28 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         eth: 1000,
         doge: 0.1
     };
+
+    // Vérifier et réinitialiser si les prix sont invalides (à 0 ou négatifs)
+    if (cryptoPrices.btc <= 0) cryptoPrices.btc = 10000;
+    if (cryptoPrices.eth <= 0) cryptoPrices.eth = 1000;
+    if (cryptoPrices.doge <= 0) cryptoPrices.doge = 0.1;
+
     const cryptoHistory = JSON.parse(localStorage.getItem('crypto-history')) || {
         btc: Array(60).fill(10000),
         eth: Array(60).fill(1000),
         doge: Array(60).fill(0.1)
     };
+
+    // Vérifier et réinitialiser l'historique si nécessaire
+    if (cryptoHistory.btc.length === 0 || cryptoHistory.btc.every(v => v <= 0)) {
+        cryptoHistory.btc = Array(60).fill(cryptoPrices.btc);
+    }
+    if (cryptoHistory.eth.length === 0 || cryptoHistory.eth.every(v => v <= 0)) {
+        cryptoHistory.eth = Array(60).fill(cryptoPrices.eth);
+    }
+    if (cryptoHistory.doge.length === 0 || cryptoHistory.doge.every(v => v <= 0)) {
+        cryptoHistory.doge = Array(60).fill(cryptoPrices.doge);
+    }
 
     // État des actions (Bourse)
     const stockPrices = JSON.parse(localStorage.getItem('stock-prices')) || {
@@ -1640,12 +1657,33 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
         amzn: 120,
         msft: 300
     };
+
+    // Vérifier et réinitialiser si les prix sont invalides
+    if (stockPrices.aapl <= 0) stockPrices.aapl = 150;
+    if (stockPrices.tsla <= 0) stockPrices.tsla = 200;
+    if (stockPrices.amzn <= 0) stockPrices.amzn = 120;
+    if (stockPrices.msft <= 0) stockPrices.msft = 300;
+
     const stockHistory = JSON.parse(localStorage.getItem('stock-history')) || {
         aapl: Array(60).fill(150),
         tsla: Array(60).fill(200),
         amzn: Array(60).fill(120),
         msft: Array(60).fill(300)
     };
+
+    // Vérifier et réinitialiser l'historique si nécessaire
+    if (stockHistory.aapl.length === 0 || stockHistory.aapl.every(v => v <= 0)) {
+        stockHistory.aapl = Array(60).fill(stockPrices.aapl);
+    }
+    if (stockHistory.tsla.length === 0 || stockHistory.tsla.every(v => v <= 0)) {
+        stockHistory.tsla = Array(60).fill(stockPrices.tsla);
+    }
+    if (stockHistory.amzn.length === 0 || stockHistory.amzn.every(v => v <= 0)) {
+        stockHistory.amzn = Array(60).fill(stockPrices.amzn);
+    }
+    if (stockHistory.msft.length === 0 || stockHistory.msft.every(v => v <= 0)) {
+        stockHistory.msft = Array(60).fill(stockPrices.msft);
+    }
 
     // Prix du marché pour la vente
     let marketPrice = 1 + Math.random();
@@ -3291,11 +3329,14 @@ input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bor
             // Attendre un peu que le canvas soit visible
             setTimeout(() => updateCharts(), 100);
         }
+        if (t.dataset.tab === 'stocks') {
+            // Attendre un peu que le canvas soit visible
+            setTimeout(() => updateStockCharts(), 100);
+        }
         if (t.dataset.tab === 'assets') {
             // Initialiser ou mettre à jour la carte dans l'onglet Magasin
             setTimeout(() => {
                 initMap();
-                updateMapMarkers();
             }, 100);
         }
     });
