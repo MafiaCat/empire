@@ -1,0 +1,3508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Empire Illicite - Mobile</title>
+<style>
+:root{
+	--bg:#f6f7fb;
+	--sidebar:#ffffff;
+	--card:#ffffff;
+	--text:#0f172a;
+	--muted:#6b7280;
+	--primary:#2563eb;
+	--primary-2:#1e40af;
+	--danger:#dc2626;
+	--accent:#16a34a;
+	--border:#e5e7eb;
+	--success:#10b981;
+	--warning:#f59e0b;
+}
+*{box-sizing:border-box}
+body{
+	margin:0;
+	font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Helvetica,Arial,sans-serif;
+	color:var(--text);
+	background:var(--bg);
+	min-height:100vh;
+	display:flex;
+	flex-direction:column;
+	padding-bottom:70px; /* Space for bottom nav */
+}
+/* Mobile Bottom Navigation */
+.sidebar{
+	position:fixed;
+	bottom:0;
+	left:0;
+	right:0;
+	height:70px;
+	background:var(--sidebar);
+	border-top:1px solid var(--border);
+	box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+	z-index:1000;
+	display:flex;
+	align-items:center;
+	padding:0;
+}
+.sidebar h1{
+	display:none; /* Hide title on mobile */
+}
+.nav {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+.nav .tab{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    border-radius: 0;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: none;
+    font-size: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 70px;
+}
+.nav .tab:hover{
+    transform: none;
+    box-shadow: none;
+    color: var(--primary);
+}
+.nav .tab.active {
+    background: transparent;
+    color: var(--primary);
+    transform: none;
+    box-shadow: none;
+    border-top: 3px solid var(--primary);
+}
+.nav .tab.active:hover {
+    transform: none;
+}
+.wallet {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: linear-gradient(135deg, #1f2937, #374151);
+    border-radius: 0;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: #fff;
+    margin: 0;
+    overflow: hidden;
+}
+.wallet::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 10%, transparent 10%), radial-gradient(circle at bottom right, rgba(255,255,255,0.1) 20%, transparent 20%);
+    background-size: 20px 20px, 40px 40px;
+    animation: move-bg 60s linear infinite;
+    opacity: 0.8;
+}
+@keyframes move-bg {
+    from { transform: rotate(0deg) translate(0, 0); }
+    to { transform: rotate(360deg) translate(20px, 20px); }
+}
+.wallet-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+.wallet-amount {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-top: 4px;
+    letter-spacing: -1px;
+    font-family: 'Courier New', Courier, monospace;
+}
+/* Main content */
+main{
+	padding:12px;
+	overflow:auto;
+	flex:1;
+}
+.panel{
+	display:none;
+}
+.panel.active{
+	display:block;
+}
+.banner{
+	position:relative;
+	height:40px;
+	border-radius:12px;
+	overflow:hidden;
+	margin-bottom:12px;
+    background: var(--primary-2);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.card{
+	background:var(--card);
+	border:1px solid var(--border);
+	border-radius:12px;
+	padding:12px;
+	margin-bottom:12px;
+}
+.card h2{
+	margin:0 0 6px 0
+}
+.muted{
+	color:var(--muted);
+	font-size:14px;
+}
+.grid{
+	display:grid;
+	gap:12px;
+}
+.grid.two{
+	grid-template-columns:1fr; /* Single column on mobile */
+}
+.grid.three{
+	grid-template-columns:1fr; /* Single column on mobile */
+}
+.grid.one{
+	grid-template-columns:1fr;
+}
+.big{
+	font-size:24px;
+	font-weight:bold;
+}
+.adbar{
+	padding:12px;
+	text-align:center;
+	font-size:12px;
+	color:var(--muted);
+	border-top:1px solid var(--border);
+}
+.icon-row{
+	display:flex;
+	align-items:center;
+	gap:8px;
+	margin-bottom:8px;
+}
+/* Style pour les emojis/icônes de crypto */
+.crypto-icon {
+    font-size: 1.5em;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+.crypto-market .grid{
+	grid-template-columns: 1fr; /* Single column on mobile */
+}
+.coin{
+	padding:12px;
+	border:1px solid var(--border);
+	border-radius:10px;
+}
+.coin h4{margin:0 0 4px 0}
+.coin .price{font-size:16px;font-weight:bold;}
+.change{font-size:11px;margin-left:6px;font-weight:bold;}
+.pos{color:var(--accent)}
+.neg{color:#dc2626}
+.spark{grid-column:1/3;height:50px;width:100%;} /* Reduced height for mobile */
+.crypto-actions{
+    display:flex;
+    gap:12px;
+    margin-top:12px;
+    justify-content:space-between;
+}
+.buy-controls, .sell-controls{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+.buy-controls input, .sell-controls input {
+    margin-bottom: 0;
+}
+.buy-controls button, .sell-controls button {
+    margin: 0;
+}
+button{
+	background:#0ea5e9;
+	color:#fff;
+	border:1px solid #0284c7;
+	border-radius:10px;padding:10px 12px;cursor:pointer;margin:6px 6px 0 0
+}
+button.primary{background:var(--primary);border-color:transparent}
+button.danger{background:var(--danger);border-color:transparent}
+button.success{background:var(--success);border-color:transparent}
+button.warning{background:var(--warning);border-color:transparent}
+button:disabled{opacity:.6;cursor:not-allowed}
+button:hover:not(:disabled){opacity:0.9;transform:translateY(-1px)}
+input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text)}
+.shop{display:grid;grid-template-columns:1fr;gap:12px} /* Single column on mobile */
+.asset{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px}
+.asset h4{margin:0 0 6px 0}
+.asset .price{color:var(--muted);font-size:14px}
+.asset .bonus{color:var(--accent)}
+.asset .media{
+    position:relative;
+    height:60px;
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    background-color: var(--bg);
+}
+/* Styles pour les barres de progression */
+.progress-container {
+    margin: 8px 0;
+}
+.progress-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background-color: #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #059669);
+    border-radius: 6px;
+    transition: width 0.3s ease;
+}
+.progress-fill.planting {
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+}
+.progress-fill.growing {
+    background: linear-gradient(90deg, #10b981, #059669);
+}
+/* Styles pour les améliorations des propriétés */
+.property-upgrades {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+.property-upgrades h5 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: var(--text);
+}
+.upgrade-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 6px 0;
+    font-size: 13px;
+}
+.upgrade-buttons {
+    display: flex;
+    gap: 6px;
+}
+.upgrade-buttons button {
+    padding: 4px 8px;
+    font-size: 11px;
+    margin: 0;
+}
+.icon-row{display:flex;align-items:center;gap:12px;margin-top:12px}
+.crypto-icon{font-size:36px; line-height:1;width:48px;height:48px;border-radius:50%;background:#f0f0f0;display:flex;justify-content:center;align-items:center}
+
+/* Styles pour les animations de gain de graines */
+.seed-gain-animation {
+    position: fixed;
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 1.2em;
+    pointer-events: none;
+    animation: floatUp 1s ease-out forwards;
+    z-index: 1000;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+@keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-50px); }
+}
+
+/* Styles pour l'animation de plantation */
+.planting-animation {
+    position: fixed;
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 0.9em;
+    pointer-events: none;
+    animation: popIn 0.5s ease-out forwards, fadeOut 0.5s ease-in 0.5s forwards;
+    z-index: 1000;
+    background: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 80px; /* Below wallet header */
+    right: 10px;
+    left: 10px; /* Full width on mobile */
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    z-index: 10000;
+    animation: slideIn 0.3s ease-out;
+    max-width: none; /* Full width on mobile */
+    border-left: 4px solid var(--success);
+}
+
+.notification.warning {
+    border-left-color: var(--warning);
+}
+
+.notification.error {
+    border-left-color: var(--danger);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+}
+
+.notification p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Stats dashboard */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+}
+
+.stat-card.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-card.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-card .stat-label {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-bottom: 4px;
+}
+
+.stat-card .stat-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Boutons d'action rapide */
+.quick-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.planted-counter {
+    font-size: 13px;
+    margin: 6px 0;
+    color: var(--muted);
+}
+
+.harvest-btn {
+    width: 100%;
+    margin-top: 8px;
+}
+
+/* Carte interactive - Style Google Maps */
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Reduced for mobile */
+    background: #e5e3df;
+    border-radius: 12px;
+    overflow: visible;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+#mapContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+
+.map-legend {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 100;
+}
+
+.map-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+    font-size: 12px;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-dot.available {
+    background: #ef4444;
+    border: 2px solid #dc2626;
+}
+
+.legend-dot.owned {
+    background: #10b981;
+    border: 2px solid #059669;
+}
+
+.property-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 50;
+}
+
+.property-marker:hover {
+    z-index: 60;
+}
+
+.property-marker.expanded {
+    z-index: 100;
+    position: absolute !important;
+}
+
+.property-marker.purchased {
+    animation: purchaseAnimation 1s ease;
+}
+
+@keyframes purchaseAnimation {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.property-bubble {
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    padding: 0;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.property-marker.expanded .property-bubble {
+    border-radius: 24px;
+    background: white;
+    width: 450px;
+    height: auto;
+    min-height: 400px;
+    max-height: 80vh;
+    padding: 0;
+    display: block;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.property-icon {
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    transition: all 0.3s;
+}
+
+.property-marker.expanded .property-icon {
+    display: none;
+}
+
+.property-marker:hover .property-icon {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.property-marker.owned:not(.expanded) .property-bubble {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.property-marker.owned.expanded .property-bubble-image {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.property-marker.poi .property-bubble {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.property-marker.poi:not(.expanded) .property-bubble {
+    width: 70px;
+    height: 70px;
+}
+
+.property-marker.poi:not(.expanded) .property-icon {
+    font-size: 38px;
+}
+
+.property-marker.poi.expanded .property-bubble-image {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.property-bubble-content {
+    display: none;
+}
+
+.property-marker.expanded .property-bubble-content {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+.property-bubble-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+}
+
+.property-bubble-body {
+    padding: 12px; /* Reduced for mobile */
+}
+
+.property-bubble-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.property-bubble-desc {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.property-bubble-price {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+.property-bubble-price.owned {
+    color: #10b981;
+}
+
+.property-bubble-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.property-bubble-actions button {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.property-bubble-actions button.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.property-bubble-actions button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.property-bubble-actions button.secondary {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.property-bubble-actions button.secondary:hover {
+    background: #e5e7eb;
+}
+
+.property-bubble-items {
+    margin-bottom: 12px;
+}
+
+.property-bubble-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+    padding: 12px;
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+    transition: all 0.2s;
+}
+
+.property-bubble-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.property-bubble-item.owned {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-left-color: #10b981;
+}
+
+.property-bubble-item-info {
+    flex: 1;
+}
+
+.property-bubble-item-icon {
+    font-size: 24px;
+    margin-right: 8px;
+}
+
+.property-bubble-item-name {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 13px;
+}
+
+.property-bubble-item-price {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.property-bubble-item button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transition: all 0.2s;
+}
+
+.property-bubble-item button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.property-bubble-item-owned {
+    color: #10b981;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+
+
+/* Modal de propriété */
+.property-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s;
+}
+
+.property-modal.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    max-width: 500px;
+    width: 95%; /* More width on mobile */
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+}
+
+.modal-icon {
+    font-size: 48px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--bg);
+}
+
+.modal-title {
+    flex: 1;
+}
+
+.modal-title h3 {
+    margin: 0 0 4px 0;
+    font-size: 20px;
+}
+
+.modal-title .price {
+    color: var(--primary);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.modal-close:hover {
+    background: var(--border);
+}
+
+.modal-description {
+    margin-bottom: 16px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.modal-bonus {
+    background: #f0fdf4;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--accent);
+}
+
+.modal-bonus strong {
+    color: var(--accent);
+}
+
+.modal-items {
+    display: grid;
+    gap: 12px;
+}
+
+.modal-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 2px solid var(--border);
+}
+
+.modal-item.owned {
+    background: #f0fdf4;
+    border-color: var(--accent);
+}
+
+.modal-item-icon {
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: white;
+}
+
+.modal-item-info {
+    flex: 1;
+}
+
+.modal-item-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+}
+
+.modal-item-info .price {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.modal-item-info .bonus {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.modal-item-info .owned-badge {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* Assets dans le Dashboard */
+.asset-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Smaller on mobile */
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.asset-showcase-item {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 8px;
+    text-align: center;
+}
+
+.asset-showcase-item .icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.asset-showcase-item .name {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.asset-showcase-item .type {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* Succès */
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.achievement-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    transition: all 0.2s;
+    opacity: 0.6;
+}
+
+.achievement-card.unlocked {
+    opacity: 1;
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.achievement-icon {
+    font-size: 48px;
+    flex-shrink: 0;
+}
+
+.achievement-info {
+    flex: 1;
+}
+
+.achievement-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.achievement-description {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.achievement-progress {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #667eea;
+}
+</style>
+</head>
+<body>
+<!-- Mobile Header with Wallet -->
+<div class="wallet">
+    <div class="wallet-label">💰 Argent</div>
+    <div class="wallet-amount" id="cashDisplay">$100</div>
+</div>
+<main>
+    <!-- NOUVEAU: Dashboard -->
+    <section id="dashboard" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>📊 Vue d'ensemble</h2>
+            <p class="muted">Statistiques de votre empire</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">💰 Cash</div>
+                    <div class="stat-value" id="dashCash">$0</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-label">🌱 Plants mûrs</div>
+                    <div class="stat-value" id="dashPlants">0</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-label">📦 Stock (g)</div>
+                    <div class="stat-value" id="dashStock">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">📈 Production/s</div>
+                    <div class="stat-value" id="dashProduction">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>🏢 Vos propriétés</h2>
+            <p class="muted">Résumé de vos lieux de production</p>
+            <div id="dashboardProperties"></div>
+        </div>
+        <div class="card">
+            <h2>💼 Vos actifs commerciaux</h2>
+            <div class="grid two">
+                <div>
+                    <strong>Dealers:</strong> <span id="dashDealers">0</span>
+                </div>
+                <div>
+                    <strong>Armes:</strong> Niveau <span id="dashWeapons">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>🏎️ Vos voitures</h2>
+            <p class="muted">Collection de véhicules de luxe</p>
+            <div class="asset-showcase" id="dashCars"></div>
+        </div>
+        <div class="card">
+            <h2>🎨 Vos œuvres d'art</h2>
+            <p class="muted">Collection d'art pour blanchir votre argent</p>
+            <div class="asset-showcase" id="dashArt"></div>
+        </div>
+        <div class="card">
+            <h2>💎 Vos bijoux</h2>
+            <p class="muted">Collection de bijoux précieux</p>
+            <div class="asset-showcase" id="dashJewelry"></div>
+        </div>
+    </section>
+
+    <section id="job" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>🍕 Livreur de pizza</h2>
+            <p class="muted">Gagnez un peu d'argent en attendant que vos plants poussent.</p>
+            <div class="grid one">
+                <div>
+                    <button id="doJob" class="primary">Faire une livraison (+$10)</button>
+                    <p id="jobCooldown" style="display:none;">Revenez dans <span id="jobTimer">30</span> secondes...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="plantation" class="panel active">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>🌱 Graines et Production</h2>
+            <p class="muted">Achetez des graines, faites pousser et récoltez de la drogue.</p>
+            <div class="grid two">
+                <div>
+                    <label>Prix graine</label>
+                    <div class="big" id="seedPrice">$10</div>
+                    <div class="quick-actions">
+                        <button id="buySeed" class="primary">Acheter 1 ($10)</button>
+                        <button id="buySeed10">Acheter 10 ($100)</button>
+                        <button id="buySeedMax" class="success">Acheter Max</button>
+                    </div>
+                </div>
+                <div>
+                    <label>Vos cultures</label>
+                    <div>Graines: <strong id="seedCount">0</strong></div>
+                    <div>Plants mûrs: <strong id="plantCount">0 / 50</strong></div>
+                    <div>Production: <strong id="productionRate">0</strong> g/s</div>
+                    <div>En plantation: <strong id="totalPlanting">0</strong></div>
+                    <div>En croissance: <strong id="totalGrowing">0</strong></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>🏡 Lieux de production</h2>
+            <p class="muted">Vos propriétés et lieux de culture. Achetez-les au Magasin.</p>
+            <div class="shop" id="plantProperties">
+                <div class="asset owned" data-asset-id="studio">
+                    <div class="media">🏠</div>
+                    <h4>Petit studio miteux</h4>
+                    <p class="bonus">Capacité: <span id="studio-capacity">0 / 50</span></p>
+                    <div class="quick-actions">
+                        <button class="primary plant-seed-btn" data-asset-id="studio">Planter 1</button>
+                        <button class="plant-seed-btn-10" data-asset-id="studio">Planter 10</button>
+                    </div>
+                    <button class="success harvest-btn" data-asset-id="studio">🌾 Récolter tout</button>
+                    <div class="planted-counter">En plantation: <span id="studio-plants">0</span></div>
+                    <div class="progress-container" id="studio-planting-container">
+                        <div class="progress-label">Plantation</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill planting" id="studio-planting-progress" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="planted-counter">En croissance: <span id="studio-growing">0</span></div>
+                    <div class="progress-container">
+                        <div class="progress-label">Croissance des plants</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill growing" id="studio-growing-progress" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="property-upgrades">
+                        <h5>🔧 Améliorations</h5>
+                        <div class="upgrade-row">
+                            <span>🧑‍🌾 Botanistes: <strong id="studio-botanists">0</strong></span>
+                            <div class="upgrade-buttons">
+                                <button class="primary hire-botanist" data-asset-id="studio">+1 ($2,000)</button>
+                            </div>
+                        </div>
+                        <div class="upgrade-row">
+                            <span>💡 Lampes UV: <strong id="studio-lamps">0</strong></span>
+                            <div class="upgrade-buttons">
+                                <button class="primary buy-lamp" data-asset-id="studio">+1 ($3,000)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="vente" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>📈 Marché</h2>
+            <p class="muted">Vendez votre stock au prix du marché. Le prix fluctue.</p>
+            <div class="grid two">
+                <div>
+                    <label>Prix actuel (par g)</label>
+                    <div class="big" id="marketPrice">$1.00</div>
+                </div>
+                <div>
+                    <label>Stock disponible: <strong id="stockDisplay2">0</strong> g</label>
+                    <input id="sellAmount" type="number" min="1" placeholder="Quantité à vendre (g)">
+                    <div class="quick-actions">
+                        <button id="sellBtn" class="primary">Vendre</button>
+                        <button id="sellAllBtn" class="success">Vendre tout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>💰 Résumé</h2>
+            <div class="grid two">
+                <div>Cash: <strong id="cashDisplay2">$100</strong></div>
+                <div>Stock: <strong id="stockDisplay">0</strong> g</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dealers" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>🤝 Dealers & Armes</h2>
+            <p class="muted">Les dealers vendent automatiquement votre stock au prix du marché.</p>
+            <div class="grid two">
+                <div>
+                    <p>Embaucher un dealer (+0.5 g/s vendus)</p>
+                    <button id="hireDealer" class="primary">Embaucher ($1,000)</button>
+                    <div>Dealers: <strong id="dealerCount">0</strong></div>
+                    <div class="muted">Vente auto: <strong id="dealerRate">0</strong> g/s</div>
+                </div>
+                <div>
+                    <p>Armer les dealers (+30% efficacité)</p>
+                    <button id="buyWeapon" class="primary">Acheter armes ($2,000)</button>
+                    <div>Niveau d'armes: <strong id="weaponLevel">0</strong></div>
+                    <div class="muted">Bonus: <strong id="weaponBonus">0</strong>%</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="assets" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>💎 Magasin - Carte de la ville</h2>
+            <p class="muted">Explorez la ville et achetez des propriétés en cliquant sur les marqueurs colorés sur la carte.</p>
+        </div>
+        <div class="card">
+            <div class="map-container" id="mapContainer">
+                <div class="map-legend">
+                    <div style="font-weight: bold; margin-bottom: 8px; font-size: 13px;">Catégories</div>
+                    <div class="map-legend-item">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                        <span>Lieux de production</span>
+                    </div>
+                    <div class="map-legend-item">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"></div>
+                        <span>Automobile</span>
+                    </div>
+                    <div class="map-legend-item">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"></div>
+                        <span>Art</span>
+                    </div>
+                    <div class="map-legend-item">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"></div>
+                        <span>Bijoux</span>
+                    </div>
+                    <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #6b7280;">
+                        <div style="margin: 4px 0;">🟣 Violet = Disponible</div>
+                        <div style="margin: 4px 0;">🟢 Vert = Possédé</div>
+                    </div>
+                </div>
+                <div id="mapContent" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+        <div class="card">
+            <h3>📍 Catégories de biens</h3>
+            <p class="muted">Cliquez sur les bulles colorées pour explorer et acheter.</p>
+            <div class="grid two">
+                <div style="padding: 12px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; border-left: 4px solid #667eea;">
+                    <strong>🏭 Lieux de production</strong>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Propriétés résidentielles et fermes pour cultiver</p>
+                </div>
+                <div style="padding: 12px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
+                    <strong>🏎️ Automobile</strong>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Voitures de luxe pour impressionner</p>
+                </div>
+                <div style="padding: 12px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
+                    <strong>🎨 Art</strong>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Œuvres d'art pour blanchir votre argent</p>
+                </div>
+                <div style="padding: 12px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
+                    <strong>💎 Bijoux</strong>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Bijoux précieux pour diversifier vos investissements</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="crypto" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>₿ Crypto Marché</h2>
+            <p class="muted">Investissez dans des cryptomonnaies. Leurs prix fluctuent lentement.</p>
+            <div class="grid two">
+                <div class="coin">
+                    <div>
+                        <h4>Bitcoin</h4>
+                        <span class="price" id="btcPrice">$0</span>
+                        <span class="change pos" id="btcChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="btcSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="btcBuyAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="primary buy-crypto" data-crypto="btc">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="btcSellAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="danger sell-crypto" data-crypto="btc">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="coin">
+                    <div>
+                        <h4>Ethereum</h4>
+                        <span class="price" id="ethPrice">$0</span>
+                        <span class="change pos" id="ethChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="ethSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="ethBuyAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="primary buy-crypto" data-crypto="eth">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="ethSellAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="danger sell-crypto" data-crypto="eth">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="coin">
+                    <div>
+                        <h4>Dogecoin</h4>
+                        <span class="price" id="dogePrice">$0</span>
+                        <span class="change pos" id="dogeChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="dogeSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="dogeBuyAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="primary buy-crypto" data-crypto="doge">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="dogeSellAmount" min="0.0001" step="0.0001" placeholder="Quantité">
+                            <button class="danger sell-crypto" data-crypto="doge">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>💼 Vos Cryptos</h2>
+            <p>Vos possessions actuelles et leur valeur.</p>
+            <div class="icon-row">
+                <span class="crypto-icon">₿</span>
+                <div>
+                    <div>Bitcoin: <strong id="btcOwned">0</strong> BTC</div>
+                    <div class="muted">Valeur: <strong id="btcValue">$0</strong></div>
+                </div>
+            </div>
+            <div class="icon-row">
+                <span class="crypto-icon">Ξ</span>
+                <div>
+                    <div>Ethereum: <strong id="ethOwned">0</strong> ETH</div>
+                    <div class="muted">Valeur: <strong id="ethValue">$0</strong></div>
+                </div>
+            </div>
+            <div class="icon-row">
+                <span class="crypto-icon">🐶</span>
+                <div>
+                    <div>Dogecoin: <strong id="dogeOwned">0</strong> DOGE</div>
+                    <div class="muted">Valeur: <strong id="dogeValue">$0</strong></div>
+                </div>
+            </div>
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+                <strong>Valeur totale du portefeuille: <span id="totalCryptoValue">$0</span></strong>
+            </div>
+        </div>
+    </section>
+
+    <section id="stocks" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>📈 Bourse</h2>
+            <p class="muted">Investissez dans des actions d'entreprises. Les cours fluctuent en fonction du marché.</p>
+            <div class="grid two">
+                <div class="coin">
+                    <div>
+                        <h4>Apple Inc.</h4>
+                        <span class="price" id="aaplPrice">$0</span>
+                        <span class="change pos" id="aaplChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="aaplSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="aaplBuyAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="primary buy-stock" data-stock="aapl">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="aaplSellAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="danger sell-stock" data-stock="aapl">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="coin">
+                    <div>
+                        <h4>Tesla Inc.</h4>
+                        <span class="price" id="tslaPrice">$0</span>
+                        <span class="change pos" id="tslaChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="tslaSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="tslaBuyAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="primary buy-stock" data-stock="tsla">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="tslaSellAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="danger sell-stock" data-stock="tsla">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="coin">
+                    <div>
+                        <h4>Amazon.com</h4>
+                        <span class="price" id="amznPrice">$0</span>
+                        <span class="change pos" id="amznChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="amznSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="amznBuyAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="primary buy-stock" data-stock="amzn">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="amznSellAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="danger sell-stock" data-stock="amzn">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="coin">
+                    <div>
+                        <h4>Microsoft</h4>
+                        <span class="price" id="msftPrice">$0</span>
+                        <span class="change pos" id="msftChange">+0%</span>
+                    </div>
+                    <div class="spark"><canvas id="msftSpark"></canvas></div>
+                    <div class="crypto-actions">
+                        <div class="buy-controls">
+                            <input type="number" id="msftBuyAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="primary buy-stock" data-stock="msft">Acheter</button>
+                        </div>
+                        <div class="sell-controls">
+                            <input type="number" id="msftSellAmount" min="1" step="1" placeholder="Quantité">
+                            <button class="danger sell-stock" data-stock="msft">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>💼 Votre Portefeuille Actions</h2>
+            <p>Vos actions et leur valeur actuelle.</p>
+            <div class="icon-row">
+                <span class="crypto-icon">🍎</span>
+                <div>
+                    <div>Apple: <strong id="aaplOwned">0</strong> actions</div>
+                    <div class="muted">Valeur: <strong id="aaplValue">$0</strong></div>
+                </div>
+            </div>
+            <div class="icon-row">
+                <span class="crypto-icon">⚡</span>
+                <div>
+                    <div>Tesla: <strong id="tslaOwned">0</strong> actions</div>
+                    <div class="muted">Valeur: <strong id="tslaValue">$0</strong></div>
+                </div>
+            </div>
+            <div class="icon-row">
+                <span class="crypto-icon">📦</span>
+                <div>
+                    <div>Amazon: <strong id="amznOwned">0</strong> actions</div>
+                    <div class="muted">Valeur: <strong id="amznValue">$0</strong></div>
+                </div>
+            </div>
+            <div class="icon-row">
+                <span class="crypto-icon">🪟</span>
+                <div>
+                    <div>Microsoft: <strong id="msftOwned">0</strong> actions</div>
+                    <div class="muted">Valeur: <strong id="msftValue">$0</strong></div>
+                </div>
+            </div>
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+                <strong>Valeur totale du portefeuille: <span id="totalStockValue">$0</span></strong>
+            </div>
+        </div>
+    </section>
+
+    <!-- Succès -->
+    <section id="achievements" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>🏅 Vos succès</h2>
+            <p class="muted">Progression: <strong id="achievementProgress">0%</strong> (<span id="unlockedCount">0</span>/<span id="totalCount">0</span>)</p>
+            <div class="card" style="margin: 16px 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px;">
+                <h3 style="margin: 0 0 8px 0;">🏆 Votre rang</h3>
+                <div style="font-size: 32px; font-weight: bold;" id="playerRank">Petit Dealer</div>
+                <div style="margin-top: 8px; font-size: 14px; opacity: 0.9;" id="rankDescription">Vous débutez dans le monde illicite</div>
+                <div style="margin-top: 16px;">
+                    <div style="background: rgba(255,255,255,0.2); border-radius: 12px; height: 24px; overflow: hidden;">
+                        <div id="rankProgress" style="background: linear-gradient(90deg, #10b981, #059669); height: 100%; width: 0%; transition: width 0.5s;"></div>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 12px;" id="rankProgressText">0 / 10000 pour le prochain rang</div>
+                </div>
+            </div>
+            <div id="achievementsList" class="achievements-grid"></div>
+        </div>
+    </section>
+
+    <section id="profil" class="panel">
+        <div class="banner"></div>
+        <div class="card">
+            <h2>👤 Profil</h2>
+            <p>Nom: <input id="playerName" placeholder="Votre blaze"></p>
+            <button id="saveBtn">Sauvegarder</button>
+            <button id="resetBtn" class="danger">Réinitialiser la partie</button>
+            <button id="adminBtn" class="warning">💰 Admin : +$1,000,000</button>
+        </div>
+    </section>
+</main>
+
+<!-- Mobile Bottom Navigation -->
+<aside class="sidebar">
+    <h1>🏴‍☠️ Empire Illicite</h1>
+    <div class="nav">
+        <button class="tab" data-tab="dashboard">📊</button>
+        <button class="tab" data-tab="job">🍕</button>
+        <button class="tab active" data-tab="plantation">🌱</button>
+        <button class="tab" data-tab="vente">📈</button>
+        <button class="tab" data-tab="dealers">🤝</button>
+        <button class="tab" data-tab="assets">💎</button>
+        <button class="tab" data-tab="crypto">₿</button>
+        <button class="tab" data-tab="stocks">📈</button>
+        <button class="tab" data-tab="achievements">🏅</button>
+        <button class="tab" data-tab="profil">👤</button>
+    </div>
+</aside>
+
+<footer class="adbar" style="display:none;">Empire Illicite v2.1 - Mobile</footer>
+
+<!-- Notifications Container -->
+<div id="notificationContainer"></div>
+
+<!-- Property Modal -->
+<div id="propertyModal" class="property-modal">
+    <div class="modal-content">
+        <button class="modal-close" id="modalClose">×</button>
+        <div class="modal-header">
+            <div class="modal-icon" id="modalIcon"></div>
+            <div class="modal-title">
+                <h3 id="modalTitle"></h3>
+                <div class="price" id="modalPrice"></div>
+            </div>
+        </div>
+        <div class="modal-description" id="modalDescription"></div>
+        <div class="modal-bonus" id="modalBonus" style="display: none;"></div>
+        <div class="modal-items" id="modalItems"></div>
+        <div class="modal-actions" id="modalActions"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script>
+(() => {
+    // État du jeu avec système de progression contrôlé
+    const savedState = JSON.parse(localStorage.getItem('illicit-empire')) || {};
+    const state = {
+        cash: savedState.cash || 100,
+        seeds: savedState.seeds || 0,
+        plants: savedState.plants || 0,
+        stockGrams: savedState.stockGrams || 0,
+        dealerCount: savedState.dealerCount || 0,
+        weaponLevel: savedState.weaponLevel || 0,
+        passiveIncome: savedState.passiveIncome || 0,
+        assets: savedState.assets || {},
+        plantLimit: savedState.plantLimit || 50,
+        playerName: savedState.playerName || '',
+        crypto: savedState.crypto || {
+            btc: 0,
+            eth: 0,
+            doge: 0
+        },
+        stocks: savedState.stocks || {
+            aapl: 0,
+            tsla: 0,
+            amzn: 0,
+            msft: 0
+        },
+        jobCooldownEnd: savedState.jobCooldownEnd || 0,
+        propertyProgress: savedState.propertyProgress || {},
+        plantingQueues: savedState.plantingQueues || {}, // NOUVEAU: Files d'attente pour plantation
+
+        // Système de succès et progression
+        achievements: savedState.achievements || {},
+        totalEarnings: savedState.totalEarnings || 0,
+        totalSales: savedState.totalSales || 0,
+        totalDeliveries: savedState.totalDeliveries || 0,
+        rank: savedState.rank || 0,
+        rankProgress: savedState.rankProgress || 0
+    };
+
+    // État des cryptos
+    const cryptoPrices = JSON.parse(localStorage.getItem('crypto-prices')) || {
+        btc: 10000,
+        eth: 1000,
+        doge: 0.1
+    };
+
+    // Vérifier et réinitialiser si les prix sont invalides (à 0 ou négatifs)
+    if (cryptoPrices.btc <= 0) cryptoPrices.btc = 10000;
+    if (cryptoPrices.eth <= 0) cryptoPrices.eth = 1000;
+    if (cryptoPrices.doge <= 0) cryptoPrices.doge = 0.1;
+
+    const cryptoHistory = JSON.parse(localStorage.getItem('crypto-history')) || {
+        btc: Array(60).fill(10000),
+        eth: Array(60).fill(1000),
+        doge: Array(60).fill(0.1)
+    };
+
+    // Vérifier et réinitialiser l'historique si nécessaire
+    if (cryptoHistory.btc.length === 0 || cryptoHistory.btc.every(v => v <= 0)) {
+        cryptoHistory.btc = Array(60).fill(cryptoPrices.btc);
+    }
+    if (cryptoHistory.eth.length === 0 || cryptoHistory.eth.every(v => v <= 0)) {
+        cryptoHistory.eth = Array(60).fill(cryptoPrices.eth);
+    }
+    if (cryptoHistory.doge.length === 0 || cryptoHistory.doge.every(v => v <= 0)) {
+        cryptoHistory.doge = Array(60).fill(cryptoPrices.doge);
+    }
+
+    // État des actions (Bourse)
+    const stockPrices = JSON.parse(localStorage.getItem('stock-prices')) || {
+        aapl: 150,
+        tsla: 200,
+        amzn: 120,
+        msft: 300
+    };
+
+    // Vérifier et réinitialiser si les prix sont invalides
+    if (stockPrices.aapl <= 0) stockPrices.aapl = 150;
+    if (stockPrices.tsla <= 0) stockPrices.tsla = 200;
+    if (stockPrices.amzn <= 0) stockPrices.amzn = 120;
+    if (stockPrices.msft <= 0) stockPrices.msft = 300;
+
+    const stockHistory = JSON.parse(localStorage.getItem('stock-history')) || {
+        aapl: Array(60).fill(150),
+        tsla: Array(60).fill(200),
+        amzn: Array(60).fill(120),
+        msft: Array(60).fill(300)
+    };
+
+    // Vérifier et réinitialiser l'historique si nécessaire
+    if (stockHistory.aapl.length === 0 || stockHistory.aapl.every(v => v <= 0)) {
+        stockHistory.aapl = Array(60).fill(stockPrices.aapl);
+    }
+    if (stockHistory.tsla.length === 0 || stockHistory.tsla.every(v => v <= 0)) {
+        stockHistory.tsla = Array(60).fill(stockPrices.tsla);
+    }
+    if (stockHistory.amzn.length === 0 || stockHistory.amzn.every(v => v <= 0)) {
+        stockHistory.amzn = Array(60).fill(stockPrices.amzn);
+    }
+    if (stockHistory.msft.length === 0 || stockHistory.msft.every(v => v <= 0)) {
+        stockHistory.msft = Array(60).fill(stockPrices.msft);
+    }
+
+    // Prix du marché pour la vente
+    let marketPrice = 1 + Math.random();
+
+    // Définition des propriétés avec positions sur la carte (positions en px sur 2000x2000)
+    const purchasableAssets = [
+        // Propriétés résidentielles
+        {
+            id: 'local',
+            type: 'plantLimit',
+            name: 'Local Abandonné',
+            description: 'Un local miteux au cœur de la ville. Discret mais petit.',
+            bonus: 500,
+            price: 5000,
+            icon: '🏪',
+            x: 850,
+            y: 1150
+        },
+        {
+            id: 'small-apt',
+            type: 'plantLimit',
+            name: 'Petit Appartement',
+            description: 'Appartement urbain parfait pour démarrer vos activités.',
+            bonus: 1000,
+            price: 25000,
+            icon: '🏙️',
+            x: 1150,
+            y: 850
+        },
+        {
+            id: 'house',
+            type: 'plantLimit',
+            name: 'Maison avec Jardin',
+            description: 'Maison en banlieue avec jardin secret pour cultiver tranquillement.',
+            bonus: 5000,
+            price: 100000,
+            icon: '🏡',
+            x: 1500,
+            y: 1000
+        },
+        {
+            id: 'farm-small',
+            type: 'plantLimit',
+            name: 'Corps de Ferme Caché',
+            description: 'Ferme isolée au cœur d\'une forêt dense. Parfaite pour la discrétion.',
+            bonus: 10000,
+            price: 500000,
+            icon: '🌲',
+            x: 1650,
+            y: 400
+        },
+        {
+            id: 'farm-large',
+            type: 'plantLimit',
+            name: 'Grosse Ferme Cachée',
+            description: 'Grande exploitation agricole perdue dans les bois. Capacité énorme.',
+            bonus: 50000,
+            price: 2000000,
+            icon: '🌳',
+            x: 350,
+            y: 1650
+        },
+        {
+            id: 'huge-farm',
+            type: 'plantLimit',
+            name: 'Exploitation Géante',
+            description: 'Complexe industriel forestier. L\'ultime propriété pour un empire.',
+            bonus: 100000,
+            price: 10000000,
+            icon: '🏭',
+            x: 1700,
+            y: 1800
+        },
+        // Voitures (regroupées dans un garage)
+        {
+            id: 'lamborghini',
+            type: 'deliverySpeed',
+            name: 'Lamborghini Huracán',
+            description: 'Supercar italienne. Vitesse et style pour vos livraisons express.',
+            bonus: 0.1,
+            price: 250000,
+            icon: '🏎️',
+            category: 'cars'
+        },
+        {
+            id: 'rollsroyce',
+            type: 'credibility',
+            name: 'Rolls-Royce Phantom',
+            description: 'Luxe britannique absolu. Augmente votre crédibilité dans le milieu.',
+            bonus: 0.15,
+            price: 450000,
+            icon: '🚗',
+            category: 'cars'
+        },
+        // Œuvres d'art (regroupées dans un musée)
+        {
+            id: 'picasso',
+            type: 'avoidInvestigation',
+            name: 'Tableau de Picasso',
+            description: 'Chef-d\'œuvre cubiste. Idéal pour blanchir de l\'argent.',
+            bonus: 0.05,
+            price: 1000000,
+            icon: '🎨',
+            category: 'art'
+        },
+        {
+            id: 'monet',
+            type: 'salesBonus',
+            name: 'Tableau de Monet',
+            description: 'Impressionnisme français. Augmente vos revenus de vente.',
+            bonus: 0.02,
+            price: 800000,
+            icon: '🖼️',
+            category: 'art'
+        },
+        // Bijoux (regroupés dans une bijouterie)
+        {
+            id: 'diamond-ring',
+            type: 'salesBonus',
+            name: 'Bague en Diamant',
+            description: 'Bijou étincelant qui impressionne vos clients et augmente vos ventes.',
+            bonus: 0.05,
+            price: 500000,
+            icon: '💍',
+            category: 'jewelry'
+        },
+    ];
+
+    // POI (Points d'intérêt) sur la carte
+    const mapPOI = [
+        {
+            id: 'garage',
+            name: 'Garage de Luxe',
+            description: 'Concessionnaire de voitures haut de gamme pour impressionner vos clients.',
+            icon: '🏎️',
+            x: 1050,
+            y: 950,
+            category: 'cars',
+            items: purchasableAssets.filter(a => a.category === 'cars')
+        },
+        {
+            id: 'museum',
+            name: 'Musée d\'Art Moderne',
+            description: 'Galerie d\'art pour investir dans des œuvres prestigieuses et blanchir votre argent.',
+            icon: '🎨',
+            x: 900,
+            y: 1000,
+            category: 'art',
+            items: purchasableAssets.filter(a => a.category === 'art')
+        },
+        {
+            id: 'jeweler',
+            name: 'Bijouterie de Luxe',
+            description: 'Boutique de bijoux précieux pour diversifier vos investissements.',
+            icon: '💎',
+            x: 1100,
+            y: 1100,
+            category: 'jewelry',
+            items: purchasableAssets.filter(a => a.category === 'jewelry')
+        }
+    ];
+
+    // Initialisation des propriétés
+    if (!state.assets.studio) {
+        state.assets.studio = { owned: true, plants: 0, limit: 50, botanists: 0, lamps: 0, growing: 0, mature: 0 };
+    }
+    if (!state.propertyProgress.studio) {
+        state.propertyProgress.studio = {
+            planting: 0,
+            growing: 0,
+            plantingActive: false,
+            growingActive: false,
+            plantingStart: 0,
+            growingStart: 0
+        };
+    }
+    if (!state.plantingQueues.studio) {
+        state.plantingQueues.studio = 0;
+    }
+
+    purchasableAssets.filter(a => a.type === 'plantLimit').forEach(asset => {
+        if (state.assets[asset.id] && !state.assets[asset.id].botanists) {
+            state.assets[asset.id].plants = state.assets[asset.id].plants || 0;
+            state.assets[asset.id].limit = asset.bonus;
+            state.assets[asset.id].botanists = 0;
+            state.assets[asset.id].lamps = 0;
+            state.assets[asset.id].growing = 0;
+            state.assets[asset.id].mature = 0;
+        }
+        if (state.assets[asset.id] && !state.propertyProgress[asset.id]) {
+            state.propertyProgress[asset.id] = {
+                planting: 0,
+                growing: 0,
+                plantingActive: false,
+                growingActive: false,
+                plantingStart: 0,
+                growingStart: 0
+            };
+        }
+        if (state.assets[asset.id] && !state.plantingQueues[asset.id]) {
+            state.plantingQueues[asset.id] = 0;
+        }
+    });
+
+    // Charts instances (pour éviter les fuites mémoire)
+    let chartInstances = {};
+
+    const fmt = n => `$${n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const fmtCrypto = n => `$${n.toLocaleString()}`;
+
+    function fmtCash(num) {
+        if (num >= 1000000000) {
+            return `$${(num / 1000000000).toFixed(1)}Md`;
+        }
+        if (num >= 1000000) {
+            return `$${(num / 1000000).toFixed(1)}M`;
+        }
+        if (num >= 1000) {
+            return `$${(num / 1000).toFixed(1)}k`;
+        }
+        return fmt(num);
+    }
+
+    const el = id => document.getElementById(id);
+
+    // NOUVEAU: Système de notifications
+    function showNotification(title, message, type = 'success') {
+        const container = el('notificationContainer');
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <h4>${title}</h4>
+            <p>${message}</p>
+        `;
+        container.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.animation = 'slideIn 0.3s ease-out reverse';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // AMELIORE: Système de plantation avec file d'attente
+    function addToPlantingQueue(propertyId, count = 1) {
+        const property = state.assets[propertyId];
+        if (!property) return 0;
+
+        let planted = 0;
+        for (let i = 0; i < count; i++) {
+            if (state.seeds > 0 && (property.plants + property.growing + property.mature + state.plantingQueues[propertyId]) < property.limit) {
+                state.plantingQueues[propertyId]++;
+                state.seeds--;
+                planted++;
+            } else {
+                break;
+            }
+        }
+
+        if (planted > 0) {
+            startPlanting(propertyId);
+        }
+
+        return planted;
+    }
+
+    function startPlanting(propertyId) {
+        const property = state.assets[propertyId];
+        const progress = state.propertyProgress[propertyId];
+
+        if (!progress.plantingActive && state.plantingQueues[propertyId] > 0) {
+            state.plantingQueues[propertyId]--;
+            property.plants++;
+            progress.plantingActive = true;
+            progress.plantingStart = Date.now();
+            progress.planting = 0;
+        }
+    }
+
+    function startGrowing(propertyId) {
+        const property = state.assets[propertyId];
+        const progress = state.propertyProgress[propertyId];
+        if (!progress.growingActive && property.growing > 0) {
+            progress.growingActive = true;
+            progress.growingStart = Date.now();
+            progress.growing = 0;
+        }
+    }
+
+    function updateProgressBars() {
+        const now = Date.now();
+        const plantingCycleTime = 5000;
+        const properties = ['studio', ...purchasableAssets.filter(a => a.type === 'plantLimit' && state.assets[a.id]).map(a => a.id)];
+
+        properties.forEach(propertyId => {
+            const property = state.assets[propertyId];
+            const progress = state.propertyProgress[propertyId];
+            if (!property || !progress) return;
+
+            // Gestion de la plantation
+            if (progress.plantingActive) {
+                const timeSinceStart = now - progress.plantingStart;
+                const plantingProgress = Math.min(100, (timeSinceStart / plantingCycleTime) * 100);
+                progress.planting = plantingProgress;
+
+                const plantingBar = el(`${propertyId}-planting-progress`);
+                if (plantingBar) {
+                    plantingBar.style.width = `${plantingProgress}%`;
+                }
+
+                if (plantingProgress >= 100) {
+                    property.plants--;
+                    property.growing++;
+
+                    progress.planting = 0;
+                    progress.plantingStart = now;
+                    progress.plantingActive = false;
+
+                    if (!progress.growingActive) {
+                        startGrowing(propertyId);
+                    }
+
+                    // Planter le suivant dans la file
+                    if (state.plantingQueues[propertyId] > 0) {
+                        startPlanting(propertyId);
+                    }
+                }
+            } else {
+                const plantingBar = el(`${propertyId}-planting-progress`);
+                if (plantingBar) {
+                    plantingBar.style.width = '0%';
+                }
+            }
+
+            // Gestion de la croissance
+            const baseGrowthTime = 10000;
+            const growthSpeedMultiplier = 1 + (property.lamps * 0.2);
+            const growthCycleTime = baseGrowthTime / growthSpeedMultiplier;
+
+            if (progress.growingActive && property.growing > 0) {
+                const timeSinceGrowthStart = now - progress.growingStart;
+                const growthProgress = Math.min(100, (timeSinceGrowthStart / growthCycleTime) * 100);
+                progress.growing = growthProgress;
+
+                const growthBar = el(`${propertyId}-growing-progress`);
+                if (growthBar) {
+                    growthBar.style.width = `${growthProgress}%`;
+                }
+
+                if (growthProgress >= 100 && property.growing > 0) {
+                    property.growing--;
+                    property.mature++;
+
+                    updateTotalMaturePlants();
+                    progress.growing = 0;
+                    progress.growingStart = now;
+
+                    // Production
+                    const baseProduction = 0.1;
+                    const lampBonus = property.lamps * 0.05;
+                    const production = baseProduction * (1 + lampBonus);
+                    state.stockGrams += production;
+
+                    if (property.growing === 0) {
+                        progress.growingActive = false;
+                        const growthBar = el(`${propertyId}-growing-progress`);
+                        if (growthBar) {
+                            growthBar.style.width = '0%';
+                        }
+                    }
+                }
+            } else if (property.growing === 0) {
+                progress.growingActive = false;
+                const growthBar = el(`${propertyId}-growing-progress`);
+                if (growthBar) {
+                    growthBar.style.width = '0%';
+                }
+            }
+        });
+    }
+
+    function updateTotalMaturePlants() {
+        let total = 0;
+        const properties = ['studio', ...purchasableAssets.filter(a => a.type === 'plantLimit' && state.assets[a.id]).map(a => a.id)];
+        properties.forEach(propertyId => {
+            total += state.assets[propertyId].mature;
+        });
+        state.plants = total;
+    }
+
+    function handleAutomaticPlanting() {
+        const properties = ['studio', ...purchasableAssets.filter(a => a.type === 'plantLimit' && state.assets[a.id]).map(a => a.id)];
+        properties.forEach(propertyId => {
+            const property = state.assets[propertyId];
+            const progress = state.propertyProgress[propertyId];
+
+            if (property && property.botanists > 0 && !progress.plantingActive && state.seeds > 0) {
+                const canPlant = property.limit - (property.plants + property.growing + property.mature + state.plantingQueues[propertyId]);
+                if (canPlant > 0) {
+                    addToPlantingQueue(propertyId, 1);
+                }
+            }
+        });
+    }
+
+    // NOUVEAU: Fonction de récolte
+    function harvestProperty(propertyId) {
+        const property = state.assets[propertyId];
+        if (property && property.mature > 0) {
+            const harvested = property.mature;
+            const baseProduction = 0.1;
+            const lampBonus = property.lamps * 0.05;
+            const totalProduction = harvested * baseProduction * (1 + lampBonus);
+
+            state.stockGrams += totalProduction;
+            property.mature = 0;
+            updateTotalMaturePlants();
+
+            showNotification('🌾 Récolte!', `Vous avez récolté ${totalProduction.toFixed(2)}g de ${harvested} plants!`, 'success');
+            updateUI();
+        }
+    }
+
+    function updateUI() {
+        el('cashDisplay').textContent = fmtCash(state.cash);
+        el('cashDisplay2').textContent = fmtCash(state.cash);
+        el('seedCount').textContent = state.seeds;
+        el('stockDisplay').textContent = state.stockGrams.toFixed(2);
+        el('stockDisplay2').textContent = state.stockGrams.toFixed(2);
+        el('dealerCount').textContent = state.dealerCount;
+        el('weaponLevel').textContent = state.weaponLevel;
+        el('dealerRate').textContent = (state.dealerCount * 0.5 * (1 + state.weaponLevel * 0.3)).toFixed(2);
+        el('weaponBonus').textContent = (state.weaponLevel * 30);
+        el('marketPrice').textContent = fmt(marketPrice);
+        el('playerName').value = state.playerName;
+
+        // Dashboard stats
+        el('dashCash').textContent = fmtCash(state.cash);
+        el('dashPlants').textContent = state.plants;
+        el('dashStock').textContent = state.stockGrams.toFixed(1);
+        el('dashDealers').textContent = state.dealerCount;
+        el('dashWeapons').textContent = state.weaponLevel;
+
+        // Calcul des totaux
+        let totalPlantLimit = 0;
+        let totalProduction = 0;
+        let totalPlanting = 0;
+        let totalGrowing = 0;
+
+        const ownedPlantPropertiesDiv = el('plantProperties');
+
+        // Mise à jour du studio
+        const studioEl = ownedPlantPropertiesDiv.querySelector('[data-asset-id="studio"]');
+        if (studioEl) {
+            const studioCapacitySpan = el('studio-capacity');
+            if (studioCapacitySpan) {
+                studioCapacitySpan.textContent = `${state.assets.studio.mature} / ${state.assets.studio.limit}`;
+            }
+            const studioPlantsSpan = el('studio-plants');
+            if (studioPlantsSpan) {
+                studioPlantsSpan.textContent = state.assets.studio.plants + (state.plantingQueues.studio || 0);
+            }
+            const studioGrowingSpan = el('studio-growing');
+            if (studioGrowingSpan) {
+                studioGrowingSpan.textContent = state.assets.studio.growing;
+            }
+
+            const botanistSpan = el('studio-botanists');
+            const lampSpan = el('studio-lamps');
+            if (botanistSpan) botanistSpan.textContent = state.assets.studio.botanists;
+            if (lampSpan) lampSpan.textContent = state.assets.studio.lamps;
+
+            totalProduction += state.assets.studio.mature * (0.1 * (1 + state.assets.studio.lamps * 0.05));
+            totalPlanting += state.assets.studio.plants + (state.plantingQueues.studio || 0);
+            totalGrowing += state.assets.studio.growing;
+        }
+        totalPlantLimit += state.assets.studio.limit;
+
+        // Supprime les anciennes cartes d'assets
+        const existingAssets = ownedPlantPropertiesDiv.querySelectorAll('.asset:not([data-asset-id="studio"])');
+        existingAssets.forEach(asset => asset.remove());
+
+        // Ajoute les nouvelles propriétés achetées
+        purchasableAssets.filter(a => a.type === 'plantLimit' && state.assets[a.id]).forEach(asset => {
+            const assetCard = document.createElement('div');
+            assetCard.className = 'asset owned';
+            assetCard.dataset.assetId = asset.id;
+            assetCard.innerHTML = `
+                <div class="media">${asset.icon}</div>
+                <h4>${asset.name}</h4>
+                <p class="bonus">Capacité: <span id="${asset.id}-capacity">${state.assets[asset.id].mature} / ${state.assets[asset.id].limit}</span></p>
+                <div class="quick-actions">
+                    <button class="primary plant-seed-btn" data-asset-id="${asset.id}">Planter 1</button>
+                    <button class="plant-seed-btn-10" data-asset-id="${asset.id}">Planter 10</button>
+                </div>
+                <button class="success harvest-btn" data-asset-id="${asset.id}">🌾 Récolter tout</button>
+                <div class="planted-counter">En plantation: <span id="${asset.id}-plants">${state.assets[asset.id].plants + (state.plantingQueues[asset.id] || 0)}</span></div>
+                <div class="progress-container" id="${asset.id}-planting-container">
+                    <div class="progress-label">Plantation</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill planting" id="${asset.id}-planting-progress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="planted-counter">En croissance: <span id="${asset.id}-growing">${state.assets[asset.id].growing}</span></div>
+                <div class="progress-container">
+                    <div class="progress-label">Croissance des plants</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill growing" id="${asset.id}-growing-progress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="property-upgrades">
+                    <h5>🔧 Améliorations</h5>
+                    <div class="upgrade-row">
+                        <span>🧑‍🌾 Botanistes: <strong id="${asset.id}-botanists">${state.assets[asset.id].botanists}</strong></span>
+                        <div class="upgrade-buttons">
+                            <button class="primary hire-botanist" data-asset-id="${asset.id}">+1 ($2,000)</button>
+                        </div>
+                    </div>
+                    <div class="upgrade-row">
+                        <span>💡 Lampes UV: <strong id="${asset.id}-lamps">${state.assets[asset.id].lamps}</strong></span>
+                        <div class="upgrade-buttons">
+                            <button class="primary buy-lamp" data-asset-id="${asset.id}">+1 ($3,000)</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            ownedPlantPropertiesDiv.appendChild(assetCard);
+            totalPlantLimit += state.assets[asset.id].limit;
+            totalProduction += state.assets[asset.id].mature * (0.1 * (1 + state.assets[asset.id].lamps * 0.05));
+            totalPlanting += state.assets[asset.id].plants + (state.plantingQueues[asset.id] || 0);
+            totalGrowing += state.assets[asset.id].growing;
+        });
+
+        state.plantLimit = totalPlantLimit;
+        el('plantCount').textContent = `${state.plants} / ${state.plantLimit}`;
+        el('productionRate').textContent = totalProduction.toFixed(2);
+        el('dashProduction').textContent = totalProduction.toFixed(2);
+        el('totalPlanting').textContent = totalPlanting;
+        el('totalGrowing').textContent = totalGrowing;
+
+        // Dashboard properties
+        const dashPropDiv = el('dashboardProperties');
+        if (dashPropDiv) {
+            dashPropDiv.innerHTML = '';
+            const allProps = ['studio', ...purchasableAssets.filter(a => a.type === 'plantLimit' && state.assets[a.id]).map(a => a.id)];
+            allProps.forEach(propId => {
+                const prop = state.assets[propId];
+                const propInfo = purchasableAssets.find(a => a.id === propId) || { name: 'Petit studio miteux', icon: '🏠' };
+                dashPropDiv.innerHTML += `
+                    <div style="padding: 8px; margin: 4px 0; background: var(--bg); border-radius: 8px;">
+                        ${propInfo.icon} <strong>${propInfo.name}</strong>:
+                        ${prop.mature}/${prop.limit} mûrs,
+                        ${prop.growing} en croissance,
+                        ${prop.plants + (state.plantingQueues[propId] || 0)} en plantation
+                    </div>
+                `;
+            });
+        }
+
+        // Mise à jour des biens disponibles à l'achat
+        el('plantAssets').innerHTML = '';
+        el('carAssets').innerHTML = '';
+        el('artAssets').innerHTML = '';
+        el('jewelryAssets').innerHTML = '';
+
+        purchasableAssets.forEach(asset => {
+            if (!state.assets[asset.id]) {
+                const assetCard = document.createElement('div');
+                assetCard.className = 'asset';
+                let bonusText = '';
+                if (asset.type === 'plantLimit') {
+                    bonusText = `Max plants: <strong class="limit-bonus">${asset.bonus}</strong>`;
+                } else if (asset.type === 'deliverySpeed') {
+                    bonusText = `+${asset.bonus * 100}% vitesse de livraison`;
+                } else if (asset.type === 'credibility') {
+                    bonusText = `+${asset.bonus * 100}% crédibilité`;
+                } else if (asset.type === 'avoidInvestigation') {
+                    bonusText = `+${asset.bonus * 100}% éviter enquêtes`;
+                } else if (asset.type === 'salesBonus') {
+                    bonusText = `+${asset.bonus * 100}% prix de vente`;
+                }
+                assetCard.innerHTML = `
+                    <div class="media">${asset.icon}</div>
+                    <h4>${asset.name}</h4>
+                    <p class="price">${fmt(asset.price)}</p>
+                    <p class="bonus">${bonusText}</p>
+                    <button class="primary buy-asset" data-asset-id="${asset.id}">Acheter</button>
+                `;
+                if (asset.type === 'plantLimit') {
+                    el('plantAssets').appendChild(assetCard);
+                } else if (['deliverySpeed', 'credibility'].includes(asset.type)) {
+                    el('carAssets').appendChild(assetCard);
+                } else if (['avoidInvestigation', 'salesBonus'].includes(asset.type) && asset.icon !== '💍') {
+                    el('artAssets').appendChild(assetCard);
+                } else if (asset.icon === '💍') {
+                    el('jewelryAssets').appendChild(assetCard);
+                }
+            }
+        });
+
+        // Mise à jour du Dashboard - Actifs possédés
+        const dashCars = el('dashCars');
+        const dashArt = el('dashArt');
+        const dashJewelry = el('dashJewelry');
+
+        if (dashCars) {
+            dashCars.innerHTML = '';
+            purchasableAssets.filter(a => a.category === 'cars' && state.assets[a.id]).forEach(car => {
+                dashCars.innerHTML += `
+                    <div class="asset-showcase-item">
+                        <div class="icon">${car.icon}</div>
+                        <div class="name">${car.name}</div>
+                        <div class="type">Véhicule</div>
+                    </div>
+                `;
+            });
+            if (dashCars.innerHTML === '') {
+                dashCars.innerHTML = '<p style="color: var(--muted); text-align: center;">Aucune voiture possédée</p>';
+            }
+        }
+
+        if (dashArt) {
+            dashArt.innerHTML = '';
+            purchasableAssets.filter(a => a.category === 'art' && state.assets[a.id]).forEach(art => {
+                dashArt.innerHTML += `
+                    <div class="asset-showcase-item">
+                        <div class="icon">${art.icon}</div>
+                        <div class="name">${art.name}</div>
+                        <div class="type">Œuvre d'art</div>
+                    </div>
+                `;
+            });
+            if (dashArt.innerHTML === '') {
+                dashArt.innerHTML = '<p style="color: var(--muted); text-align: center;">Aucune œuvre d\'art possédée</p>';
+            }
+        }
+
+        if (dashJewelry) {
+            dashJewelry.innerHTML = '';
+            purchasableAssets.filter(a => a.category === 'jewelry' && state.assets[a.id]).forEach(jewel => {
+                dashJewelry.innerHTML += `
+                    <div class="asset-showcase-item">
+                        <div class="icon">${jewel.icon}</div>
+                        <div class="name">${jewel.name}</div>
+                        <div class="type">Bijou</div>
+                    </div>
+                `;
+            });
+            if (dashJewelry.innerHTML === '') {
+                dashJewelry.innerHTML = '<p style="color: var(--muted); text-align: center;">Aucun bijou possédé</p>';
+            }
+        }
+
+        attachEventListeners();
+
+        // Mise à jour des cryptos
+        el('btcPrice').textContent = fmtCrypto(cryptoPrices.btc);
+        el('ethPrice').textContent = fmtCrypto(cryptoPrices.eth);
+        el('dogePrice').textContent = fmtCrypto(cryptoPrices.doge);
+        el('btcOwned').textContent = state.crypto.btc.toFixed(4);
+        el('ethOwned').textContent = state.crypto.eth.toFixed(4);
+        el('dogeOwned').textContent = state.crypto.doge.toFixed(4);
+
+        // Valeurs des cryptos
+        el('btcValue').textContent = fmtCash(state.crypto.btc * cryptoPrices.btc);
+        el('ethValue').textContent = fmtCash(state.crypto.eth * cryptoPrices.eth);
+        el('dogeValue').textContent = fmtCash(state.crypto.doge * cryptoPrices.doge);
+        const totalCryptoValue = (state.crypto.btc * cryptoPrices.btc) +
+                                  (state.crypto.eth * cryptoPrices.eth) +
+                                  (state.crypto.doge * cryptoPrices.doge);
+        el('totalCryptoValue').textContent = fmtCash(totalCryptoValue);
+
+        // Prix et possessions actions (Bourse)
+        el('aaplPrice').textContent = fmtCash(stockPrices.aapl);
+        el('tslaPrice').textContent = fmtCash(stockPrices.tsla);
+        el('amznPrice').textContent = fmtCash(stockPrices.amzn);
+        el('msftPrice').textContent = fmtCash(stockPrices.msft);
+        el('aaplOwned').textContent = state.stocks.aapl;
+        el('tslaOwned').textContent = state.stocks.tsla;
+        el('amznOwned').textContent = state.stocks.amzn;
+        el('msftOwned').textContent = state.stocks.msft;
+
+        // Valeurs des actions
+        el('aaplValue').textContent = fmtCash(state.stocks.aapl * stockPrices.aapl);
+        el('tslaValue').textContent = fmtCash(state.stocks.tsla * stockPrices.tsla);
+        el('amznValue').textContent = fmtCash(state.stocks.amzn * stockPrices.amzn);
+        el('msftValue').textContent = fmtCash(state.stocks.msft * stockPrices.msft);
+        const totalStockValue = (state.stocks.aapl * stockPrices.aapl) +
+                                (state.stocks.tsla * stockPrices.tsla) +
+                                (state.stocks.amzn * stockPrices.amzn) +
+                                (state.stocks.msft * stockPrices.msft);
+        el('totalStockValue').textContent = fmtCash(totalStockValue);
+
+        updateProgressBars();
+        updateJobUI();
+    }
+
+    function attachEventListeners() {
+        document.querySelectorAll('.buy-asset').forEach(button => {
+            button.onclick = handleAssetPurchase;
+        });
+        document.querySelectorAll('.plant-seed-btn').forEach(button => {
+            button.onclick = handlePlantSeed;
+        });
+        document.querySelectorAll('.plant-seed-btn-10').forEach(button => {
+            button.onclick = handlePlantSeed10;
+        });
+        document.querySelectorAll('.harvest-btn').forEach(button => {
+            button.onclick = (e) => {
+                const assetId = e.target.dataset.assetId;
+                harvestProperty(assetId);
+            };
+        });
+        document.querySelectorAll('.hire-botanist').forEach(button => {
+            button.onclick = handleHireBotanist;
+        });
+        document.querySelectorAll('.buy-lamp').forEach(button => {
+            button.onclick = handleBuyLamp;
+        });
+    }
+
+    function handleAssetPurchase(e) {
+        const assetId = e.target.dataset.assetId;
+        const asset = purchasableAssets.find(a => a.id === assetId);
+        if (state.cash >= asset.price && !state.assets[assetId]) {
+            state.cash -= asset.price;
+            state.assets[assetId] = { owned: true, plants: 0, limit: asset.bonus, botanists: 0, lamps: 0, growing: 0, mature: 0 };
+            state.propertyProgress[assetId] = {
+                planting: 0,
+                growing: 0,
+                plantingActive: false,
+                growingActive: false,
+                plantingStart: 0,
+                growingStart: 0
+            };
+            state.plantingQueues[assetId] = 0;
+
+            if (asset.type === 'passiveIncome') {
+                state.passiveIncome += asset.bonus;
+            }
+
+            showNotification('✅ Achat réussi!', `Vous avez acheté: ${asset.name}`, 'success');
+            updateUI();
+        } else if (state.assets[assetId]) {
+            showNotification('⚠️ Erreur', 'Vous avez déjà acheté cet asset!', 'warning');
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    }
+
+    function handlePlantSeed(e) {
+        const assetId = e.target.dataset.assetId;
+        const planted = addToPlantingQueue(assetId, 1);
+
+        if (planted > 0) {
+            const button = e.target;
+            const rect = button.getBoundingClientRect();
+            const animation = document.createElement('div');
+            animation.className = 'planting-animation';
+            animation.textContent = '🌱 Planté!';
+            animation.style.left = `${rect.left + rect.width / 2}px`;
+            animation.style.top = `${rect.top}px`;
+            document.body.appendChild(animation);
+            setTimeout(() => animation.remove(), 1000);
+            updateUI();
+        } else {
+            showNotification('⚠️ Attention', 'Pas assez de graines ou capacité atteinte!', 'warning');
+        }
+    }
+
+    function handlePlantSeed10(e) {
+        const assetId = e.target.dataset.assetId;
+        const planted = addToPlantingQueue(assetId, 10);
+
+        if (planted > 0) {
+            const button = e.target;
+            const rect = button.getBoundingClientRect();
+            const animation = document.createElement('div');
+            animation.className = 'planting-animation';
+            animation.textContent = `🌱 ${planted} plantées!`;
+            animation.style.left = `${rect.left + rect.width / 2}px`;
+            animation.style.top = `${rect.top}px`;
+            document.body.appendChild(animation);
+            setTimeout(() => animation.remove(), 1000);
+            updateUI();
+        } else {
+            showNotification('⚠️ Attention', 'Pas assez de graines ou capacité atteinte!', 'warning');
+        }
+    }
+
+    function handleHireBotanist(e) {
+        const assetId = e.target.dataset.assetId;
+        if (state.cash >= 2000) {
+            state.cash -= 2000;
+            state.assets[assetId].botanists++;
+            showNotification('✅ Embauche réussie!', 'Un botaniste a été embauché. Plantation automatique activée!', 'success');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash pour embaucher un botaniste!', 'error');
+        }
+    }
+
+    function handleBuyLamp(e) {
+        const assetId = e.target.dataset.assetId;
+        if (state.cash >= 3000) {
+            state.cash -= 3000;
+            state.assets[assetId].lamps++;
+            showNotification('✅ Achat réussi!', 'Lampe UV installée! Production augmentée!', 'success');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash pour acheter une lampe UV!', 'error');
+        }
+    }
+
+    function gameLoop() {
+        // Ventes automatiques par les dealers
+        const dealerSellRate = state.dealerCount * 0.5 * (1 + state.weaponLevel * 0.3);
+        const sellAmount = Math.min(state.stockGrams, dealerSellRate / 10); // Divisé par 10 car appelé 10x/sec
+        if (sellAmount > 0) {
+            state.cash += sellAmount * marketPrice;
+            state.stockGrams -= sellAmount;
+        }
+
+        // Revenus passifs des assets
+        if (state.passiveIncome > 0) {
+            state.cash += state.passiveIncome / (24 * 60 * 60 * 10); // Divisé par 10 car appelé 10x/sec
+        }
+
+        // Plantation automatique
+        handleAutomaticPlanting();
+
+        // Fluctuation du prix du marché
+        marketPrice += (Math.random() - 0.5) * 0.05;
+        marketPrice = Math.max(0.5, Math.min(5, marketPrice));
+    }
+
+    function updateJobUI() {
+        const now = Date.now();
+        const doJobBtn = el('doJob');
+        const jobCooldownMsg = el('jobCooldown');
+        const jobTimer = el('jobTimer');
+
+        if (now < state.jobCooldownEnd) {
+            doJobBtn.disabled = true;
+            doJobBtn.style.display = 'none';
+            jobCooldownMsg.style.display = 'block';
+            const remainingTime = Math.ceil((state.jobCooldownEnd - now) / 1000);
+            if (jobTimer) {
+                jobTimer.textContent = remainingTime;
+            }
+        } else {
+            doJobBtn.disabled = false;
+            doJobBtn.style.display = 'block';
+            jobCooldownMsg.style.display = 'none';
+        }
+    }
+
+    function updateCryptoPrices() {
+        const volatility = 0.01;
+        ['btc', 'eth', 'doge'].forEach(crypto => {
+            let change = (Math.random() - 0.5) * cryptoPrices[crypto] * volatility;
+            cryptoPrices[crypto] += change;
+            if (cryptoPrices[crypto] <= 0) cryptoPrices[crypto] = 0.01;
+
+            const changeEl = el(crypto + 'Change');
+            const changePercent = (change / cryptoPrices[crypto]) * 100;
+            changeEl.textContent = changePercent.toFixed(2) + '%';
+            changeEl.className = 'change ' + (change > 0 ? 'pos' : 'neg');
+
+            cryptoHistory[crypto].push(cryptoPrices[crypto]);
+            if (cryptoHistory[crypto].length > 60) {
+                cryptoHistory[crypto].shift();
+            }
+        });
+        localStorage.setItem('crypto-prices', JSON.stringify(cryptoPrices));
+        localStorage.setItem('crypto-history', JSON.stringify(cryptoHistory));
+        updateCharts();
+    }
+
+    function updateStockPrices() {
+        const volatility = 0.015;
+        ['aapl', 'tsla', 'amzn', 'msft'].forEach(stock => {
+            let change = (Math.random() - 0.5) * stockPrices[stock] * volatility;
+            stockPrices[stock] += change;
+            if (stockPrices[stock] <= 1) stockPrices[stock] = 1;
+
+            const changeEl = el(stock + 'Change');
+            const changePercent = (change / stockPrices[stock]) * 100;
+            changeEl.textContent = changePercent.toFixed(2) + '%';
+            changeEl.className = 'change ' + (change > 0 ? 'pos' : 'neg');
+
+            stockHistory[stock].push(stockPrices[stock]);
+            if (stockHistory[stock].length > 60) {
+                stockHistory[stock].shift();
+            }
+        });
+        localStorage.setItem('stock-prices', JSON.stringify(stockPrices));
+        localStorage.setItem('stock-history', JSON.stringify(stockHistory));
+        updateStockCharts();
+    }
+
+    // FIX CRITIQUE: Correction du bug dans updateCharts
+    function updateCharts() {
+        const chartOptions = {
+            animation: false,
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: { display: false },
+            tooltips: { enabled: false },
+            scales: {
+                xAxes: [{ display: false }],
+                yAxes: [{ display: false }]
+            },
+            elements: { point: { radius: 0 } }
+        };
+
+        const createChart = (id, data, color) => {
+            const canvas = el(id);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+
+            // Détruire l'ancien chart s'il existe
+            if (chartInstances[id]) {
+                chartInstances[id].destroy();
+            }
+
+            chartInstances[id] = new Chart(ctx, {
+                type: 'line',
+                data: { // FIX: Ajout de "data:"
+                    labels: Array(data.length).fill(''),
+                    datasets: [{
+                        data: data,
+                        borderColor: color,
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: chartOptions
+            });
+        };
+
+        createChart('btcSpark', cryptoHistory.btc, '#f7931a');
+        createChart('ethSpark', cryptoHistory.eth, '#627eea');
+        createChart('dogeSpark', cryptoHistory.doge, '#c2a633');
+    }
+
+    function updateStockCharts() {
+        const chartOptions = {
+            animation: false,
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: { display: false },
+            tooltips: { enabled: false },
+            scales: {
+                xAxes: [{ display: false }],
+                yAxes: [{ display: false }]
+            },
+            elements: { point: { radius: 0 } }
+        };
+
+        const createChart = (id, data, color) => {
+            const canvas = el(id);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+
+            if (chartInstances[id]) {
+                chartInstances[id].destroy();
+            }
+
+            chartInstances[id] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map((v, i) => i),
+                    datasets: [{
+                        data: data,
+                        borderColor: color,
+                        backgroundColor: color + '33',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: chartOptions
+            });
+        };
+
+        createChart('aaplSpark', stockHistory.aapl, '#555555');
+        createChart('tslaSpark', stockHistory.tsla, '#cc0000');
+        createChart('amznSpark', stockHistory.amzn, '#ff9900');
+        createChart('msftSpark', stockHistory.msft, '#00a4ef');
+    }
+
+    function showSeedGainAnimation(amount, buttonId) {
+        const button = el(buttonId);
+        if (!button) return;
+
+        const rect = button.getBoundingClientRect();
+        const animation = document.createElement('div');
+        animation.className = 'seed-gain-animation';
+        animation.textContent = `+${amount} 🌱`;
+        animation.style.left = `${rect.left + rect.width / 2}px`;
+        animation.style.top = `${rect.top}px`;
+        document.body.appendChild(animation);
+
+        setTimeout(() => animation.remove(), 1000);
+    }
+
+    // Événements des boutons de base
+    el('buySeed').onclick = () => {
+        if (state.cash >= 10) {
+            state.seeds++;
+            state.cash -= 10;
+            showSeedGainAnimation(1, 'buySeed');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    };
+
+    el('buySeed10').onclick = () => {
+        if (state.cash >= 100) {
+            state.seeds += 10;
+            state.cash -= 100;
+            showSeedGainAnimation(10, 'buySeed10');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    };
+
+    // NOUVEAU: Acheter max de graines
+    el('buySeedMax').onclick = () => {
+        const maxSeeds = Math.floor(state.cash / 10);
+        if (maxSeeds > 0) {
+            state.seeds += maxSeeds;
+            state.cash -= maxSeeds * 10;
+            showSeedGainAnimation(maxSeeds, 'buySeedMax');
+            showNotification('✅ Achat réussi!', `Vous avez acheté ${maxSeeds} graines!`, 'success');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    };
+
+    el('sellBtn').onclick = () => {
+        let qty = Math.min(parseInt(el('sellAmount').value) || 0, state.stockGrams);
+        if (qty > 0) {
+            const revenue = qty * marketPrice;
+            state.cash += revenue;
+            state.totalEarnings += revenue;
+            state.stockGrams -= qty;
+            el('sellAmount').value = '';
+            checkAchievements();
+            showNotification('💰 Vente réussie!', `Vendu ${qty}g pour ${fmtCash(revenue)}!`, 'success');
+            updateUI();
+        } else {
+            showNotification('⚠️ Attention', 'Quantité invalide!', 'warning');
+        }
+    };
+
+    // NOUVEAU: Vendre tout
+    el('sellAllBtn').onclick = () => {
+        if (state.stockGrams > 0) {
+            const qty = state.stockGrams;
+            const revenue = qty * marketPrice;
+            state.cash += revenue;
+            state.totalEarnings += revenue;
+            state.stockGrams = 0;
+            checkAchievements();
+            showNotification('💰 Vente totale!', `Vendu ${qty.toFixed(2)}g pour ${fmtCash(revenue)}!`, 'success');
+            updateUI();
+        } else {
+            showNotification('⚠️ Attention', 'Pas de stock à vendre!', 'warning');
+        }
+    };
+
+    el('hireDealer').onclick = () => {
+        if (state.cash >= 1000) {
+            state.dealerCount++;
+            state.cash -= 1000;
+            showNotification('✅ Embauche réussie!', 'Un dealer a été embauché!', 'success');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    };
+
+    el('buyWeapon').onclick = () => {
+        if (state.cash >= 2000) {
+            state.weaponLevel++;
+            state.cash -= 2000;
+            showNotification('✅ Achat réussi!', 'Armes achetées! Dealers plus efficaces!', 'success');
+            updateUI();
+        } else {
+            showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+        }
+    };
+
+    // Gestion des cryptos
+    document.querySelectorAll('.buy-crypto').forEach(button => {
+        button.onclick = () => {
+            const crypto = button.dataset.crypto;
+            const price = cryptoPrices[crypto];
+            const qtyInput = el(crypto + 'BuyAmount');
+            const qty = parseFloat(qtyInput.value) || 0;
+
+            if (qty <= 0) {
+                showNotification('⚠️ Attention', 'Veuillez entrer une quantité valide.', 'warning');
+                return;
+            }
+
+            const totalCost = qty * price;
+            if (state.cash >= totalCost) {
+                state.cash -= totalCost;
+                state.crypto[crypto] += qty;
+                qtyInput.value = '';
+                checkAchievements();
+                showNotification('✅ Achat crypto!', `Acheté ${qty.toFixed(4)} ${crypto.toUpperCase()}`, 'success');
+                updateUI();
+            } else {
+                showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+            }
+        };
+    });
+
+    document.querySelectorAll('.sell-crypto').forEach(button => {
+        button.onclick = () => {
+            const crypto = button.dataset.crypto;
+            const qtyInput = el(crypto + 'SellAmount');
+            const qty = parseFloat(qtyInput.value) || 0;
+
+            if (state.crypto[crypto] >= qty && qty > 0) {
+                const price = cryptoPrices[crypto];
+                const revenue = qty * price;
+                state.cash += revenue;
+                state.totalEarnings += revenue;
+                state.crypto[crypto] -= qty;
+                qtyInput.value = '';
+                checkAchievements();
+                showNotification('💰 Vente crypto!', `Vendu ${qty.toFixed(4)} ${crypto.toUpperCase()} pour ${fmtCash(revenue)}`, 'success');
+                updateUI();
+            } else {
+                showNotification('❌ Erreur', "Pas assez de crypto à vendre!", 'error');
+            }
+        };
+    });
+
+    // Gestion des actions (Bourse)
+    document.querySelectorAll('.buy-stock').forEach(button => {
+        button.onclick = () => {
+            const stock = button.dataset.stock;
+            const price = stockPrices[stock];
+            const qtyInput = el(stock + 'BuyAmount');
+            const qty = parseInt(qtyInput.value) || 0;
+
+            if (qty <= 0) {
+                showNotification('⚠️ Attention', 'Veuillez entrer une quantité valide.', 'warning');
+                return;
+            }
+
+            const totalCost = qty * price;
+            if (state.cash >= totalCost) {
+                state.cash -= totalCost;
+                state.stocks[stock] += qty;
+                qtyInput.value = '';
+                checkAchievements();
+                showNotification('✅ Achat action!', `Acheté ${qty} ${stock.toUpperCase()} pour ${fmtCash(totalCost)}`, 'success');
+                updateUI();
+            } else {
+                showNotification('❌ Erreur', 'Pas assez de cash!', 'error');
+            }
+        };
+    });
+
+    document.querySelectorAll('.sell-stock').forEach(button => {
+        button.onclick = () => {
+            const stock = button.dataset.stock;
+            const qtyInput = el(stock + 'SellAmount');
+            const qty = parseInt(qtyInput.value) || 0;
+
+            if (state.stocks[stock] >= qty && qty > 0) {
+                const price = stockPrices[stock];
+                const revenue = qty * price;
+                state.cash += revenue;
+                state.totalEarnings += revenue;
+                state.stocks[stock] -= qty;
+                qtyInput.value = '';
+                checkAchievements();
+                showNotification('💰 Vente action!', `Vendu ${qty} ${stock.toUpperCase()} pour ${fmtCash(revenue)}`, 'success');
+                updateUI();
+            } else {
+                showNotification('❌ Erreur', "Pas assez d'actions à vendre!", 'error');
+            }
+        };
+    });
+
+    el('doJob').onclick = () => {
+        const now = Date.now();
+        if (now >= state.jobCooldownEnd) {
+            const earnings = 10;
+            state.cash += earnings;
+            state.totalEarnings += earnings;
+            state.totalDeliveries++;
+            state.jobCooldownEnd = now + 30000;
+            checkAchievements();
+            showNotification('✅ Livraison!', 'Vous avez gagné $10!', 'success');
+            updateUI();
+        }
+    };
+
+    el('adminBtn').onclick = () => {
+        state.cash += 1000000;
+        showNotification('💰 Admin', 'Vous avez reçu $1,000,000!', 'success');
+        updateUI();
+    };
+
+    el('saveBtn').onclick = () => {
+        state.playerName = el('playerName').value;
+        saveGame();
+        showNotification('✅ Sauvegarde', 'Partie sauvegardée!', 'success');
+    };
+
+    el('resetBtn').onclick = () => {
+        if (confirm('Réinitialiser la partie ? Cette action est irréversible!')) {
+            localStorage.removeItem('illicit-empire');
+            localStorage.removeItem('crypto-prices');
+            localStorage.removeItem('crypto-history');
+            showNotification('🔄 Reset', 'Partie réinitialisée! Rechargement...', 'warning');
+            setTimeout(() => location.reload(), 1000);
+        }
+    };
+
+    function saveGame() {
+        localStorage.setItem('illicit-empire', JSON.stringify(state));
+    }
+
+    // ========================================
+    // CARTE INTERACTIVE
+    // ========================================
+
+    function initMap() {
+        const mapContent = el('mapContent');
+        const mapContainer = el('mapContainer');
+
+        if (!mapContent || !mapContainer) return;
+
+        // Créer l'iframe Google Maps comme fond
+        createCityElements(mapContent);
+
+        // Créer les marqueurs de propriétés superposés sur la carte
+        createPropertyMarkers(mapContent);
+    }
+
+    function createCityElements(container) {
+        container.innerHTML = ''; // Vider le contenu précédent
+
+        // Créer l'image de la carte Google Maps comme fond
+        const mapImage = document.createElement('img');
+        mapImage.src = 'https://image.noelshack.com/fichiers/2025/45/1/1762159683-capture-d-cran-2025-11-02-19-06-10.png';
+        mapImage.alt = 'Carte de la ville';
+        mapImage.style.position = 'absolute';
+        mapImage.style.top = '0';
+        mapImage.style.left = '0';
+        mapImage.style.width = '100%';
+        mapImage.style.height = '100%';
+        mapImage.style.objectFit = 'cover';
+        mapImage.style.borderRadius = '16px';
+        mapImage.style.zIndex = '1';
+        container.appendChild(mapImage);
+    }
+    
+    function createPropertyMarkers(container) {
+        // Supprimer les anciens marqueurs
+        container.querySelectorAll('.property-marker').forEach(m => m.remove());
+
+        // Créer les marqueurs pour les propriétés ayant une position x,y
+        purchasableAssets.filter(a => a.x && a.y).forEach(asset => {
+            const marker = document.createElement('div');
+            marker.className = 'property-marker';
+            marker.dataset.assetId = asset.id;
+
+            const isOwned = state.assets[asset.id] && state.assets[asset.id].owned;
+            if (isOwned) {
+                marker.classList.add('owned');
+            }
+
+            // Convertir les coordonnées de l'ancienne carte (2000x2000) vers la nouvelle (pourcentage)
+            marker.style.left = (asset.x / 2000 * 100) + '%';
+            marker.style.top = (asset.y / 2000 * 100) + '%';
+
+            // Créer la structure de la bulle
+            marker.innerHTML = `
+                <div class="property-bubble">
+                    <div class="property-icon">${asset.icon}</div>
+                    <div class="property-bubble-content">
+                        <div class="property-bubble-image">${asset.icon}</div>
+                        <div class="property-bubble-body">
+                            <div class="property-bubble-title">${asset.name}</div>
+                            <div class="property-bubble-desc">${asset.description}</div>
+                            <div class="property-bubble-price ${isOwned ? 'owned' : ''}">${isOwned ? '✓ Possédée' : fmt(asset.price)}</div>
+                            <div class="property-bubble-actions">
+                                ${!isOwned ? `<button class="primary buy-btn" data-asset-id="${asset.id}">Acheter</button>` : ''}
+                                <button class="secondary close-btn">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Événement de clic pour agrandir/réduire la bulle
+            marker.addEventListener('click', (e) => {
+                if (e.target.classList.contains('buy-btn')) {
+                    e.stopPropagation();
+                    buyAsset(e.target.dataset.assetId);
+                    return;
+                }
+                if (e.target.classList.contains('close-btn')) {
+                    e.stopPropagation();
+                    marker.classList.remove('expanded');
+                    return;
+                }
+                if (!e.target.closest('.property-bubble-content')) {
+                    e.stopPropagation();
+                    toggleBubble(marker);
+                }
+            });
+
+            container.appendChild(marker);
+        });
+
+        // Créer les marqueurs POI (garage, musée, bijouterie)
+        mapPOI.forEach(poi => {
+            const marker = document.createElement('div');
+            marker.className = 'property-marker poi';
+            marker.dataset.poiId = poi.id;
+
+            // Vérifier si tous les items du POI sont possédés
+            const allOwned = poi.items.every(item => state.assets[item.id] && state.assets[item.id].owned);
+            if (allOwned) {
+                marker.classList.add('owned');
+            }
+
+            // Convertir les coordonnées
+            marker.style.left = (poi.x / 2000 * 100) + '%';
+            marker.style.top = (poi.y / 2000 * 100) + '%';
+
+            // Liste des items pour le POI avec boutons d'achat
+            const itemsList = poi.items.map(item => {
+                const itemOwned = state.assets[item.id] && state.assets[item.id].owned;
+                return `<div class="property-bubble-item ${itemOwned ? 'owned' : ''}">
+                    <div class="property-bubble-item-info">
+                        <span class="property-bubble-item-icon">${item.icon}</span>
+                        <div style="display: inline-block; vertical-align: middle;">
+                            <div class="property-bubble-item-name">${item.name}</div>
+                            <div class="property-bubble-item-price">${fmt(item.price)}</div>
+                        </div>
+                    </div>
+                    ${!itemOwned ?
+                        `<button class="buy-btn" data-asset-id="${item.id}">Acheter</button>`
+                        : `<span class="property-bubble-item-owned">✓ Possédé</span>`
+                    }
+                </div>`;
+            }).join('');
+
+            // Créer la structure de la bulle POI
+            marker.innerHTML = `
+                <div class="property-bubble">
+                    <div class="property-icon">${poi.icon}</div>
+                    <div class="property-bubble-content">
+                        <div class="property-bubble-image">${poi.icon}</div>
+                        <div class="property-bubble-body">
+                            <div class="property-bubble-title">${poi.name}</div>
+                            <div class="property-bubble-desc">${poi.description}</div>
+                            <div class="property-bubble-items">${itemsList}</div>
+                            <div class="property-bubble-actions">
+                                <button class="secondary close-btn">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Événement de clic pour agrandir/réduire la bulle
+            marker.addEventListener('click', (e) => {
+                if (e.target.classList.contains('buy-btn')) {
+                    e.stopPropagation();
+                    buyAsset(e.target.dataset.assetId);
+                    return;
+                }
+                if (e.target.classList.contains('close-btn')) {
+                    e.stopPropagation();
+                    marker.classList.remove('expanded');
+                    return;
+                }
+                if (!e.target.closest('.property-bubble-content')) {
+                    e.stopPropagation();
+                    toggleBubble(marker);
+                }
+            });
+
+            container.appendChild(marker);
+        });
+    }
+
+    function toggleBubble(marker) {
+        // Fermer toutes les autres bulles
+        document.querySelectorAll('.property-marker.expanded').forEach(m => {
+            if (m !== marker) {
+                m.classList.remove('expanded');
+            }
+        });
+
+        // Toggle cette bulle (elle s'ouvrira centrée grâce au CSS position: fixed)
+        marker.classList.toggle('expanded');
+    }
+
+    function closeBubble(id) {
+        const marker = document.querySelector(`[data-asset-id="${id}"], [data-poi-id="${id}"]`);
+        if (marker) {
+            marker.classList.remove('expanded');
+        }
+    }
+
+    function buyAsset(assetId) {
+        const asset = purchasableAssets.find(a => a.id === assetId);
+        if (!asset) return;
+
+        // Vérifier si déjà possédé
+        if (state.assets[assetId] && state.assets[assetId].owned) {
+            showNotification('⚠️ Déjà possédé!', 'Vous possédez déjà ce bien.', 'warning');
+            return;
+        }
+
+        if (state.cash >= asset.price) {
+            state.cash -= asset.price;
+
+            if (!state.assets[assetId]) {
+                state.assets[assetId] = { owned: false, level: 0 };
+            }
+
+            state.assets[assetId].owned = true;
+
+            if (asset.type === 'plantLimit') {
+                state.plantLimit += asset.bonus;
+            }
+
+            checkAchievements();
+
+            saveGame();
+            updateUI();
+
+            // Fermer la bulle immédiatement
+            const marker = document.querySelector(`[data-asset-id="${assetId}"], [data-poi-id="${assetId}"]`);
+            if (marker) {
+                marker.classList.remove('expanded');
+            }
+
+            // Rafraîchir les marqueurs immédiatement pour afficher le statut "possédé"
+            createPropertyMarkers(el('mapContent'));
+
+            // Animation d'achat après rafraîchissement
+            setTimeout(() => {
+                const updatedMarker = document.querySelector(`[data-asset-id="${assetId}"], [data-poi-id="${assetId}"]`);
+                if (updatedMarker) {
+                    updatedMarker.classList.add('purchased');
+                    setTimeout(() => {
+                        updatedMarker.classList.remove('purchased');
+                    }, 1000);
+                }
+            }, 50);
+
+            showNotification('✅ Achat réussi!', `${asset.name} acheté pour ${fmtCash(asset.price)}!`, 'success');
+        } else {
+            showNotification('❌ Pas assez d\'argent!', `Il vous faut ${fmtCash(asset.price)}`, 'error');
+        }
+    }
+
+    // Fermer les bulles en cliquant à l'extérieur
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.property-marker')) {
+            document.querySelectorAll('.property-marker.expanded').forEach(m => {
+                m.classList.remove('expanded');
+            });
+        }
+    });
+    
+    function openPropertyModal(asset) {
+        const modal = el('propertyModal');
+        const modalIcon = el('modalIcon');
+        const modalTitle = el('modalTitle');
+        const modalPrice = el('modalPrice');
+        const modalDescription = el('modalDescription');
+        const modalBonus = el('modalBonus');
+        const modalItems = el('modalItems');
+        const modalActions = el('modalActions');
+    
+        modalIcon.textContent = asset.icon;
+        modalTitle.textContent = asset.name;
+        modalDescription.textContent = asset.description;
+    
+        const isOwned = state.assets[asset.id] && state.assets[asset.id].owned;
+    
+        if (isOwned) {
+            modalPrice.textContent = '✓ Possédée';
+            modalPrice.style.color = 'var(--accent)';
+            modalBonus.style.display = 'block';
+        } else {
+            modalPrice.textContent = fmt(asset.price);
+            modalPrice.style.color = 'var(--primary)';
+            modalBonus.style.display = 'none';
+        }
+    
+        // Afficher le bonus
+        let bonusText = '';
+        if (asset.type === 'plantLimit') {
+            bonusText = `<strong>Bonus:</strong> +${asset.bonus} plants de capacité`;
+        } else if (asset.type === 'deliverySpeed') {
+            bonusText = `<strong>Bonus:</strong> +${asset.bonus * 100}% de vitesse de livraison`;
+        } else if (asset.type === 'credibility') {
+            bonusText = `<strong>Bonus:</strong> +${asset.bonus * 100}% de crédibilité`;
+        } else if (asset.type === 'avoidInvestigation') {
+            bonusText = `<strong>Bonus:</strong> +${asset.bonus * 100}% d'éviter les enquêtes`;
+        } else if (asset.type === 'salesBonus') {
+            bonusText = `<strong>Bonus:</strong> +${asset.bonus * 100}% sur les prix de vente`;
+        }
+        modalBonus.innerHTML = bonusText;
+    
+        // Pas d'items à afficher pour une propriété simple
+        modalItems.innerHTML = '';
+    
+        // Actions
+        modalActions.innerHTML = '';
+        if (!isOwned) {
+            const buyBtn = document.createElement('button');
+            buyBtn.textContent = 'Acheter ' + fmt(asset.price);
+            buyBtn.className = 'primary';
+            buyBtn.onclick = () => {
+                handleMapPropertyPurchase(asset.id);
+                modal.classList.remove('active');
+            };
+            modalActions.appendChild(buyBtn);
+        }
+    
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = 'Fermer';
+        closeBtn.onclick = () => {
+            modal.classList.remove('active');
+        };
+        modalActions.appendChild(closeBtn);
+    
+        modal.classList.add('active');
+    }
+    
+    function openPOIModal(poi) {
+        const modal = el('propertyModal');
+        const modalIcon = el('modalIcon');
+        const modalTitle = el('modalTitle');
+        const modalPrice = el('modalPrice');
+        const modalDescription = el('modalDescription');
+        const modalBonus = el('modalBonus');
+        const modalItems = el('modalItems');
+        const modalActions = el('modalActions');
+    
+        modalIcon.textContent = poi.icon;
+        modalTitle.textContent = poi.name;
+        modalDescription.textContent = poi.description;
+        modalPrice.textContent = '';
+        modalBonus.style.display = 'none';
+    
+        // Afficher les items disponibles dans ce POI
+        modalItems.innerHTML = '';
+        poi.items.forEach(item => {
+            const isOwned = state.assets[item.id] && state.assets[item.id].owned;
+    
+            const itemEl = document.createElement('div');
+            itemEl.className = isOwned ? 'modal-item owned' : 'modal-item';
+    
+            let bonusText = '';
+            if (item.type === 'deliverySpeed') {
+                bonusText = `+${item.bonus * 100}% vitesse`;
+            } else if (item.type === 'credibility') {
+                bonusText = `+${item.bonus * 100}% crédibilité`;
+            } else if (item.type === 'avoidInvestigation') {
+                bonusText = `+${item.bonus * 100}% discrétion`;
+            } else if (item.type === 'salesBonus') {
+                bonusText = `+${item.bonus * 100}% vente`;
+            }
+    
+            itemEl.innerHTML = `
+                <div class="modal-item-icon">${item.icon}</div>
+                <div class="modal-item-info">
+                    <h4>${item.name}</h4>
+                    <div class="price">${fmt(item.price)}</div>
+                    <div class="bonus">${bonusText}</div>
+                    ${isOwned ? '<div class="owned-badge">✓ Possédé</div>' : ''}
+                </div>
+                ${!isOwned ? `<button class="primary" onclick="handleMapPropertyPurchase('${item.id}'); updateMapMarkers(); updateUI();">Acheter</button>` : ''}
+            `;
+    
+            modalItems.appendChild(itemEl);
+        });
+    
+        // Actions
+        modalActions.innerHTML = '';
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = 'Fermer';
+        closeBtn.onclick = () => {
+            modal.classList.remove('active');
+        };
+        modalActions.appendChild(closeBtn);
+    
+        modal.classList.add('active');
+    }
+    
+    // Initialiser les événements du modal
+    function initModalEvents() {
+        const modal = el('propertyModal');
+        const modalClose = el('modalClose');
+
+        if (modalClose) {
+            modalClose.onclick = () => {
+                modal.classList.remove('active');
+            };
+        }
+
+        if (modal) {
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            };
+        }
+    }
+
+    // Tabs
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(t => t.onclick = () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        t.classList.add('active');
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(t.dataset.tab).classList.add('active');
+        if (t.dataset.tab === 'crypto') {
+            // Attendre un peu que le canvas soit visible
+            setTimeout(() => updateCharts(), 100);
+        }
+        if (t.dataset.tab === 'stocks') {
+            // Attendre un peu que le canvas soit visible
+            setTimeout(() => updateStockCharts(), 100);
+        }
+        if (t.dataset.tab === 'assets') {
+            // Initialiser ou mettre à jour la carte dans l'onglet Magasin
+            setTimeout(() => {
+                initMap();
+            }, 100);
+        }
+    });
+
+    // ========================================
+    // NOUVEAUX SYSTÈMES DE GAMEPLAY
+    // ========================================
+
+    // Définitions des rangs
+    const ranks = [
+        { name: 'Petit Dealer', threshold: 0, description: 'Vous débutez dans le monde illicite', bonus: 1 },
+        { name: 'Grossiste', threshold: 10000, description: 'Vous commencez à vous faire un nom', bonus: 1.05 },
+        { name: 'Baron', threshold: 100000, description: 'Votre empire prend de l\'ampleur', bonus: 1.10 },
+        { name: 'Parrain', threshold: 500000, description: 'Vous contrôlez une part importante du marché', bonus: 1.15 },
+        { name: 'Empereur', threshold: 2000000, description: 'Vous êtes au sommet de l\'empire illicite', bonus: 1.25 }
+    ];
+
+    // Définitions des succès
+    const achievementDefs = [
+        { id: 'first_money', name: 'Premier million', icon: '💰', description: 'Gagner $1,000,000 au total', check: () => state.totalEarnings >= 1000000 },
+        { id: 'portfolio', name: 'Portfolio diversifié', icon: '🎯', description: 'Posséder 5 propriétés différentes', check: () => Object.keys(state.assets).filter(k => state.assets[k].owned).length >= 5 },
+        { id: 'wallstreet', name: 'Wolf of Wallstreet', icon: '📈', description: '100 transactions boursières', check: () => (state.totalSales || 0) >= 100 },
+        { id: 'untouchable', name: 'Intouchable', icon: '🛡️', description: '50 livraisons sans arrestation', check: () => state.totalDeliveries >= 50 },
+        { id: 'crypto_king', name: 'Roi du Crypto', icon: '₿', description: 'Posséder au moins 1 BTC, 10 ETH et 1000 DOGE', check: () => state.crypto.btc >= 1 && state.crypto.eth >= 10 && state.crypto.doge >= 1000 },
+        { id: 'empire_builder', name: 'Bâtisseur d\'empire', icon: '🏗️', description: 'Posséder 10 propriétés', check: () => Object.keys(state.assets).filter(k => state.assets[k].owned).length >= 10 },
+        { id: 'big_boss', name: 'Grand patron', icon: '👑', description: 'Atteindre le rang d\'Empereur', check: () => state.rank >= 4 }
+    ];
+
+    // Fonctions pour les succès et progression
+    function checkAchievements() {
+        let newUnlocks = 0;
+        achievementDefs.forEach(achievement => {
+            if (!state.achievements[achievement.id] && achievement.check()) {
+                state.achievements[achievement.id] = true;
+                newUnlocks++;
+                showNotification('🏅 Succès débloqué!', achievement.name, 'success');
+            }
+        });
+        if (newUnlocks > 0) {
+            updateAchievementsUI();
+        }
+        updateRank();
+    }
+
+    function updateRank() {
+        const earnings = state.totalEarnings;
+        let newRank = 0;
+        for (let i = ranks.length - 1; i >= 0; i--) {
+            if (earnings >= ranks[i].threshold) {
+                newRank = i;
+                break;
+            }
+        }
+
+        if (newRank > state.rank) {
+            state.rank = newRank;
+            showNotification('🏆 Nouveau rang!', ranks[newRank].name, 'success');
+        }
+
+        // Calculer la progression vers le prochain rang
+        const currentRank = ranks[state.rank];
+        const nextRank = ranks[state.rank + 1];
+
+        if (nextRank) {
+            const progress = earnings - currentRank.threshold;
+            const needed = nextRank.threshold - currentRank.threshold;
+            state.rankProgress = (progress / needed) * 100;
+        } else {
+            state.rankProgress = 100;
+        }
+
+        updateAchievementsUI();
+    }
+
+    function updateAchievementsUI() {
+        const container = el('achievementsList');
+        const progressDisplay = el('achievementProgress');
+        const unlockedDisplay = el('unlockedCount');
+        const totalDisplay = el('totalCount');
+        const rankDisplay = el('playerRank');
+        const rankDescDisplay = el('rankDescription');
+        const rankProgressBar = el('rankProgress');
+        const rankProgressText = el('rankProgressText');
+
+        // Rang
+        const currentRank = ranks[state.rank];
+        const nextRank = ranks[state.rank + 1];
+
+        if (rankDisplay) rankDisplay.textContent = currentRank.name;
+        if (rankDescDisplay) rankDescDisplay.textContent = currentRank.description;
+        if (rankProgressBar) rankProgressBar.style.width = state.rankProgress + '%';
+        if (rankProgressText && nextRank) {
+            rankProgressText.textContent = `${fmtCash(state.totalEarnings)} / ${fmtCash(nextRank.threshold)} pour ${nextRank.name}`;
+        } else if (rankProgressText) {
+            rankProgressText.textContent = 'Rang maximum atteint!';
+        }
+
+        // Succès
+        const unlocked = Object.keys(state.achievements).length;
+        const total = achievementDefs.length;
+        const percent = ((unlocked / total) * 100).toFixed(0);
+
+        if (progressDisplay) progressDisplay.textContent = percent + '%';
+        if (unlockedDisplay) unlockedDisplay.textContent = unlocked;
+        if (totalDisplay) totalDisplay.textContent = total;
+
+        if (!container) return;
+
+        container.innerHTML = achievementDefs.map(a => {
+            const unlocked = state.achievements[a.id];
+            return `
+                <div class="achievement-card ${unlocked ? 'unlocked' : ''}">
+                    <div class="achievement-icon">${a.icon}</div>
+                    <div class="achievement-info">
+                        <div class="achievement-title">${a.name}</div>
+                        <div class="achievement-description">${a.description}</div>
+                        ${unlocked ? '<div class="achievement-progress">✓ Débloqué</div>' : '<div class="achievement-progress">🔒 Verrouillé</div>'}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Timers et initialisation
+    setInterval(saveGame, 10000); // Sauvegarde toutes les 10 secondes
+    setInterval(updateCryptoPrices, 5000); // Prix crypto toutes les 5 secondes
+    setInterval(updateStockPrices, 5000); // Prix actions toutes les 5 secondes
+    setInterval(updateJobUI, 1000); // Cooldown job chaque seconde
+    setInterval(gameLoop, 100); // Game loop 10x par seconde
+    setInterval(updateProgressBars, 100); // Barres de progression 10x par seconde
+    setInterval(updateUI, 1000); // UI mise à jour chaque seconde
+
+    // Initialisation
+    updateUI();
+    updateCharts();
+    updateStockCharts();
+    initMap();
+    initModalEvents();
+    updateAchievementsUI();
+})();
+</script>
+</body>
+</html>
